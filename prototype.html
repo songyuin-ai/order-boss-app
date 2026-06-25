@@ -104,10 +104,12 @@ button:active{transform:scale(0.95)}
 /* ── PRODUCT SCREEN ── */
 .search-bar{background:var(--canvas);border-radius:var(--r-pill);border:0.5px solid rgba(0,0,0,0.08);padding:10px 16px;font-size:15px;color:var(--ink);outline:none;width:100%;margin-bottom:12px}
 .search-bar::placeholder{color:var(--ink-48)}
-.chip-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.chip-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .chip-row::-webkit-scrollbar{display:none}
 .chip{display:inline-flex;align-items:center;padding:6px 14px;border-radius:var(--r-pill);font-size:13px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink);white-space:nowrap;cursor:pointer;transition:all 0.15s;flex-shrink:0}
 .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sort-row{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px}
+.sort-select{border:0.5px solid var(--hairline);background:var(--canvas);border-radius:var(--r-pill);padding:5px 10px;font-size:12px;color:var(--ink-48);font-family:var(--font-t);outline:none;cursor:pointer}
 .product-list{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);overflow:hidden}
 .prod-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:0.5px solid var(--divider);cursor:pointer;transition:background 0.1s}
 .prod-row:last-child{border-bottom:none}
@@ -116,15 +118,12 @@ button:active{transform:scale(0.95)}
 .prod-info{flex:1;min-width:0}
 .prod-name{font-size:14px;font-weight:600;letter-spacing:-0.3px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prod-price{font-size:12px;color:var(--ink-48);margin-top:2px}
-.prod-toggles{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0}
-.mt-wrap{display:flex;align-items:center;gap:5px}
-.mt-lbl{font-size:10px;color:var(--ink-48)}
-.mt{position:relative;width:34px;height:20px}
-.mt input{opacity:0;width:0;height:0}
-.mt-track{position:absolute;inset:0;background:var(--hairline);border-radius:var(--r-pill);transition:background 0.2s}
-.mt input:checked+.mt-track{background:var(--success)}
-.mt-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:transform 0.2s}
-.mt input:checked~.mt-thumb{transform:translateX(14px)}
+.prod-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.prod-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-pill);font-size:11px;font-weight:600}
+.prod-badge.selling{background:#e8f9ee;color:#1a7f3c;border:0.5px solid #a3e0b5}
+.prod-badge.soldout{background:#fff4e6;color:#c75000;border:0.5px solid #f5c896}
+.prod-badge.nosell{background:#f0f0f2;color:#7a7a7a;border:0.5px solid var(--hairline)}
+.prod-chevron{color:var(--muted)}
 
 /* ── STATS SCREEN ── */
 .hpoint-card{border-radius:var(--r-lg);padding:16px;margin-bottom:12px;color:#fff}
@@ -181,14 +180,20 @@ button:active{transform:scale(0.95)}
 
 /* product status sheet */
 .status-sheet-prod{display:flex;align-items:center;gap:12px;padding:0 20px;margin-bottom:16px}
-.status-thumb{width:52px;height:52px;background:var(--parchment);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-48)}
+.status-thumb{width:52px;height:52px;background:var(--parchment);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-48);flex-shrink:0}
 .status-prod-name{font-size:15px;font-weight:600;color:var(--ink)}
 .status-prod-price{font-size:13px;color:var(--ink-48);margin-top:2px}
-.status-label{font-size:12px;font-weight:600;color:var(--ink-48);padding:0 20px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
-.reason-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px;margin-bottom:16px}
-.reason-chip{padding:7px 14px;border-radius:var(--r-pill);font-size:13px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink);cursor:pointer;transition:all 0.15s}
-.reason-chip.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
-.scope-row{padding:0 20px;margin-bottom:20px}
+/* action type segmented control */
+.action-seg{display:flex;background:var(--parchment);border-radius:var(--r-md);padding:3px;margin:0 20px 16px}
+.action-seg-btn{flex:1;padding:8px;border-radius:8px;font-size:14px;font-weight:500;color:var(--ink-48);text-align:center;cursor:pointer;transition:all 0.18s}
+.action-seg-btn.active{background:var(--canvas);color:var(--ink);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.12)}
+/* explanation callout */
+.explain-callout{margin:0 20px 16px;padding:12px 14px;border-radius:var(--r-md);font-size:12px;line-height:1.6}
+.explain-callout.nosell-explain{background:#f5f5f7;border:0.5px solid var(--hairline);color:var(--ink-48)}
+.explain-callout.soldout-explain{background:#fff8f0;border:0.5px solid #f5c896;color:#8a4400}
+.explain-title{font-size:12px;font-weight:700;margin-bottom:4px}
+/* scope */
+.scope-row{padding:0 20px;margin-bottom:16px}
 .scope-title{font-size:12px;font-weight:600;color:var(--ink-48);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
 .scope-opts{display:flex;gap:6px}
 .scope-btn{flex:1;padding:8px;border-radius:var(--r-md);font-size:13px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink);cursor:pointer;text-align:center;transition:all 0.15s}
@@ -196,6 +201,7 @@ button:active{transform:scale(0.95)}
 .sheet-action{margin:0 20px;display:flex;gap:8px}
 .btn-cancel-sheet{flex:1;padding:13px;border-radius:var(--r-pill);font-size:15px;background:var(--parchment);color:var(--ink-48)}
 .btn-apply{flex:2;padding:13px;border-radius:var(--r-pill);font-size:15px;font-weight:600;background:var(--primary);color:#fff}
+.btn-apply.nosell-btn{background:var(--ink-48)}
 
 /* toast */
 .toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;border-radius:var(--r-pill);padding:10px 18px;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:all 0.25s;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
@@ -385,6 +391,14 @@ button:active{transform:scale(0.95)}
         <span class="chip" onclick="filterCat(this,'dessert')">디저트</span>
       </div>
 
+      <!-- Sort -->
+      <div class="sort-row">
+        <select class="sort-select" id="sort-select" onchange="setSort(this.value)">
+          <option value="default">기본순</option>
+          <option value="changed">최근 변경 순</option>
+        </select>
+      </div>
+
       <!-- Product list -->
       <div class="product-list" id="product-list"></div>
     </div>
@@ -559,6 +573,8 @@ button:active{transform:scale(0.95)}
   <div class="sheet" id="prod-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">상태 변경</div>
+
+    <!-- 상품 정보 -->
     <div class="status-sheet-prod">
       <div class="status-thumb">img</div>
       <div>
@@ -566,24 +582,33 @@ button:active{transform:scale(0.95)}
         <div class="status-prod-price" id="sheet-prod-price">가격</div>
       </div>
     </div>
-    <div class="status-label">사유 선택</div>
-    <div class="reason-chips">
-      <div class="reason-chip sel" onclick="selReason(this)">재고 부족</div>
-      <div class="reason-chip" onclick="selReason(this)">영업 종료</div>
-      <div class="reason-chip" onclick="selReason(this)">조리 불가</div>
-      <div class="reason-chip" onclick="selReason(this)">기타</div>
+
+    <!-- 처리 유형 선택 -->
+    <div class="action-seg">
+      <div class="action-seg-btn active" id="seg-nosell" onclick="setActionType('nosell')">비판매 처리</div>
+      <div class="action-seg-btn" id="seg-soldout" onclick="setActionType('soldout')">품절 처리</div>
     </div>
-    <div class="scope-row">
-      <div class="scope-title">적용 범위</div>
+
+    <!-- 설명 callout (JS로 교체됨) -->
+    <div class="explain-callout nosell-explain" id="explain-box">
+      <div class="explain-title">비판매란?</div>
+      앱에서 상품이 완전히 숨겨져요. 고객이 상품을 볼 수 없고 주문 자체가 불가합니다.<br>
+      <span style="font-weight:600;color:#555">예) 시즌 종료, 단종, 임시 메뉴 제거</span>
+    </div>
+
+    <!-- 적용 범위 (품절 시만 표시) -->
+    <div class="scope-row" id="scope-section" style="display:none">
+      <div class="scope-title">적용 범위 <span style="color:var(--danger);font-size:11px">필수 선택</span></div>
       <div class="scope-opts">
         <div class="scope-btn sel" onclick="selScope(this)">전체</div>
-        <div class="scope-btn" onclick="selScope(this)">배달만</div>
         <div class="scope-btn" onclick="selScope(this)">픽업만</div>
+        <div class="scope-btn" onclick="selScope(this)">배달만</div>
       </div>
     </div>
+
     <div class="sheet-action">
       <button class="btn-cancel-sheet" onclick="closeProdSheet()">취소</button>
-      <button class="btn-apply" onclick="applyStatus()">품절 처리</button>
+      <button class="btn-apply nosell-btn" id="btn-apply" onclick="applyStatus()">비판매 처리</button>
     </div>
   </div>
 
@@ -650,27 +675,43 @@ button:active{transform:scale(0.95)}
 <script>
 // ── PRODUCT DATA ──
 const PRODUCTS = [
-  {id:1,name:'뜯어먹는롤치즈브레드(1/2)',price:'6,000원',cat:'bread',sell:true,sold:false},
-  {id:2,name:'소보루빵',price:'2,200원',cat:'bread',sell:true,sold:false},
-  {id:3,name:'단팥빵',price:'2,000원',cat:'bread',sell:true,sold:true},
-  {id:4,name:'정통 에그타르트',price:'2,600원',cat:'bread',sell:true,sold:false},
-  {id:5,name:'[파란라벨] 저당 발효버터 롤케익',price:'14,900원',cat:'blue',sell:true,sold:false},
-  {id:6,name:'[파란라벨] 저당 통밀 식빵',price:'7,900원',cat:'blue',sell:false,sold:false},
-  {id:7,name:'[파란라벨] 저당 크림치즈 베이글',price:'8,500원',cat:'blue',sell:true,sold:false},
-  {id:8,name:'벨지안 초코 젤라또 콘 아이스크림',price:'2,700원',cat:'ice',sell:true,sold:true},
-  {id:9,name:'딸기 소르베 아이스크림 바',price:'2,200원',cat:'ice',sell:true,sold:false},
-  {id:10,name:'미니 크루아상 4개입',price:'4,500원',cat:'mini',sell:true,sold:false},
-  {id:11,name:'한입 단팥 찹쌀떡 6개입',price:'3,800원',cat:'mini',sell:true,sold:false},
-  {id:12,name:'마카롱 5종 박스',price:'8,500원',cat:'dessert',sell:true,sold:false},
-  {id:13,name:'에그 타르트 4개입',price:'9,800원',cat:'dessert',sell:true,sold:false},
+  {id:1,name:'뜯어먹는롤치즈브레드(1/2)',price:'6,000원',cat:'bread',sell:true,sold:false,changedAt:null},
+  {id:2,name:'소보루빵',price:'2,200원',cat:'bread',sell:true,sold:false,changedAt:null},
+  {id:3,name:'단팥빵',price:'2,000원',cat:'bread',sell:true,sold:true,changedAt:Date.now()-1000*60*8},
+  {id:4,name:'정통 에그타르트',price:'2,600원',cat:'bread',sell:true,sold:false,changedAt:null},
+  {id:5,name:'[파란라벨] 저당 발효버터 롤케익',price:'14,900원',cat:'blue',sell:true,sold:false,changedAt:null},
+  {id:6,name:'[파란라벨] 저당 통밀 식빵',price:'7,900원',cat:'blue',sell:false,sold:false,changedAt:Date.now()-1000*60*32},
+  {id:7,name:'[파란라벨] 저당 크림치즈 베이글',price:'8,500원',cat:'blue',sell:true,sold:false,changedAt:null},
+  {id:8,name:'벨지안 초코 젤라또 콘 아이스크림',price:'2,700원',cat:'ice',sell:true,sold:true,changedAt:Date.now()-1000*60*3},
+  {id:9,name:'딸기 소르베 아이스크림 바',price:'2,200원',cat:'ice',sell:true,sold:false,changedAt:null},
+  {id:10,name:'미니 크루아상 4개입',price:'4,500원',cat:'mini',sell:true,sold:false,changedAt:null},
+  {id:11,name:'한입 단팥 찹쌀떡 6개입',price:'3,800원',cat:'mini',sell:true,sold:false,changedAt:null},
+  {id:12,name:'마카롱 5종 박스',price:'8,500원',cat:'dessert',sell:true,sold:false,changedAt:null},
+  {id:13,name:'에그 타르트 4개입',price:'9,800원',cat:'dessert',sell:true,sold:false,changedAt:null},
 ];
 
 let currentCat = 'all';
 let currentProdId = null;
+let currentSort = 'default';
+let currentActionType = 'nosell';
+
+function getBadge(p) {
+  if (!p.sell) return '<span class="prod-badge nosell">비판매</span>';
+  if (p.sold)  return '<span class="prod-badge soldout">품절</span>';
+  return '<span class="prod-badge selling">판매중</span>';
+}
 
 function renderProducts() {
   const list = document.getElementById('product-list');
-  const filtered = currentCat === 'all' ? PRODUCTS : PRODUCTS.filter(p=>p.cat===currentCat);
+  let filtered = currentCat === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p=>p.cat===currentCat);
+  if (currentSort === 'changed') {
+    filtered.sort((a,b)=>{
+      if (a.changedAt === null && b.changedAt === null) return 0;
+      if (a.changedAt === null) return 1;
+      if (b.changedAt === null) return -1;
+      return b.changedAt - a.changedAt;
+    });
+  }
   list.innerHTML = filtered.map(p=>`
     <div class="prod-row" onclick="openProdSheet(${p.id})">
       <div class="prod-thumb">img</div>
@@ -678,24 +719,17 @@ function renderProducts() {
         <div class="prod-name">${p.name}</div>
         <div class="prod-price">${p.price}</div>
       </div>
-      <div class="prod-toggles" onclick="event.stopPropagation()">
-        <div class="mt-wrap">
-          <span class="mt-lbl">판매</span>
-          <label class="mt"><input type="checkbox" ${p.sell?'checked':''} onchange="toggleProd(${p.id},'sell',this.checked)"><div class="mt-track"></div><div class="mt-thumb"></div></label>
-        </div>
-        <div class="mt-wrap">
-          <span class="mt-lbl">품절</span>
-          <label class="mt"><input type="checkbox" ${p.sold?'checked':''} onchange="toggleProd(${p.id},'sold',this.checked)"><div class="mt-track"></div><div class="mt-thumb"></div></label>
-        </div>
+      <div class="prod-right">
+        ${getBadge(p)}
+        <svg class="prod-chevron" width="7" height="12" fill="none" viewBox="0 0 7 12"><path d="M1 1l5 5-5 5" stroke="#cccccc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
     </div>
   `).join('');
 }
 
-function toggleProd(id, field, val) {
-  const p = PRODUCTS.find(x=>x.id===id);
-  if(p) p[field]=val;
-  showToast(val ? (field==='sell'?'판매 중으로 변경됐어요':'품절 처리됐어요') : (field==='sell'?'판매 중지됐어요':'품절 해제됐어요'));
+function setSort(val) {
+  currentSort = val;
+  renderProducts();
 }
 
 function filterCat(el, cat) {
@@ -804,14 +838,42 @@ function switchStore(idx) {
 }
 
 // ── PRODUCT STATUS SHEET ──
+const EXPLAIN = {
+  nosell: {
+    cls: 'nosell-explain',
+    html: '<div class="explain-title">비판매란?</div>앱에서 상품이 완전히 숨겨져요. 고객이 상품을 볼 수 없고 주문 자체가 불가합니다.<br><span style="font-weight:600;color:#555">예) 시즌 종료, 단종, 임시 메뉴 제거</span>'
+  },
+  soldout: {
+    cls: 'soldout-explain',
+    html: '<div class="explain-title">품절이란?</div>상품은 앱에 그대로 노출되지만 주문 버튼이 비활성화돼요. 재고가 다시 생기면 바로 판매 재개할 수 있어요.<br><span style="font-weight:600;color:#8a4400">예) 오늘 재고 소진, 특정 채널만 일시 중단</span>'
+  }
+};
+
+function setActionType(type) {
+  currentActionType = type;
+  document.getElementById('seg-nosell').classList.toggle('active', type==='nosell');
+  document.getElementById('seg-soldout').classList.toggle('active', type==='soldout');
+  const box = document.getElementById('explain-box');
+  box.className = 'explain-callout ' + EXPLAIN[type].cls;
+  box.innerHTML = EXPLAIN[type].html;
+  document.getElementById('scope-section').style.display = type==='soldout' ? '' : 'none';
+  const btn = document.getElementById('btn-apply');
+  btn.textContent = type==='nosell' ? '비판매 처리' : '품절 처리';
+  btn.className = 'btn-apply' + (type==='nosell' ? ' nosell-btn' : '');
+  if (type==='soldout') {
+    document.querySelectorAll('.scope-btn').forEach((b,i)=>b.classList.toggle('sel',i===0));
+  }
+}
+
 function openProdSheet(id) {
   const p = PRODUCTS.find(x=>x.id===id);
   if(!p) return;
   currentProdId = id;
   document.getElementById('sheet-prod-name').textContent = p.name;
   document.getElementById('sheet-prod-price').textContent = p.price;
-  document.querySelectorAll('.reason-chip').forEach((c,i)=>c.classList.toggle('sel',i===0));
-  document.querySelectorAll('.scope-btn').forEach((b,i)=>b.classList.toggle('sel',i===0));
+  // default to matching current state
+  const defaultType = !p.sell ? 'nosell' : (p.sold ? 'soldout' : 'nosell');
+  setActionType(defaultType);
   document.getElementById('prod-overlay').classList.add('show');
   document.getElementById('prod-sheet').classList.add('show');
 }
@@ -820,16 +882,21 @@ function closeProdSheet() {
   document.getElementById('prod-sheet').classList.remove('show');
 }
 function applyStatus() {
-  const reason = document.querySelector('.reason-chip.sel')?.textContent || '재고 부족';
-  const scope = document.querySelector('.scope-btn.sel')?.textContent || '전체';
-  closeProdSheet();
-  showToast(`품절 처리됐어요 (${scope})`);
   const p = PRODUCTS.find(x=>x.id===currentProdId);
-  if(p){ p.sold=true; renderProducts(); }
-}
-function selReason(el){
-  document.querySelectorAll('.reason-chip').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
+  if (!p) return;
+  p.changedAt = Date.now();
+  if (currentActionType === 'nosell') {
+    p.sell = false; p.sold = false;
+    closeProdSheet();
+    showToast('비판매 처리됐어요');
+  } else {
+    const scope = document.querySelector('.scope-btn.sel')?.textContent || '전체';
+    p.sold = true;
+    closeProdSheet();
+    showToast(`품절 처리됐어요 (${scope})`);
+  }
+  if (currentSort === 'changed') document.getElementById('sort-select').value = 'changed';
+  renderProducts();
 }
 function selScope(el){
   document.querySelectorAll('.scope-btn').forEach(b=>b.classList.remove('sel'));
