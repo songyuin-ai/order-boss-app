@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사장님앱 디자인 시스템</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Colors — Brand */
+  --color-primary:          #0066cc;
+  --color-primary-focus:    #0071e3;
+  --color-primary-on-dark:  #2997ff;
+
+  /* Colors — Ink */
+  --color-ink:              #1d1d1f;
+  --color-ink-muted-80:     #333333;
+  --color-ink-muted-48:     #7a7a7a;
+  --color-body-muted:       #cccccc;
+
+  /* Colors — Surface */
+  --color-canvas:           #ffffff;
+  --color-canvas-parchment: #f5f5f7;
+  --color-surface-pearl:    #fafafc;
+  --color-surface-tile-1:   #272729;
+  --color-surface-black:    #000000;
+  --color-chip-translucent: rgba(210, 210, 215, 0.64);
+
+  /* Colors — On */
+  --color-on-primary:       #ffffff;
+  --color-on-dark:          #ffffff;
+
+  /* Colors — Border */
+  --color-hairline:         #e0e0e0;
+  --color-divider-soft:     #f0f0f0;
+
+  /* Typography */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  --font-text:    -apple-system, BlinkMacSystemFont, "SF Pro Text",    "Inter", sans-serif;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-xs:   5px;
+  --radius-sm:   8px;
+  --radius-md:   11px;
+  --radius-lg:   18px;
+  --radius-pill: 9999px;
+
+  /* Spacing */
+  --sp-xxs: 4px;
+  --sp-xs:  8px;
+  --sp-sm:  12px;
+  --sp-md:  17px;
+  --sp-lg:  24px;
+  --sp-xl:  32px;
+  --sp-xxl: 48px;
+  --sp-section: 80px;
+
+  /* Elevation — product only */
+  --shadow-product: rgba(0,0,0,0.22) 3px 5px 30px 0;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-text);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
+  background: var(--color-canvas-parchment);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   SHOWCASE LAYOUT
+   ============================================================ */
+.ds-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--sp-xl) var(--sp-lg) var(--sp-section);
+}
+
+.ds-section {
+  margin-bottom: var(--sp-xxl);
+}
+
+.ds-section-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.28px;
+  line-height: 1.1;
+  color: var(--color-ink);
+  border-bottom: 0.5px solid var(--color-hairline);
+  padding-bottom: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+}
+
+.ds-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-ink-muted-48);
+  letter-spacing: -0.12px;
+  margin-top: var(--sp-xs);
+  text-align: center;
+}
+
+.ds-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-lg);
+  align-items: flex-start;
+}
+
+.ds-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-xxs);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.ds-hero {
+  background: var(--color-surface-black);
+  color: var(--color-on-dark);
+  padding: var(--sp-xxl) var(--sp-lg);
+  margin-bottom: var(--sp-xl);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.ds-hero h1 {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.28px;
+  line-height: 1.1;
+  margin-bottom: var(--sp-xs);
+}
+
+.ds-hero p {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--color-body-muted);
+}
+
+/* ============================================================
+   COLORS
+   ============================================================ */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--sp-md);
+}
+
+.color-chip {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 0.5px solid var(--color-hairline);
+}
+
+.color-chip-swatch {
+  height: 64px;
+  width: 100%;
+}
+
+.color-chip-info {
+  padding: var(--sp-xs);
+  background: var(--color-canvas);
+}
+
+.color-chip-name {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.12px;
+  color: var(--color-ink);
+  display: block;
+}
+
+.color-chip-hex {
+  font-size: 11px;
+  color: var(--color-ink-muted-48);
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.type-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-hairline);
+  padding: var(--sp-xl);
+}
+
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-lg);
+  padding-bottom: var(--sp-md);
+  border-bottom: 0.5px solid var(--color-divider-soft);
+}
+
+.type-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+.type-meta {
+  flex: 0 0 180px;
+  font-size: 11px;
+  color: var(--color-ink-muted-48);
+  line-height: 1.5;
+}
+
+.type-meta strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-muted-80);
+  letter-spacing: -0.12px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+button {
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+  text-decoration: none;
+  font-family: var(--font-text);
+}
+
+button:active { transform: scale(0.95); }
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  border-radius: var(--radius-pill);
+  padding: 11px 22px;
+  line-height: 1;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: var(--color-canvas);
+  color: var(--color-primary);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  line-height: 1;
+  border: 1px solid var(--color-primary);
+}
+
+.btn-utility {
+  background: var(--color-ink);
+  color: var(--color-on-dark);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  border-radius: var(--radius-sm);
+  padding: 8px 15px;
+  line-height: 1.29;
+}
+
+.btn-pearl {
+  background: var(--color-surface-pearl);
+  color: var(--color-ink-muted-80);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  line-height: 1.29;
+  border: 3px solid var(--color-divider-soft);
+}
+
+.btn-icon-circular {
+  background: var(--color-chip-translucent);
+  color: var(--color-ink);
+  border-radius: var(--radius-pill);
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+}
+
+.btn-destructive {
+  background: #ff3b30;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 400;
+  border-radius: var(--radius-pill);
+  padding: 11px 22px;
+  line-height: 1;
+}
+
+.btn-on-dark {
+  background: transparent;
+  color: var(--color-primary-on-dark);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  border: 1px solid var(--color-primary-on-dark);
+}
+
+.btn-demo-dark {
+  background: var(--color-surface-tile-1);
+  padding: var(--sp-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+
+.btn-demo-dark .ds-label { color: var(--color-body-muted); }
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card-utility {
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-hairline);
+  padding: var(--sp-lg);
+  width: 200px;
+}
+
+.card-utility-thumb {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: var(--color-canvas-parchment);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-sm);
+  color: var(--color-ink-muted-48);
+  font-size: 12px;
+}
+
+.card-utility-name {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  line-height: 1.24;
+  margin-bottom: 4px;
+}
+
+.card-utility-price {
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
+  margin-bottom: var(--sp-xs);
+}
+
+.card-utility-link {
+  color: var(--color-primary);
+  font-size: 17px;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* KPI Card */
+.card-kpi {
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-hairline);
+  padding: var(--sp-lg);
+  min-width: 160px;
+  flex: 1;
+}
+
+.card-kpi-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-ink-muted-48);
+  letter-spacing: -0.12px;
+  margin-bottom: var(--sp-xxs);
+}
+
+.card-kpi-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.28px;
+  line-height: 1.1;
+  color: var(--color-ink);
+  margin-bottom: var(--sp-xxs);
+}
+
+.card-kpi-delta {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+}
+
+.card-kpi-delta.up   { color: #34c759; }
+.card-kpi-delta.down { color: #ff3b30; }
+
+/* Happy Point Card */
+.card-hpoint {
+  background: var(--color-surface-tile-1);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-lg);
+  color: var(--color-on-dark);
+  max-width: 400px;
+}
+
+.card-hpoint-label {
+  font-size: 12px;
+  color: var(--color-body-muted);
+  margin-bottom: var(--sp-xs);
+}
+
+.card-hpoint-value {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  margin-bottom: var(--sp-xs);
+}
+
+.card-hpoint-copy {
+  font-size: 14px;
+  color: var(--color-body-muted);
+  line-height: 1.43;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.12px;
+  line-height: 1;
+  border-radius: var(--radius-pill);
+  padding: 3px 8px;
+  min-width: 20px;
+  height: 20px;
+}
+
+.badge-primary   { background: var(--color-primary);    color: var(--color-on-primary); }
+.badge-danger    { background: #ff3b30;                  color: #ffffff; }
+.badge-success   { background: #34c759;                  color: #ffffff; }
+.badge-neutral   { background: var(--color-canvas-parchment); color: var(--color-ink-muted-48); border: 0.5px solid var(--color-hairline); }
+.badge-warning   { background: #ff9500;                  color: #ffffff; }
+
+/* ============================================================
+   TOGGLE
+   ============================================================ */
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  cursor: pointer;
+}
+
+.toggle {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  flex-shrink: 0;
+}
+
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--color-hairline);
+  border-radius: var(--radius-pill);
+  transition: background 0.2s ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: #34c759;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease;
+}
+
+.toggle input:checked ~ .toggle-thumb {
+  transform: translateX(20px);
+}
+
+.toggle-label {
+  font-size: 17px;
+  color: var(--color-ink);
+}
+
+/* ============================================================
+   CHIPS / FILTER
+   ============================================================ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 0.5px solid var(--color-hairline);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.chip.active {
+  background: var(--color-ink);
+  color: var(--color-on-dark);
+  border-color: var(--color-ink);
+}
+
+/* ============================================================
+   BOTTOM TAB BAR
+   ============================================================ */
+.tab-bar-demo {
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-top: 0.5px solid var(--color-hairline);
+  display: flex;
+  padding: var(--sp-xs) 0 var(--sp-md);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: var(--sp-xs) 0;
+  cursor: pointer;
+  color: var(--color-ink-muted-48);
+  transition: color 0.15s;
+}
+
+.tab-item.active { color: var(--color-primary); }
+
+.tab-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: -0.08px;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar-demo {
+  background: var(--color-surface-black);
+  color: var(--color-on-dark);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-md);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.top-bar-store {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xxs);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  cursor: pointer;
+}
+
+.top-bar-store svg { flex-shrink: 0; }
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+}
+
+/* ============================================================
+   BOTTOM SHEET
+   ============================================================ */
+.bottom-sheet-demo {
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border: 0.5px solid var(--color-hairline);
+  padding: var(--sp-lg);
+  max-width: 390px;
+}
+
+.bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--color-hairline);
+  border-radius: var(--radius-pill);
+  margin: 0 auto var(--sp-lg);
+}
+
+.bottom-sheet-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.231px;
+  margin-bottom: var(--sp-md);
+}
+
+.store-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-sm) 0;
+  border-bottom: 0.5px solid var(--color-divider-soft);
+  cursor: pointer;
+}
+
+.store-row:last-child { border-bottom: none; }
+
+.store-row-name {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--color-ink);
+}
+
+.store-row-sales {
+  font-size: 14px;
+  color: var(--color-ink-muted-48);
+  letter-spacing: -0.224px;
+}
+
+.store-row.active .store-row-name {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-demo {
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-xl);
+  max-width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  margin-bottom: var(--sp-xs);
+}
+
+.modal-body {
+  font-size: 14px;
+  color: var(--color-ink-muted-48);
+  letter-spacing: -0.224px;
+  line-height: 1.43;
+  margin-bottom: var(--sp-lg);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--sp-xs);
+  justify-content: center;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-demo {
+  background: var(--color-ink);
+  color: var(--color-on-dark);
+  border-radius: var(--radius-pill);
+  padding: var(--sp-sm) var(--sp-lg);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+/* ============================================================
+   PRODUCT LIST ROW (상품관리용)
+   ============================================================ */
+.product-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+  padding: var(--sp-md) 0;
+  border-bottom: 0.5px solid var(--color-divider-soft);
+}
+
+.product-thumb {
+  width: 56px;
+  height: 56px;
+  background: var(--color-canvas-parchment);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-muted-48);
+  font-size: 10px;
+}
+
+.product-info { flex: 1; min-width: 0; }
+
+.product-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  font-size: 14px;
+  color: var(--color-ink-muted-48);
+  letter-spacing: -0.224px;
+  margin-top: 2px;
+}
+
+.product-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xxs);
+  align-items: flex-end;
+}
+
+.mini-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-toggle-label {
+  font-size: 11px;
+  color: var(--color-ink-muted-48);
+}
+
+.mini-toggle {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.mini-toggle input { opacity: 0; width: 0; height: 0; }
+
+.mini-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--color-hairline);
+  border-radius: var(--radius-pill);
+  transition: background 0.2s;
+}
+
+.mini-toggle input:checked + .mini-toggle-track { background: #34c759; }
+
+.mini-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.2s;
+}
+
+.mini-toggle input:checked ~ .mini-toggle-thumb { transform: translateX(16px); }
+
+/* ============================================================
+   CHART BAR (시간대별)
+   ============================================================ */
+.chart-wrap {
+  background: var(--color-canvas);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-hairline);
+  padding: var(--sp-lg);
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 80px;
+  margin-bottom: var(--sp-xs);
+}
+
+.chart-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.chart-bar {
+  width: 100%;
+  background: var(--color-primary);
+  border-radius: 3px 3px 0 0;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+}
+
+.chart-bar.peak { opacity: 1; }
+
+.chart-bar-label {
+  font-size: 9px;
+  color: var(--color-ink-muted-48);
+  text-align: center;
+}
+
+/* ============================================================
+   SHORTCUT GRID (바로가기)
+   ============================================================ */
+.shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-sm);
+}
+
+.shortcut-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.shortcut-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--color-canvas);
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--color-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shortcut-label {
+  font-size: 11px;
+  color: var(--color-ink);
+  letter-spacing: -0.08px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ============================================================
+   RFM SEGMENT CHIPS
+   ============================================================ */
+.rfm-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+}
+
+.rfm-chip {
+  padding: var(--sp-xs) var(--sp-sm);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.224px;
+}
+
+.rfm-vip      { background: #fff0f3; color: #c0004a; border: 0.5px solid #f5b8c8; }
+.rfm-loyal    { background: #fff8e6; color: #8a5000; border: 0.5px solid #f5d98a; }
+.rfm-new      { background: #e6f4ff; color: #0055a5; border: 0.5px solid #a8d4f5; }
+.rfm-at-risk  { background: #f0f0f2; color: #555; border: 0.5px solid var(--color-hairline); }
+.rfm-churned  { background: #f5f5f7; color: var(--color-ink-muted-48); border: 0.5px solid var(--color-hairline); }
+
+/* ============================================================
+   INPUT
+   ============================================================ */
+.input-field {
+  width: 100%;
+  max-width: 320px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  border: 0.5px solid rgba(0,0,0,0.08);
+  background: var(--color-canvas);
+  padding: 12px 20px;
+  font-family: var(--font-text);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
+  outline: none;
+}
+
+.input-field:focus {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 1px;
+}
+
+.input-field::placeholder { color: var(--color-ink-muted-48); }
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider {
+  border: none;
+  border-top: 0.5px solid var(--color-hairline);
+  margin: var(--sp-lg) 0;
+}
+
+/* ============================================================
+   DARK TILE DEMO
+   ============================================================ */
+.tile-dark {
+  background: var(--color-surface-tile-1);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-xl);
+  color: var(--color-on-dark);
+}
+
+.tile-dark .ds-section-title {
+  color: var(--color-on-dark);
+  border-bottom-color: rgba(255,255,255,0.1);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .ds-page { padding: var(--sp-lg) var(--sp-md) var(--sp-xxl); }
+  .ds-hero h1 { font-size: 28px; }
+  .color-grid { grid-template-columns: repeat(3, 1fr); }
+  .card-kpi-value { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="ds-page">
+
+  <!-- HERO -->
+  <div class="ds-hero">
+    <h1>사장님앱 디자인 시스템</h1>
+    <p>Apple 디자인 가이드 기반 컴포넌트 소스 — v1.0 · 2026-06-25</p>
+  </div>
+
+  <!-- =====================================================
+       1. COLORS
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">1. 컬러</h2>
+
+    <div style="margin-bottom: var(--sp-md)">
+      <p style="font-size:14px;color:var(--color-ink-muted-48);margin-bottom:var(--sp-sm)">Brand &amp; Interactive</p>
+      <div class="color-grid">
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#0066cc"></div>
+          <div class="color-chip-info"><span class="color-chip-name">primary</span><span class="color-chip-hex">#0066cc</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#0071e3"></div>
+          <div class="color-chip-info"><span class="color-chip-name">primary-focus</span><span class="color-chip-hex">#0071e3</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#2997ff"></div>
+          <div class="color-chip-info"><span class="color-chip-name">primary-on-dark</span><span class="color-chip-hex">#2997ff</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--sp-md)">
+      <p style="font-size:14px;color:var(--color-ink-muted-48);margin-bottom:var(--sp-sm)">Surface</p>
+      <div class="color-grid">
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#ffffff;border-bottom:0.5px solid #e0e0e0"></div>
+          <div class="color-chip-info"><span class="color-chip-name">canvas</span><span class="color-chip-hex">#ffffff</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#f5f5f7"></div>
+          <div class="color-chip-info"><span class="color-chip-name">parchment</span><span class="color-chip-hex">#f5f5f7</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#fafafc"></div>
+          <div class="color-chip-info"><span class="color-chip-name">pearl</span><span class="color-chip-hex">#fafafc</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#272729"></div>
+          <div class="color-chip-info"><span class="color-chip-name">tile-dark</span><span class="color-chip-hex">#272729</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#000000"></div>
+          <div class="color-chip-info"><span class="color-chip-name">surface-black</span><span class="color-chip-hex">#000000</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--sp-md)">
+      <p style="font-size:14px;color:var(--color-ink-muted-48);margin-bottom:var(--sp-sm)">Ink &amp; Text</p>
+      <div class="color-grid">
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#1d1d1f"></div>
+          <div class="color-chip-info"><span class="color-chip-name">ink</span><span class="color-chip-hex">#1d1d1f</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#333333"></div>
+          <div class="color-chip-info"><span class="color-chip-name">ink-muted-80</span><span class="color-chip-hex">#333333</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#7a7a7a"></div>
+          <div class="color-chip-info"><span class="color-chip-name">ink-muted-48</span><span class="color-chip-hex">#7a7a7a</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#cccccc"></div>
+          <div class="color-chip-info"><span class="color-chip-name">body-muted</span><span class="color-chip-hex">#cccccc</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p style="font-size:14px;color:var(--color-ink-muted-48);margin-bottom:var(--sp-sm)">Status &amp; Semantic</p>
+      <div class="color-grid">
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#34c759"></div>
+          <div class="color-chip-info"><span class="color-chip-name">success</span><span class="color-chip-hex">#34c759</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#ff3b30"></div>
+          <div class="color-chip-info"><span class="color-chip-name">danger</span><span class="color-chip-hex">#ff3b30</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#ff9500"></div>
+          <div class="color-chip-info"><span class="color-chip-name">warning</span><span class="color-chip-hex">#ff9500</span></div>
+        </div>
+        <div class="color-chip">
+          <div class="color-chip-swatch" style="background:#e0e0e0"></div>
+          <div class="color-chip-info"><span class="color-chip-name">hairline</span><span class="color-chip-hex">#e0e0e0</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       2. TYPOGRAPHY
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">2. 타이포그래피</h2>
+    <div class="type-stack">
+      <div class="type-row">
+        <div class="type-meta"><strong>hero-display</strong>56px / 600 / -0.28px</div>
+        <span style="font-family:var(--font-display);font-size:clamp(28px,5vw,56px);font-weight:600;letter-spacing:-0.28px;line-height:1.07">사장님 매출 현황</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>display-lg</strong>40px / 600 / 0px</div>
+        <span style="font-family:var(--font-display);font-size:clamp(24px,4vw,40px);font-weight:600;line-height:1.1">오늘의 매출 요약</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>display-md</strong>34px / 600 / -0.374px</div>
+        <span style="font-family:var(--font-text);font-size:clamp(20px,3.5vw,34px);font-weight:600;letter-spacing:-0.374px;line-height:1.47">주문 통계</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>lead</strong>28px / 400 / 0.196px</div>
+        <span style="font-family:var(--font-display);font-size:clamp(18px,2.8vw,28px);font-weight:400;letter-spacing:0.196px;line-height:1.14">전일 대비 +12.3% 증가했어요</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>tagline</strong>21px / 600 / 0.231px</div>
+        <span style="font-family:var(--font-display);font-size:21px;font-weight:600;letter-spacing:0.231px;line-height:1.19">상품관리</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>body-strong</strong>17px / 600 / -0.374px</div>
+        <span style="font-size:17px;font-weight:600;letter-spacing:-0.374px;line-height:1.24">뜯어먹는롤치즈브레드(1/2)</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>body</strong>17px / 400 / -0.374px</div>
+        <span style="font-size:17px;font-weight:400;letter-spacing:-0.374px;line-height:1.47">주문 접수부터 배달 완료까지 실시간으로 현황을 확인하세요.</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>caption</strong>14px / 400 / -0.224px</div>
+        <span style="font-size:14px;font-weight:400;letter-spacing:-0.224px;line-height:1.43;color:var(--color-ink-muted-48)">주문가능수량 3 · 전일 대비</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fine-print</strong>12px / 400 / -0.12px</div>
+        <span style="font-size:12px;font-weight:400;letter-spacing:-0.12px;line-height:1;color:var(--color-ink-muted-48)">해피포인트 회원 기준 통계입니다. 전체 방문객을 포함하지 않습니다.</span>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>micro-legal</strong>10px / 400 / -0.08px</div>
+        <span style="font-size:10px;font-weight:400;letter-spacing:-0.08px;line-height:1.3;color:var(--color-ink-muted-48)">※ 본 통계는 해피오더 온라인 주문 기준이며 오프라인 매출은 포함되지 않습니다.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       3. BUTTONS
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">3. 버튼</h2>
+
+    <div class="ds-row" style="margin-bottom:var(--sp-lg)">
+      <div class="ds-col">
+        <button class="btn-primary">확인</button>
+        <span class="ds-label">btn-primary</span>
+      </div>
+      <div class="ds-col">
+        <button class="btn-secondary">자세히 보기</button>
+        <span class="ds-label">btn-secondary</span>
+      </div>
+      <div class="ds-col">
+        <button class="btn-utility">로그인</button>
+        <span class="ds-label">btn-utility</span>
+      </div>
+      <div class="ds-col">
+        <button class="btn-pearl">필터</button>
+        <span class="ds-label">btn-pearl</span>
+      </div>
+      <div class="ds-col">
+        <button class="btn-icon-circular">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <span class="ds-label">btn-icon-circular</span>
+      </div>
+      <div class="ds-col">
+        <button class="btn-destructive">취소 처리</button>
+        <span class="ds-label">btn-destructive</span>
+      </div>
+    </div>
+
+    <div class="btn-demo-dark">
+      <div class="ds-row">
+        <div class="ds-col">
+          <button class="btn-primary">구매하기</button>
+          <span class="ds-label">primary (on dark)</span>
+        </div>
+        <div class="ds-col">
+          <button class="btn-on-dark">자세히 보기</button>
+          <span class="ds-label">btn-on-dark</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--color-ink-muted-48);margin-top:var(--sp-xs)">모든 버튼 press → scale(0.95) 인터랙션</p>
+  </section>
+
+  <!-- =====================================================
+       4. BADGES
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">4. 배지</h2>
+    <div class="ds-row">
+      <div class="ds-col"><span class="badge badge-primary">3</span><span class="ds-label">primary</span></div>
+      <div class="ds-col"><span class="badge badge-danger">미답변 5</span><span class="ds-label">danger</span></div>
+      <div class="ds-col"><span class="badge badge-success">완료</span><span class="ds-label">success</span></div>
+      <div class="ds-col"><span class="badge badge-warning">준비중</span><span class="ds-label">warning</span></div>
+      <div class="ds-col"><span class="badge badge-neutral">전체</span><span class="ds-label">neutral</span></div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       5. CHIPS / FILTER
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">5. 필터 칩</h2>
+    <div class="ds-row">
+      <span class="chip active">전체</span>
+      <span class="chip">갓구운빵</span>
+      <span class="chip">[파란라벨] 저당 케이크/건강빵</span>
+      <span class="chip">빙수/아이스크림</span>
+      <span class="chip">한입브레드/한입식빵</span>
+      <span class="chip">디저트#마카롱#타르트</span>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       6. TOGGLE
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">6. 토글</h2>
+    <div style="background:var(--color-canvas);border-radius:var(--radius-lg);border:0.5px solid var(--color-hairline);padding:var(--sp-lg);display:flex;flex-direction:column;gap:var(--sp-md)">
+      <label class="toggle-wrap">
+        <div class="toggle">
+          <input type="checkbox" checked>
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label">판매 중</span>
+      </label>
+      <label class="toggle-wrap">
+        <div class="toggle">
+          <input type="checkbox">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label">품절</span>
+      </label>
+      <label class="toggle-wrap">
+        <div class="toggle">
+          <input type="checkbox" checked>
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label">푸시 알림 수신</span>
+      </label>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       7. INPUT
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">7. 입력 필드</h2>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-sm)">
+      <input class="input-field" type="text" placeholder="상품 검색">
+      <input class="input-field" type="tel" placeholder="전화번호 입력">
+    </div>
+  </section>
+
+  <!-- =====================================================
+       8. CARDS
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">8. 카드</h2>
+
+    <!-- KPI Cards -->
+    <p style="font-size:14px;font-weight:600;color:var(--color-ink-muted-80);margin-bottom:var(--sp-sm)">KPI 카드</p>
+    <div class="ds-row" style="margin-bottom:var(--sp-lg)">
+      <div class="card-kpi">
+        <div class="card-kpi-label">총 매출</div>
+        <div class="card-kpi-value">87만원</div>
+        <div class="card-kpi-delta up">▲ 12.3% 전일 대비</div>
+      </div>
+      <div class="card-kpi">
+        <div class="card-kpi-label">주문 건수</div>
+        <div class="card-kpi-value">43건</div>
+        <div class="card-kpi-delta up">▲ 5건 전일 대비</div>
+      </div>
+      <div class="card-kpi">
+        <div class="card-kpi-label">객단가</div>
+        <div class="card-kpi-value">20,200원</div>
+        <div class="card-kpi-delta down">▼ 2.1% 전일 대비</div>
+      </div>
+      <div class="card-kpi">
+        <div class="card-kpi-label">취소율</div>
+        <div class="card-kpi-value">2.3%</div>
+        <div class="card-kpi-delta up">▼ 0.5%p 개선</div>
+      </div>
+    </div>
+
+    <!-- Happy Point Card -->
+    <p style="font-size:14px;font-weight:600;color:var(--color-ink-muted-80);margin-bottom:var(--sp-sm)">해피포인트 인사이트 카드 (H값 3단계)</p>
+    <div class="ds-row" style="flex-direction:column;gap:var(--sp-sm)">
+      <div class="card-hpoint">
+        <div class="card-hpoint-label">포인트 활용 지표 (H)</div>
+        <div class="card-hpoint-value">178%</div>
+        <div class="card-hpoint-copy">포인트 적립에 쓴 비용, 2배만큼 매출로 돌아오고 있어요</div>
+      </div>
+      <div class="card-hpoint" style="background:#1c2a1c">
+        <div class="card-hpoint-label">포인트 활용 지표 (H)</div>
+        <div class="card-hpoint-value" style="color:#34c759">112%</div>
+        <div class="card-hpoint-copy">포인트 비용만큼 고객이 쓰고 갔어요</div>
+      </div>
+      <div class="card-hpoint" style="background:#2a1c1c">
+        <div class="card-hpoint-label">포인트 활용 지표 (H)</div>
+        <div class="card-hpoint-value" style="color:#ff6b6b">84%</div>
+        <div class="card-hpoint-copy">이번 달은 포인트 비용보다 사용이 적었어요</div>
+      </div>
+    </div>
+
+    <!-- Utility Card -->
+    <p style="font-size:14px;font-weight:600;color:var(--color-ink-muted-80);margin:var(--sp-lg) 0 var(--sp-sm)">상품 카드 (store-utility)</p>
+    <div class="ds-row">
+      <div class="card-utility">
+        <div class="card-utility-thumb">item_thumb</div>
+        <div class="card-utility-name">뜯어먹는롤치즈브레드(1/2)</div>
+        <div class="card-utility-price">6,000원</div>
+        <a class="card-utility-link">상태 변경</a>
+      </div>
+      <div class="card-utility">
+        <div class="card-utility-thumb">item_thumb</div>
+        <div class="card-utility-name">정통 에그타르트</div>
+        <div class="card-utility-price">2,600원</div>
+        <a class="card-utility-link">상태 변경</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       9. PRODUCT LIST ROW
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">9. 상품 목록 행 (상품관리)</h2>
+    <div style="background:var(--color-canvas);border-radius:var(--radius-lg);border:0.5px solid var(--color-hairline);padding:0 var(--sp-lg)">
+      <div class="product-row">
+        <div class="product-thumb">item_thumb</div>
+        <div class="product-info">
+          <div class="product-name">뜯어먹는롤치즈브레드(1/2)</div>
+          <div class="product-price">6,000원 · 주문가능 2</div>
+        </div>
+        <div class="product-toggles">
+          <div class="mini-toggle-wrap">
+            <span class="mini-toggle-label">판매</span>
+            <label class="mini-toggle">
+              <input type="checkbox" checked>
+              <div class="mini-toggle-track"></div>
+              <div class="mini-toggle-thumb"></div>
+            </label>
+          </div>
+          <div class="mini-toggle-wrap">
+            <span class="mini-toggle-label">품절</span>
+            <label class="mini-toggle">
+              <input type="checkbox">
+              <div class="mini-toggle-track"></div>
+              <div class="mini-toggle-thumb"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="product-thumb">item_thumb</div>
+        <div class="product-info">
+          <div class="product-name">벨지안 초코 젤라또 콘 아이스크림</div>
+          <div class="product-price">2,700원 · 주문가능 15</div>
+        </div>
+        <div class="product-toggles">
+          <div class="mini-toggle-wrap">
+            <span class="mini-toggle-label">판매</span>
+            <label class="mini-toggle">
+              <input type="checkbox" checked>
+              <div class="mini-toggle-track"></div>
+              <div class="mini-toggle-thumb"></div>
+            </label>
+          </div>
+          <div class="mini-toggle-wrap">
+            <span class="mini-toggle-label">품절</span>
+            <label class="mini-toggle">
+              <input type="checkbox" checked>
+              <div class="mini-toggle-track"></div>
+              <div class="mini-toggle-thumb"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="product-thumb">item_thumb</div>
+        <div class="product-info">
+          <div class="product-name">[파란라벨] 저당 발효버터 롤케익</div>
+          <div class="product-price">14,900원 · 주문가능 3</div>
+        </div>
+        <div class="product-toggles">
+          <div class="mini-toggle-wrap">
+            <span class="mini-toggle-label">판매</span>
+            <label class="mini-toggle">
+              <input type="checkbox">
+              <div class="mini-toggle-track"></div>
+              <div class="mini-toggle-thumb"></div>
+            </label>
+          </div>
+          <div class="mini-toggle-wrap">
+            <span class="mini-toggle-label">품절</span>
+            <label class="mini-toggle">
+              <input type="checkbox">
+              <div class="mini-toggle-track"></div>
+              <div class="mini-toggle-thumb"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       10. CHART
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">10. 시간대별 차트</h2>
+    <div class="chart-wrap">
+      <p style="font-size:14px;font-weight:600;letter-spacing:-0.224px;margin-bottom:var(--sp-sm)">시간대별 주문 현황</p>
+      <div class="chart-bars">
+        <div class="chart-bar-col"><div class="chart-bar" style="height:20%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:15%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:10%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:8%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:5%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:12%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:30%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:55%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:70%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar peak" style="height:100%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:85%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:65%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:72%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:60%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:45%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:38%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:20%"></div></div>
+        <div class="chart-bar-col"><div class="chart-bar" style="height:15%"></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span class="chart-bar-label">06시</span>
+        <span class="chart-bar-label">09시</span>
+        <span class="chart-bar-label">12시</span>
+        <span class="chart-bar-label">15시</span>
+        <span class="chart-bar-label">18시</span>
+        <span class="chart-bar-label">21시</span>
+        <span class="chart-bar-label">23시</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       11. SHORTCUT GRID
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">11. 바로가기 그리드 (4×2)</h2>
+    <div style="background:var(--color-canvas);border-radius:var(--radius-lg);border:0.5px solid var(--color-hairline);padding:var(--sp-lg)">
+      <div class="shortcut-grid">
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/></svg>
+          </div>
+          <span class="shortcut-label">주문관리</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="shortcut-label">상품관리</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h12" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="shortcut-label">리뷰 관리</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="shortcut-label">통계</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 0-2-2H5z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="shortcut-label">쿠폰 발행</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="shortcut-label">정산내역</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0H5m14 0h2M5 21H3m4-4h2m4 0h2M9 7h6M9 11h6" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="shortcut-label">매장관리</span>
+        </div>
+        <div class="shortcut-item">
+          <div class="shortcut-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="shortcut-label">알림 설정</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       12. RFM SEGMENTS
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">12. RFM 고객 세그먼트</h2>
+    <div style="background:var(--color-canvas);border-radius:var(--radius-lg);border:0.5px solid var(--color-hairline);padding:var(--sp-lg)">
+      <div class="rfm-grid">
+        <div class="rfm-chip rfm-vip">VIP 단골 <strong>12명</strong></div>
+        <div class="rfm-chip rfm-loyal">충성 고객 <strong>34명</strong></div>
+        <div class="rfm-chip rfm-new">신규 고객 <strong>21명</strong></div>
+        <div class="rfm-chip rfm-at-risk">이탈 위험 <strong>8명</strong></div>
+        <div class="rfm-chip rfm-churned">이탈 고객 <strong>5명</strong></div>
+      </div>
+      <p style="font-size:11px;color:var(--color-ink-muted-48);margin-top:var(--sp-sm)">※ 해피포인트 회원 기준 · 이탈고객: 30일 미방문 고정 기준</p>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       13. TOP BAR + BOTTOM TAB
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">13. 탑바 / 바텀탭</h2>
+    <div style="max-width:390px;border:0.5px solid var(--color-hairline);border-radius:var(--radius-lg);overflow:hidden">
+      <div class="top-bar-demo">
+        <button class="btn-icon-circular" style="background:rgba(255,255,255,0.12);color:#fff">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="top-bar-store">
+          <span>파리크라상 강남점</span>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="top-bar-actions">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="white" stroke-width="1.5"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div style="height:120px;background:var(--color-canvas-parchment);display:flex;align-items:center;justify-content:center;color:var(--color-ink-muted-48);font-size:13px">화면 영역</div>
+      <div class="tab-bar-demo">
+        <div class="tab-item active">
+          <div class="tab-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" stroke="#0066cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="tab-label" style="color:#0066cc">홈</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" stroke="#7a7a7a" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="tab-label">통계</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/></svg>
+          </div>
+          <span class="tab-label">주문</span>
+        </div>
+        <div class="tab-item">
+          <div class="tab-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 0-2-2H5z" stroke="#7a7a7a" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="tab-label">쿠폰</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       14. BOTTOM SHEET
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">14. 바텀시트 — 다점포 스위처</h2>
+    <div class="bottom-sheet-demo">
+      <div class="bottom-sheet-handle"></div>
+      <div class="bottom-sheet-title">매장 선택</div>
+      <div style="font-size:12px;color:var(--color-ink-muted-48);margin-bottom:var(--sp-md)">전체 합산 매출 <strong style="color:var(--color-ink)">1,500,000원</strong></div>
+      <div class="store-row active">
+        <div>
+          <div class="store-row-name">파리크라상 강남점</div>
+          <div class="store-row-sales">오늘 870,000원</div>
+        </div>
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#0066cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="store-row">
+        <div>
+          <div class="store-row-name">파리크라상 홍대점</div>
+          <div class="store-row-sales">오늘 630,000원</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       15. MODAL
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">15. 모달 / 토스트</h2>
+    <div class="ds-row" style="align-items:flex-start">
+      <div class="modal-demo">
+        <div class="modal-title">주문을 취소하시겠어요?</div>
+        <div class="modal-body">취소 사유를 선택하면 고객에게 알림이 전송됩니다.</div>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-xs);margin-bottom:var(--sp-md)">
+          <div class="chip active" style="justify-content:flex-start">재고 부족</div>
+          <div class="chip" style="justify-content:flex-start">영업 종료</div>
+          <div class="chip" style="justify-content:flex-start">조리 불가</div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-pearl">닫기</button>
+          <button class="btn-destructive" style="font-size:15px;padding:9px 18px">취소 확인</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:var(--sp-sm)">
+        <div class="toast-demo">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#34c759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          상태가 변경되었어요
+        </div>
+        <div class="toast-demo">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 8v4m0 4h.01" stroke="#ff9500" stroke-width="2" stroke-linecap="round"/></svg>
+          네트워크 오류가 발생했어요
+        </div>
+        <div class="toast-demo">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#2997ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          매장이 전환되었어요
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       16. DARK TILE
+  ====================================================== -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">16. 다크 타일 (tile-dark)</h2>
+    <div class="tile-dark">
+      <p style="font-family:var(--font-display);font-size:28px;font-weight:600;letter-spacing:-0.28px;margin-bottom:var(--sp-xs)">오늘의 매출 현황</p>
+      <p style="font-size:17px;color:var(--color-body-muted);margin-bottom:var(--sp-lg)">파리크라상 강남점 · 2026년 6월 25일</p>
+      <div class="ds-row">
+        <button class="btn-primary">자세히 보기</button>
+        <button class="btn-on-dark">통계 분석</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+  <footer style="text-align:center;padding:var(--sp-xl) 0;border-top:0.5px solid var(--color-hairline);margin-top:var(--sp-section)">
+    <p style="font-size:12px;color:var(--color-ink-muted-48);letter-spacing:-0.12px">사장님앱 리뉴얼 디자인 시스템 · 섹타나인/SPC · 2026</p>
+    <p style="font-size:10px;color:var(--color-ink-muted-48);margin-top:4px">Apple 디자인 가이드 기반 · 프로토타입 전용 참고 소스</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
