@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>사장님앱 프로토타입</title>
+<style>
+:root {
+  --primary: #0066cc;
+  --primary-dark: #2997ff;
+  --ink: #1d1d1f;
+  --ink-80: #333333;
+  --ink-48: #7a7a7a;
+  --muted: #cccccc;
+  --canvas: #ffffff;
+  --parchment: #f5f5f7;
+  --pearl: #fafafc;
+  --tile: #272729;
+  --black: #000000;
+  --hairline: #e0e0e0;
+  --divider: #f0f0f0;
+  --success: #34c759;
+  --danger: #ff3b30;
+  --warning: #ff9500;
+  --font-d: -apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",sans-serif;
+  --font-t: -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif;
+  --r-sm: 8px; --r-md: 11px; --r-lg: 18px; --r-pill: 9999px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-t);background:#e8e8ed;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 16px;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;border:none;background:none;font-family:var(--font-t);transition:transform 0.1s}
+button:active{transform:scale(0.95)}
+
+/* ── PHONE SHELL ── */
+.phone{width:390px;min-height:844px;background:var(--parchment);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.28),0 0 0 1px rgba(0,0,0,0.08);display:flex;flex-direction:column}
+.status-bar{height:50px;background:var(--black);display:flex;align-items:flex-end;padding:0 28px 10px;justify-content:space-between;flex-shrink:0}
+.status-time{color:#fff;font-size:15px;font-weight:600;letter-spacing:-0.3px}
+.status-icons{display:flex;gap:6px;align-items:center}
+
+/* ── TOP BAR ── */
+.top-bar{height:56px;background:var(--black);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:8px}
+.tb-menu{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-pill);background:rgba(255,255,255,0.1)}
+.tb-store{display:flex;align-items:center;gap:4px;color:#fff;font-size:16px;font-weight:600;letter-spacing:-0.3px;cursor:pointer;padding:6px 8px;border-radius:var(--r-sm);transition:background 0.15s}
+.tb-store:active{background:rgba(255,255,255,0.15)}
+.tb-right{display:flex;gap:12px;align-items:center}
+
+/* ── SCREEN ── */
+.screen{display:none;flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:84px}
+.screen.active{display:block}
+.screen-inner{padding:16px}
+
+/* ── BOTTOM TAB ── */
+.tab-bar{position:absolute;bottom:0;left:0;right:0;height:83px;background:rgba(255,255,255,0.92);backdrop-filter:saturate(180%) blur(20px);border-top:0.5px solid var(--hairline);display:flex;padding:8px 0 24px}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;cursor:pointer;color:var(--ink-48);transition:color 0.15s}
+.tab-item.active{color:var(--primary)}
+.tab-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.tab-label{font-size:10px;letter-spacing:-0.08px}
+
+/* ── SECTION HEADER ── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-title{font-family:var(--font-d);font-size:18px;font-weight:600;letter-spacing:-0.3px;color:var(--ink)}
+.sec-link{font-size:14px;color:var(--primary)}
+
+/* ── PERIOD TOGGLE ── */
+.period-toggle{display:flex;background:var(--divider);border-radius:var(--r-pill);padding:2px;margin-bottom:16px}
+.period-btn{flex:1;height:32px;border-radius:var(--r-pill);font-size:14px;font-weight:400;color:var(--ink-48);transition:all 0.2s}
+.period-btn.active{background:var(--canvas);color:var(--ink);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.12)}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.kpi-card{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:14px}
+.kpi-label{font-size:11px;color:var(--ink-48);letter-spacing:-0.1px;margin-bottom:2px}
+.kpi-value{font-family:var(--font-d);font-size:22px;font-weight:600;letter-spacing:-0.3px;color:var(--ink);line-height:1.1;margin-bottom:2px}
+.kpi-delta{font-size:11px}
+.kpi-delta.up{color:var(--success)}.kpi-delta.down{color:var(--danger)}
+
+/* ── CHART ── */
+.chart-card{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:16px;margin-bottom:16px}
+.chart-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px}
+.chart-bars{display:flex;align-items:flex-end;gap:4px;height:72px;margin-bottom:6px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+.bar{width:100%;background:var(--primary);border-radius:3px 3px 0 0;opacity:0.65}
+.bar.peak{opacity:1}
+.bar-lbl{font-size:8px;color:var(--ink-48);margin-top:4px;text-align:center}
+.chart-footer{display:flex;justify-content:space-between}
+.chart-foot-lbl{font-size:9px;color:var(--ink-48)}
+
+/* ── SHORTCUT GRID ── */
+.shortcut-card{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:16px;margin-bottom:16px}
+.shortcut-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sc-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.sc-icon{width:48px;height:48px;background:var(--parchment);border-radius:var(--r-md);border:0.5px solid var(--hairline);display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.sc-item:active .sc-icon{background:var(--hairline)}
+.sc-lbl{font-size:10px;color:var(--ink);text-align:center;line-height:1.3;letter-spacing:-0.08px}
+
+/* ── REVIEW BADGE ── */
+.review-badge{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.rb-left{display:flex;align-items:center;gap:10px}
+.rb-dot{width:8px;height:8px;background:var(--danger);border-radius:50%;flex-shrink:0}
+.rb-text{font-size:14px;color:var(--ink)}
+.rb-count{background:var(--danger);color:#fff;font-size:11px;font-weight:600;border-radius:var(--r-pill);padding:2px 7px}
+
+/* ── PRODUCT SCREEN ── */
+.search-bar{background:var(--canvas);border-radius:var(--r-pill);border:0.5px solid rgba(0,0,0,0.08);padding:10px 16px;font-size:15px;color:var(--ink);outline:none;width:100%;margin-bottom:12px}
+.search-bar::placeholder{color:var(--ink-48)}
+.chip-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.chip-row::-webkit-scrollbar{display:none}
+.chip{display:inline-flex;align-items:center;padding:6px 14px;border-radius:var(--r-pill);font-size:13px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink);white-space:nowrap;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.product-list{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);overflow:hidden}
+.prod-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:0.5px solid var(--divider);cursor:pointer;transition:background 0.1s}
+.prod-row:last-child{border-bottom:none}
+.prod-row:active{background:var(--parchment)}
+.prod-thumb{width:52px;height:52px;background:var(--parchment);border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--ink-48);font-size:9px;font-weight:500}
+.prod-info{flex:1;min-width:0}
+.prod-name{font-size:14px;font-weight:600;letter-spacing:-0.3px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-price{font-size:12px;color:var(--ink-48);margin-top:2px}
+.prod-toggles{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0}
+.mt-wrap{display:flex;align-items:center;gap:5px}
+.mt-lbl{font-size:10px;color:var(--ink-48)}
+.mt{position:relative;width:34px;height:20px}
+.mt input{opacity:0;width:0;height:0}
+.mt-track{position:absolute;inset:0;background:var(--hairline);border-radius:var(--r-pill);transition:background 0.2s}
+.mt input:checked+.mt-track{background:var(--success)}
+.mt-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:transform 0.2s}
+.mt input:checked~.mt-thumb{transform:translateX(14px)}
+
+/* ── STATS SCREEN ── */
+.hpoint-card{border-radius:var(--r-lg);padding:16px;margin-bottom:12px;color:#fff}
+.hpoint-lbl{font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px}
+.hpoint-val{font-family:var(--font-d);font-size:34px;font-weight:600;letter-spacing:-0.3px;margin-bottom:4px}
+.hpoint-copy{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.4}
+.hpoint-h{font-size:10px;color:rgba(255,255,255,0.4);margin-top:8px}
+.rfm-section{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:14px;margin-bottom:12px}
+.rfm-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px}
+.rfm-chips{display:flex;flex-wrap:wrap;gap:6px}
+.rfm-chip{padding:6px 10px;border-radius:var(--r-md);font-size:12px;font-weight:600}
+.rfm-vip{background:#fff0f3;color:#c0004a;border:0.5px solid #f5b8c8}
+.rfm-loyal{background:#fff8e6;color:#8a5000;border:0.5px solid #f5d98a}
+.rfm-new{background:#e6f4ff;color:#0055a5;border:0.5px solid #a8d4f5}
+.rfm-risk{background:#f0f0f2;color:#555;border:0.5px solid var(--hairline)}
+.rfm-churn{background:#f5f5f7;color:var(--ink-48);border:0.5px solid var(--hairline)}
+.stat-period-row{display:flex;gap:8px;margin-bottom:12px}
+.stat-period-btn{flex:1;padding:8px;border-radius:var(--r-md);font-size:13px;font-weight:400;color:var(--ink-48);background:var(--canvas);border:0.5px solid var(--hairline);cursor:pointer}
+.stat-period-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sales-summary{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:14px;margin-bottom:12px}
+.ss-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--divider)}
+.ss-row:last-child{border-bottom:none}
+.ss-key{font-size:13px;color:var(--ink-48)}
+.ss-val{font-size:14px;font-weight:600;color:var(--ink)}
+.ss-delta{font-size:11px;margin-left:4px}
+
+/* ── ORDER SCREEN (PLACEHOLDER) ── */
+.order-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;color:var(--ink-48)}
+.order-empty-icon{width:64px;height:64px;background:var(--hairline);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+
+/* ── COUPON SCREEN ── */
+.coupon-card{background:var(--canvas);border-radius:var(--r-lg);border:0.5px solid var(--hairline);padding:16px;margin-bottom:10px}
+.coupon-badge{display:inline-block;background:#fff0e6;color:#cc5500;border:0.5px solid #f5c8a0;border-radius:var(--r-pill);font-size:11px;font-weight:600;padding:2px 8px;margin-bottom:6px}
+.coupon-name{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.coupon-desc{font-size:12px;color:var(--ink-48)}
+
+/* ── OVERLAY / BOTTOM SHEET ── */
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.overlay.show{opacity:1;pointer-events:auto}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:var(--canvas);border-radius:var(--r-lg) var(--r-lg) 0 0;z-index:101;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);padding:12px 0 40px}
+.sheet.show{transform:translateY(0)}
+.sheet-handle{width:36px;height:4px;background:var(--hairline);border-radius:var(--r-pill);margin:0 auto 16px}
+.sheet-title{font-family:var(--font-d);font-size:19px;font-weight:600;padding:0 20px;margin-bottom:6px;letter-spacing:0.2px}
+.sheet-sub{font-size:12px;color:var(--ink-48);padding:0 20px;margin-bottom:14px}
+
+/* store switcher */
+.store-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid var(--divider);cursor:pointer;transition:background 0.1s}
+.store-row:last-child{border-bottom:none}
+.store-row:active{background:var(--parchment)}
+.store-name{font-size:16px;color:var(--ink)}
+.store-sales{font-size:12px;color:var(--ink-48);margin-top:1px}
+.store-row.cur .store-name{color:var(--primary);font-weight:600}
+.store-check{color:var(--primary)}
+
+/* product status sheet */
+.status-sheet-prod{display:flex;align-items:center;gap:12px;padding:0 20px;margin-bottom:16px}
+.status-thumb{width:52px;height:52px;background:var(--parchment);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-48)}
+.status-prod-name{font-size:15px;font-weight:600;color:var(--ink)}
+.status-prod-price{font-size:13px;color:var(--ink-48);margin-top:2px}
+.status-label{font-size:12px;font-weight:600;color:var(--ink-48);padding:0 20px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.reason-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px;margin-bottom:16px}
+.reason-chip{padding:7px 14px;border-radius:var(--r-pill);font-size:13px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink);cursor:pointer;transition:all 0.15s}
+.reason-chip.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.scope-row{padding:0 20px;margin-bottom:20px}
+.scope-title{font-size:12px;font-weight:600;color:var(--ink-48);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.scope-opts{display:flex;gap:6px}
+.scope-btn{flex:1;padding:8px;border-radius:var(--r-md);font-size:13px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink);cursor:pointer;text-align:center;transition:all 0.15s}
+.scope-btn.sel{background:var(--primary);color:#fff;border-color:var(--primary)}
+.sheet-action{margin:0 20px;display:flex;gap:8px}
+.btn-cancel-sheet{flex:1;padding:13px;border-radius:var(--r-pill);font-size:15px;background:var(--parchment);color:var(--ink-48)}
+.btn-apply{flex:2;padding:13px;border-radius:var(--r-pill);font-size:15px;font-weight:600;background:var(--primary);color:#fff}
+
+/* toast */
+.toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;border-radius:var(--r-pill);padding:10px 18px;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:all 0.25s;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* raft drawer */
+.drawer{position:absolute;top:0;bottom:0;left:0;width:80%;background:var(--canvas);z-index:102;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);overflow-y:auto}
+.drawer.show{transform:translateX(0)}
+.drawer-header{background:var(--black);padding:60px 20px 20px;color:#fff}
+.drawer-store{font-size:17px;font-weight:600;margin-bottom:2px}
+.drawer-user{font-size:13px;color:rgba(255,255,255,0.6)}
+.drawer-group{padding:12px 20px 4px;font-size:11px;font-weight:600;color:var(--ink-48);letter-spacing:0.5px;text-transform:uppercase}
+.drawer-item{display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;transition:background 0.1s;border-bottom:0.5px solid var(--divider)}
+.drawer-item:active{background:var(--parchment)}
+.drawer-item-icon{width:32px;height:32px;background:var(--parchment);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drawer-item-text{font-size:15px;color:var(--ink)}
+.drawer-item-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:600;border-radius:var(--r-pill);padding:1px 6px}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">
+      <svg width="16" height="12" fill="white" viewBox="0 0 16 12"><rect x="0" y="3" width="3" height="9" rx="1"/><rect x="4.5" y="2" width="3" height="10" rx="1"/><rect x="9" y="0" width="3" height="12" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity=".35"/></svg>
+      <svg width="16" height="12" fill="white" viewBox="0 0 24 18"><path d="M12 3C7.8 3 4 4.8 1.2 7.7L3.6 10c2.2-2.3 5.2-3.7 8.4-3.7s6.2 1.4 8.4 3.7l2.4-2.3C20 4.8 16.2 3 12 3z" opacity=".35"/><path d="M12 7.5C9 7.5 6.3 8.8 4.4 11l2.4 2.3c1.3-1.5 3.2-2.4 5.2-2.4s3.9.9 5.2 2.4l2.4-2.3C17.7 8.8 15 7.5 12 7.5z"/><circle cx="12" cy="16" r="2"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0" y="1" width="22" height="10" rx="3" stroke="white" stroke-width="1" fill="none" opacity=".35"/><rect x="1" y="2" width="17" height="8" rx="2" fill="white"/><path d="M23 4.5v3a1.5 1.5 0 0 0 0-3z" fill="white" opacity=".4"/></svg>
+    </div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="tb-left">
+      <button class="tb-menu" onclick="toggleDrawer()">
+        <svg width="18" height="14" fill="none" viewBox="0 0 18 14"><path d="M1 1h16M1 7h16M1 13h16" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="tb-store" onclick="openStoreSheet()">
+        <span id="store-name">파리크라상 강남점</span>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="tb-right">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="white" stroke-width="1.5"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 1: 홈
+  ═══════════════════════════════════ -->
+  <div class="screen active" id="screen-home">
+    <div class="screen-inner">
+
+      <!-- Period toggle -->
+      <div class="period-toggle">
+        <button class="period-btn active" onclick="setPeriod(this,'day')">일간</button>
+        <button class="period-btn" onclick="setPeriod(this,'week')">주간</button>
+        <button class="period-btn" onclick="setPeriod(this,'month')">월간</button>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">총 매출</div>
+          <div class="kpi-value" id="kv-sales">870,000원</div>
+          <div class="kpi-delta up" id="kd-sales">▲ 12.3% 전일 대비</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">주문 건수</div>
+          <div class="kpi-value" id="kv-orders">43건</div>
+          <div class="kpi-delta up" id="kd-orders">▲ 5건 전일 대비</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">객단가</div>
+          <div class="kpi-value" id="kv-avg">20,200원</div>
+          <div class="kpi-delta down" id="kd-avg">▼ 2.1% 전일 대비</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">취소율</div>
+          <div class="kpi-value" id="kv-cancel">2.3%</div>
+          <div class="kpi-delta up" id="kd-cancel">▼ 0.5%p 개선</div>
+        </div>
+      </div>
+
+      <!-- Review badge -->
+      <div class="review-badge" onclick="showToast('리뷰 관리로 이동합니다')">
+        <div class="rb-left">
+          <div class="rb-dot"></div>
+          <span class="rb-text">미답변 리뷰가 있어요</span>
+        </div>
+        <span class="rb-count">3건</span>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="chart-card">
+        <div class="chart-title">시간대별 주문 현황</div>
+        <div class="chart-bars" id="chart-bars">
+          <div class="bar-col"><div class="bar" style="height:20%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:15%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:8%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:5%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:12%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:35%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:60%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:75%"></div></div>
+          <div class="bar-col"><div class="bar peak" style="height:100%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:88%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:70%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:55%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:62%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:48%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:30%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:18%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:10%"></div></div>
+          <div class="bar-col"><div class="bar" style="height:6%"></div></div>
+        </div>
+        <div class="chart-footer">
+          <span class="chart-foot-lbl">06시</span>
+          <span class="chart-foot-lbl">09시</span>
+          <span class="chart-foot-lbl">12시</span>
+          <span class="chart-foot-lbl">15시</span>
+          <span class="chart-foot-lbl">18시</span>
+          <span class="chart-foot-lbl">21시</span>
+          <span class="chart-foot-lbl">23시</span>
+        </div>
+      </div>
+
+      <!-- Shortcut grid -->
+      <div class="shortcut-card">
+        <div class="sec-header"><span class="sec-title">바로가기</span></div>
+        <div class="shortcut-grid">
+          <div class="sc-item" onclick="switchTab('product')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">상품관리</span>
+          </div>
+          <div class="sc-item" onclick="switchTab('stats')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">주문통계</span>
+          </div>
+          <div class="sc-item" onclick="switchTab('orders')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/></svg></div>
+            <span class="sc-lbl">주문관리</span>
+          </div>
+          <div class="sc-item" onclick="switchTab('coupon')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 0-2-2H5z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">쿠폰 발행</span>
+          </div>
+          <div class="sc-item" onclick="showToast('리뷰 관리로 이동합니다')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">리뷰 관리</span>
+          </div>
+          <div class="sc-item" onclick="showToast('정산 내역으로 이동합니다')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">정산내역</span>
+          </div>
+          <div class="sc-item" onclick="showToast('매장 관리로 이동합니다')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0H5m14 0h2M5 21H3m4-4h2m4 0h2M9 7h6M9 11h6" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">매장관리</span>
+          </div>
+          <div class="sc-item" onclick="showToast('알림 설정으로 이동합니다')">
+            <div class="sc-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <span class="sc-lbl">알림 설정</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 2: 상품관리
+  ═══════════════════════════════════ -->
+  <div class="screen" id="screen-product">
+    <div class="screen-inner">
+      <input class="search-bar" type="text" placeholder="🔍  상품 검색">
+
+      <!-- Category chips -->
+      <div class="chip-row" id="cat-chips">
+        <span class="chip active" onclick="filterCat(this,'all')">전체</span>
+        <span class="chip" onclick="filterCat(this,'bread')">갓구운빵</span>
+        <span class="chip" onclick="filterCat(this,'blue')">파란라벨</span>
+        <span class="chip" onclick="filterCat(this,'ice')">빙수/아이스크림</span>
+        <span class="chip" onclick="filterCat(this,'mini')">한입브레드</span>
+        <span class="chip" onclick="filterCat(this,'dessert')">디저트</span>
+      </div>
+
+      <!-- Product list -->
+      <div class="product-list" id="product-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 3: 주문통계
+  ═══════════════════════════════════ -->
+  <div class="screen" id="screen-stats">
+    <div class="screen-inner">
+
+      <div class="stat-period-row">
+        <button class="stat-period-btn active" onclick="setStatPeriod(this,'day')">오늘</button>
+        <button class="stat-period-btn" onclick="setStatPeriod(this,'week')">이번 주</button>
+        <button class="stat-period-btn" onclick="setStatPeriod(this,'month')">이번 달</button>
+      </div>
+
+      <!-- Sales summary -->
+      <div class="sales-summary">
+        <div class="ss-row">
+          <span class="ss-key">총 매출</span>
+          <div><span class="ss-val" id="ss-sales">870,000원</span><span class="ss-delta up kpi-delta" id="ss-sales-d">▲ 12.3%</span></div>
+        </div>
+        <div class="ss-row">
+          <span class="ss-key">주문 건수</span>
+          <div><span class="ss-val" id="ss-orders">43건</span><span class="ss-delta up kpi-delta" id="ss-orders-d">▲ 5건</span></div>
+        </div>
+        <div class="ss-row">
+          <span class="ss-key">객단가</span>
+          <div><span class="ss-val" id="ss-avg">20,200원</span><span class="ss-delta down kpi-delta" id="ss-avg-d">▼ 2.1%</span></div>
+        </div>
+        <div class="ss-row">
+          <span class="ss-key">취소 건수</span>
+          <div><span class="ss-val" id="ss-cancel">1건</span><span class="ss-delta up kpi-delta">▼ 개선</span></div>
+        </div>
+        <div class="ss-row">
+          <span class="ss-key">해피포인트 적립 고객</span>
+          <div><span class="ss-val">28명</span></div>
+        </div>
+      </div>
+
+      <!-- Happy Point H-value card -->
+      <div class="hpoint-card" id="hpoint-card" style="background:var(--tile)">
+        <div class="hpoint-lbl">포인트 활용 지표 (H값)</div>
+        <div class="hpoint-val" id="hpoint-val">178%</div>
+        <div class="hpoint-copy" id="hpoint-copy">포인트 적립에 쓴 비용, 2배만큼 매출로 돌아오고 있어요 🎉</div>
+        <div class="hpoint-h">H = 포인트 사용 매출 ÷ 포인트 적립 비용 × 100</div>
+      </div>
+
+      <!-- H-value state switcher (demo) -->
+      <div style="display:flex;gap:6px;margin-bottom:12px">
+        <button style="flex:1;padding:7px;border-radius:var(--r-md);font-size:11px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink-48);cursor:pointer" onclick="setHstate('good')">H≥150%</button>
+        <button style="flex:1;padding:7px;border-radius:var(--r-md);font-size:11px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink-48);cursor:pointer" onclick="setHstate('mid')">100%≤H&lt;150%</button>
+        <button style="flex:1;padding:7px;border-radius:var(--r-md);font-size:11px;border:0.5px solid var(--hairline);background:var(--canvas);color:var(--ink-48);cursor:pointer" onclick="setHstate('low')">H&lt;100%</button>
+      </div>
+
+      <!-- RFM segments -->
+      <div class="rfm-section">
+        <div class="rfm-title">고객 세그먼트 (해피포인트 기준)</div>
+        <div class="rfm-chips">
+          <div class="rfm-chip rfm-vip">VIP 단골 <strong>12명</strong></div>
+          <div class="rfm-chip rfm-loyal">충성 고객 <strong>34명</strong></div>
+          <div class="rfm-chip rfm-new">신규 고객 <strong>21명</strong></div>
+          <div class="rfm-chip rfm-risk">이탈 위험 <strong>8명</strong></div>
+          <div class="rfm-chip rfm-churn">이탈 고객 <strong>5명</strong></div>
+        </div>
+        <p style="font-size:10px;color:var(--ink-48);margin-top:10px">※ 이탈 고객: 30일 미방문 기준</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 4: 주문관리 (placeholder)
+  ═══════════════════════════════════ -->
+  <div class="screen" id="screen-orders">
+    <div class="screen-inner">
+      <div class="order-empty">
+        <div class="order-empty-icon">
+          <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#7a7a7a" stroke-width="1.5"/></svg>
+        </div>
+        <p style="font-size:16px;font-weight:600;color:var(--ink);margin-bottom:6px">지금은 주문이 없어요</p>
+        <p style="font-size:14px;line-height:1.5">새 주문이 들어오면<br>알림으로 알려드릴게요</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCREEN 5: 쿠폰
+  ═══════════════════════════════════ -->
+  <div class="screen" id="screen-coupon">
+    <div class="screen-inner">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div class="sec-title">쿠폰 관리</div>
+        <button style="background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:7px 14px;font-size:13px;font-weight:600">+ 쿠폰 발행</button>
+      </div>
+      <div class="coupon-card">
+        <div class="coupon-badge">진행중</div>
+        <div class="coupon-name">6월 웰컴 쿠폰 — 3,000원 할인</div>
+        <div class="coupon-desc">최소 주문금액 15,000원 · 06/25~06/30 · 사용 12회</div>
+      </div>
+      <div class="coupon-card">
+        <div class="coupon-badge">진행중</div>
+        <div class="coupon-name">첫 주문 10% 할인</div>
+        <div class="coupon-desc">신규 고객 전용 · 기간 무제한 · 사용 34회</div>
+      </div>
+      <div class="coupon-card" style="opacity:0.5">
+        <div class="coupon-badge" style="background:#f0f0f2;color:#7a7a7a;border-color:var(--hairline)">종료</div>
+        <div class="coupon-name">5월 감사 이벤트 — 2,000원 할인</div>
+        <div class="coupon-desc">05/01~05/31 · 사용 89회</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       BOTTOM TAB BAR
+  ═══════════════════════════════════ -->
+  <div class="tab-bar">
+    <div class="tab-item active" id="tab-home" onclick="switchTab('home')">
+      <div class="tab-icon">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="tab-label">홈</span>
+    </div>
+    <div class="tab-item" id="tab-stats" onclick="switchTab('stats')">
+      <div class="tab-icon">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="tab-label">통계</span>
+    </div>
+    <div class="tab-item" id="tab-orders" onclick="switchTab('orders')">
+      <div class="tab-icon">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      </div>
+      <span class="tab-label">주문</span>
+    </div>
+    <div class="tab-item" id="tab-coupon" onclick="switchTab('coupon')">
+      <div class="tab-icon">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 0-2-2H5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="tab-label">쿠폰</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       STORE SWITCHER SHEET
+  ═══════════════════════════════════ -->
+  <div class="overlay" id="store-overlay" onclick="closeStoreSheet()"></div>
+  <div class="sheet" id="store-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">매장 선택</div>
+    <div class="sheet-sub">전체 합산 매출 <strong style="color:var(--ink)">1,500,000원</strong></div>
+    <div class="store-row cur" id="srow-0" onclick="switchStore(0)">
+      <div>
+        <div class="store-name">파리크라상 강남점</div>
+        <div class="store-sales">오늘 870,000원 · 주문 43건</div>
+      </div>
+      <svg class="store-check" width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#0066cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="store-row" id="srow-1" onclick="switchStore(1)">
+      <div>
+        <div class="store-name">파리크라상 홍대점</div>
+        <div class="store-sales">오늘 630,000원 · 주문 31건</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       PRODUCT STATUS SHEET
+  ═══════════════════════════════════ -->
+  <div class="overlay" id="prod-overlay" onclick="closeProdSheet()"></div>
+  <div class="sheet" id="prod-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">상태 변경</div>
+    <div class="status-sheet-prod">
+      <div class="status-thumb">img</div>
+      <div>
+        <div class="status-prod-name" id="sheet-prod-name">상품명</div>
+        <div class="status-prod-price" id="sheet-prod-price">가격</div>
+      </div>
+    </div>
+    <div class="status-label">사유 선택</div>
+    <div class="reason-chips">
+      <div class="reason-chip sel" onclick="selReason(this)">재고 부족</div>
+      <div class="reason-chip" onclick="selReason(this)">영업 종료</div>
+      <div class="reason-chip" onclick="selReason(this)">조리 불가</div>
+      <div class="reason-chip" onclick="selReason(this)">기타</div>
+    </div>
+    <div class="scope-row">
+      <div class="scope-title">적용 범위</div>
+      <div class="scope-opts">
+        <div class="scope-btn sel" onclick="selScope(this)">전체</div>
+        <div class="scope-btn" onclick="selScope(this)">배달만</div>
+        <div class="scope-btn" onclick="selScope(this)">픽업만</div>
+      </div>
+    </div>
+    <div class="sheet-action">
+      <button class="btn-cancel-sheet" onclick="closeProdSheet()">취소</button>
+      <button class="btn-apply" onclick="applyStatus()">품절 처리</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       RAFT DRAWER
+  ═══════════════════════════════════ -->
+  <div class="overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+  <div class="drawer" id="raft-drawer">
+    <div class="drawer-header">
+      <div class="drawer-store" id="drawer-store">파리크라상 강남점</div>
+      <div class="drawer-user">사장님 계정 · 2개 매장 운영 중</div>
+    </div>
+    <div class="drawer-group">주요 기능</div>
+    <div class="drawer-item" onclick="drawerNav('home')">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="drawer-item-text">홈</span>
+    </div>
+    <div class="drawer-item" onclick="drawerNav('orders')">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#1d1d1f" stroke-width="1.5"/></svg></div>
+      <span class="drawer-item-text">주문관리</span>
+      <span class="drawer-item-badge">0건</span>
+    </div>
+    <div class="drawer-item" onclick="drawerNav('product')">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">상품관리</span>
+    </div>
+    <div class="drawer-item" onclick="drawerNav('stats')">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">주문통계</span>
+    </div>
+    <div class="drawer-group">마케팅</div>
+    <div class="drawer-item" onclick="drawerNav('coupon')">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 0-2-2H5z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">쿠폰 발행</span>
+    </div>
+    <div class="drawer-item" onclick="showToast('리뷰 관리로 이동합니다');toggleDrawer()">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">리뷰 관리</span>
+      <span class="drawer-item-badge">3건</span>
+    </div>
+    <div class="drawer-group">정산 / 설정</div>
+    <div class="drawer-item" onclick="showToast('정산 내역으로 이동합니다');toggleDrawer()">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">정산 내역</span>
+    </div>
+    <div class="drawer-item" onclick="showToast('매장 관리로 이동합니다');toggleDrawer()">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0H5m14 0h2M5 21H3m4-4h2m4 0h2M9 7h6M9 11h6" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">매장 관리</span>
+    </div>
+    <div class="drawer-item" onclick="showToast('알림 설정으로 이동합니다');toggleDrawer()">
+      <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="drawer-item-text">알림 설정</span>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#34c759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="toast-msg"></span>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ── PRODUCT DATA ──
+const PRODUCTS = [
+  {id:1,name:'뜯어먹는롤치즈브레드(1/2)',price:'6,000원',cat:'bread',sell:true,sold:false},
+  {id:2,name:'소보루빵',price:'2,200원',cat:'bread',sell:true,sold:false},
+  {id:3,name:'단팥빵',price:'2,000원',cat:'bread',sell:true,sold:true},
+  {id:4,name:'정통 에그타르트',price:'2,600원',cat:'bread',sell:true,sold:false},
+  {id:5,name:'[파란라벨] 저당 발효버터 롤케익',price:'14,900원',cat:'blue',sell:true,sold:false},
+  {id:6,name:'[파란라벨] 저당 통밀 식빵',price:'7,900원',cat:'blue',sell:false,sold:false},
+  {id:7,name:'[파란라벨] 저당 크림치즈 베이글',price:'8,500원',cat:'blue',sell:true,sold:false},
+  {id:8,name:'벨지안 초코 젤라또 콘 아이스크림',price:'2,700원',cat:'ice',sell:true,sold:true},
+  {id:9,name:'딸기 소르베 아이스크림 바',price:'2,200원',cat:'ice',sell:true,sold:false},
+  {id:10,name:'미니 크루아상 4개입',price:'4,500원',cat:'mini',sell:true,sold:false},
+  {id:11,name:'한입 단팥 찹쌀떡 6개입',price:'3,800원',cat:'mini',sell:true,sold:false},
+  {id:12,name:'마카롱 5종 박스',price:'8,500원',cat:'dessert',sell:true,sold:false},
+  {id:13,name:'에그 타르트 4개입',price:'9,800원',cat:'dessert',sell:true,sold:false},
+];
+
+let currentCat = 'all';
+let currentProdId = null;
+
+function renderProducts() {
+  const list = document.getElementById('product-list');
+  const filtered = currentCat === 'all' ? PRODUCTS : PRODUCTS.filter(p=>p.cat===currentCat);
+  list.innerHTML = filtered.map(p=>`
+    <div class="prod-row" onclick="openProdSheet(${p.id})">
+      <div class="prod-thumb">img</div>
+      <div class="prod-info">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-price">${p.price}</div>
+      </div>
+      <div class="prod-toggles" onclick="event.stopPropagation()">
+        <div class="mt-wrap">
+          <span class="mt-lbl">판매</span>
+          <label class="mt"><input type="checkbox" ${p.sell?'checked':''} onchange="toggleProd(${p.id},'sell',this.checked)"><div class="mt-track"></div><div class="mt-thumb"></div></label>
+        </div>
+        <div class="mt-wrap">
+          <span class="mt-lbl">품절</span>
+          <label class="mt"><input type="checkbox" ${p.sold?'checked':''} onchange="toggleProd(${p.id},'sold',this.checked)"><div class="mt-track"></div><div class="mt-thumb"></div></label>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleProd(id, field, val) {
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(p) p[field]=val;
+  showToast(val ? (field==='sell'?'판매 중으로 변경됐어요':'품절 처리됐어요') : (field==='sell'?'판매 중지됐어요':'품절 해제됐어요'));
+}
+
+function filterCat(el, cat) {
+  document.querySelectorAll('#cat-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  currentCat = cat;
+  renderProducts();
+}
+
+// ── PERIOD TOGGLE (홈) ──
+const kpiData = {
+  day:   {sales:'870,000원',sdelta:'▲ 12.3% 전일 대비',sd:'up', orders:'43건',odelta:'▲ 5건 전일 대비',od:'up', avg:'20,200원',adelta:'▼ 2.1% 전일 대비',adl:'down', cancel:'2.3%',cdelta:'▼ 0.5%p 개선',cdl:'up'},
+  week:  {sales:'5,430,000원',sdelta:'▲ 8.1% 전주 대비',sd:'up', orders:'271건',odelta:'▲ 19건 전주 대비',od:'up', avg:'20,036원',adelta:'▲ 0.3% 전주 대비',adl:'up', cancel:'2.1%',cdelta:'▼ 0.4%p 개선',cdl:'up'},
+  month: {sales:'21,800,000원',sdelta:'▲ 15.2% 전월 대비',sd:'up', orders:'1,082건',odelta:'▲ 134건 전월 대비',od:'up', avg:'20,148원',adelta:'▼ 1.1% 전월 대비',adl:'down', cancel:'2.6%',cdelta:'▲ 0.3%p 증가',cdl:'down'},
+};
+
+function setPeriod(btn, period) {
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = kpiData[period];
+  document.getElementById('kv-sales').textContent = d.sales;
+  document.getElementById('kd-sales').textContent = d.sdelta;
+  document.getElementById('kd-sales').className = 'kpi-delta '+d.sd;
+  document.getElementById('kv-orders').textContent = d.orders;
+  document.getElementById('kd-orders').textContent = d.odelta;
+  document.getElementById('kd-orders').className = 'kpi-delta '+d.od;
+  document.getElementById('kv-avg').textContent = d.avg;
+  document.getElementById('kd-avg').textContent = d.adelta;
+  document.getElementById('kd-avg').className = 'kpi-delta '+d.adl;
+  document.getElementById('kv-cancel').textContent = d.cancel;
+  document.getElementById('kd-cancel').textContent = d.cdelta;
+  document.getElementById('kd-cancel').className = 'kpi-delta '+d.cdl;
+}
+
+// ── STATS PERIOD ──
+const statData = {
+  day:   {sales:'870,000원',sd:'▲ 12.3%',sdc:'up', orders:'43건',od:'▲ 5건',odc:'up', avg:'20,200원',ad:'▼ 2.1%',adc:'down'},
+  week:  {sales:'5,430,000원',sd:'▲ 8.1%',sdc:'up', orders:'271건',od:'▲ 19건',odc:'up', avg:'20,036원',ad:'▲ 0.3%',adc:'up'},
+  month: {sales:'21,800,000원',sd:'▲ 15.2%',sdc:'up', orders:'1,082건',od:'▲ 134건',odc:'up', avg:'20,148원',ad:'▼ 1.1%',adc:'down'},
+};
+
+function setStatPeriod(btn, period) {
+  document.querySelectorAll('.stat-period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = statData[period];
+  document.getElementById('ss-sales').textContent = d.sales;
+  document.getElementById('ss-sales-d').textContent = d.sd;
+  document.getElementById('ss-sales-d').className = 'ss-delta kpi-delta '+d.sdc;
+  document.getElementById('ss-orders').textContent = d.orders;
+  document.getElementById('ss-orders-d').textContent = d.od;
+  document.getElementById('ss-orders-d').className = 'ss-delta kpi-delta '+d.odc;
+  document.getElementById('ss-avg').textContent = d.avg;
+  document.getElementById('ss-avg-d').textContent = d.ad;
+  document.getElementById('ss-avg-d').className = 'ss-delta kpi-delta '+d.adc;
+}
+
+// ── H-VALUE STATES ──
+const hStates = {
+  good: {bg:'#1a2a1a',val:'178%',copy:'포인트 적립에 쓴 비용, 2배만큼 매출로 돌아오고 있어요 🎉'},
+  mid:  {bg:'#1c2330',val:'112%',copy:'포인트 비용만큼 고객이 쓰고 갔어요. 좋은 추세예요.'},
+  low:  {bg:'#2a1a1a',val:'84%', copy:'이번 달은 포인트 비용보다 사용이 적었어요. 적립 혜택을 늘려보세요.'},
+};
+
+function setHstate(state) {
+  const d = hStates[state];
+  const card = document.getElementById('hpoint-card');
+  card.style.background = d.bg;
+  document.getElementById('hpoint-val').textContent = d.val;
+  document.getElementById('hpoint-copy').textContent = d.copy;
+}
+
+// ── TAB NAVIGATION ──
+function switchTab(tab) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+tab).classList.add('active');
+  const tabEl = document.getElementById('tab-'+tab);
+  if(tabEl) tabEl.classList.add('active');
+}
+
+// ── STORE SWITCHER ──
+const stores = ['파리크라상 강남점','파리크라상 홍대점'];
+let curStore = 0;
+
+function openStoreSheet() {
+  document.getElementById('store-overlay').classList.add('show');
+  document.getElementById('store-sheet').classList.add('show');
+}
+function closeStoreSheet() {
+  document.getElementById('store-overlay').classList.remove('show');
+  document.getElementById('store-sheet').classList.remove('show');
+}
+function switchStore(idx) {
+  if(idx === curStore) { closeStoreSheet(); return; }
+  curStore = idx;
+  const name = stores[idx];
+  document.getElementById('store-name').textContent = name;
+  document.getElementById('drawer-store').textContent = name;
+  document.querySelectorAll('.store-row').forEach((r,i)=>{
+    r.classList.toggle('cur', i===idx);
+    const chk = r.querySelector('.store-check');
+    if(chk) chk.style.display = i===idx ? '' : 'none';
+  });
+  closeStoreSheet();
+  showToast(`${name}으로 전환됐어요`);
+}
+
+// ── PRODUCT STATUS SHEET ──
+function openProdSheet(id) {
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p) return;
+  currentProdId = id;
+  document.getElementById('sheet-prod-name').textContent = p.name;
+  document.getElementById('sheet-prod-price').textContent = p.price;
+  document.querySelectorAll('.reason-chip').forEach((c,i)=>c.classList.toggle('sel',i===0));
+  document.querySelectorAll('.scope-btn').forEach((b,i)=>b.classList.toggle('sel',i===0));
+  document.getElementById('prod-overlay').classList.add('show');
+  document.getElementById('prod-sheet').classList.add('show');
+}
+function closeProdSheet() {
+  document.getElementById('prod-overlay').classList.remove('show');
+  document.getElementById('prod-sheet').classList.remove('show');
+}
+function applyStatus() {
+  const reason = document.querySelector('.reason-chip.sel')?.textContent || '재고 부족';
+  const scope = document.querySelector('.scope-btn.sel')?.textContent || '전체';
+  closeProdSheet();
+  showToast(`품절 처리됐어요 (${scope})`);
+  const p = PRODUCTS.find(x=>x.id===currentProdId);
+  if(p){ p.sold=true; renderProducts(); }
+}
+function selReason(el){
+  document.querySelectorAll('.reason-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selScope(el){
+  document.querySelectorAll('.scope-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── DRAWER ──
+function toggleDrawer() {
+  const drawer = document.getElementById('raft-drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  const open = drawer.classList.toggle('show');
+  overlay.classList.toggle('show', open);
+}
+function drawerNav(tab) {
+  toggleDrawer();
+  switchTab(tab);
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+// ── INIT ──
+renderProducts();
+// Hide store check on non-active store
+document.getElementById('srow-1').querySelector && (() => {
+  // no check icon on srow-1 initially (HTML only has it on srow-0)
+})();
+</script>
+</body>
+</html>
