@@ -160,6 +160,42 @@ button:active{transform:scale(0.95)}
 .coupon-name{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px}
 .coupon-desc{font-size:12px;color:var(--ink-48)}
 
+/* ── COUPON MODAL ── */
+.coupon-modal{position:absolute;inset:0;background:var(--parchment);z-index:120;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)}
+.coupon-modal.show{transform:translateY(0)}
+.cm-header{background:var(--canvas);border-bottom:0.5px solid var(--hairline);height:56px;display:flex;align-items:center;justify-content:center;padding:0 16px;flex-shrink:0;position:relative}
+.cm-close{position:absolute;left:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--parchment)}
+.cm-title{font-family:var(--font-d);font-size:17px;font-weight:600;letter-spacing:-0.2px}
+.cm-body{flex:1;overflow-y:auto;padding:20px 16px 100px}
+.cm-field{margin-bottom:20px}
+.cm-label{font-size:12px;font-weight:600;color:var(--ink-48);margin-bottom:6px;letter-spacing:0.3px;text-transform:uppercase}
+.cm-select{width:100%;padding:12px 14px;border-radius:var(--r-md);border:0.5px solid var(--hairline);background:var(--canvas);font-size:15px;color:var(--ink);font-family:var(--font-t);appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7a7a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;outline:none}
+.cm-input{width:100%;padding:12px 14px;border-radius:var(--r-md);border:0.5px solid var(--hairline);background:var(--canvas);font-size:15px;color:var(--ink);font-family:var(--font-t);outline:none}
+.cm-input:focus{border-color:var(--primary)}
+.cm-input:disabled{background:var(--parchment);color:var(--muted)}
+.cm-input-row{display:flex;gap:8px;align-items:center}
+.cm-unit{font-size:14px;color:var(--ink-48);flex-shrink:0;white-space:nowrap}
+.disc-seg{display:flex;background:var(--divider);border-radius:var(--r-pill);padding:2px;margin-bottom:12px}
+.disc-seg-btn{flex:1;height:34px;border-radius:var(--r-pill);font-size:14px;font-weight:400;color:var(--ink-48);text-align:center;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;justify-content:center}
+.disc-seg-btn.active{background:var(--canvas);color:var(--ink);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.12)}
+.cm-check-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.cm-check-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer}
+.cm-check-row label{font-size:14px;color:var(--ink-48);cursor:pointer}
+.cm-date-row{display:flex;gap:8px;align-items:center}
+.cm-date-sep{font-size:14px;color:var(--ink-48)}
+.cm-footer{position:absolute;bottom:0;left:0;right:0;padding:12px 16px 32px;background:var(--canvas);border-top:0.5px solid var(--hairline)}
+.cm-cta{width:100%;padding:14px;border-radius:var(--r-pill);background:var(--primary);color:#fff;font-size:16px;font-weight:600;font-family:var(--font-t)}
+
+/* ── CONFIRM DIALOG ── */
+.confirm-dialog{position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:130;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;padding:24px}
+.confirm-dialog.show{opacity:1;pointer-events:auto}
+.cd-box{background:var(--canvas);border-radius:var(--r-lg);padding:24px 20px 20px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.2)}
+.cd-title{font-family:var(--font-d);font-size:17px;font-weight:600;margin-bottom:8px;letter-spacing:-0.2px}
+.cd-desc{font-size:14px;color:var(--ink-48);line-height:1.6;margin-bottom:20px}
+.cd-actions{display:flex;gap:8px}
+.cd-cancel{flex:1;padding:12px;border-radius:var(--r-pill);font-size:15px;background:var(--parchment);color:var(--ink-48);font-family:var(--font-t)}
+.cd-confirm{flex:2;padding:12px;border-radius:var(--r-pill);font-size:15px;font-weight:600;background:var(--primary);color:#fff;font-family:var(--font-t)}
+
 /* ── OVERLAY / BOTTOM SHEET ── */
 .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.25s}
 .overlay.show{opacity:1;pointer-events:auto}
@@ -493,7 +529,7 @@ button:active{transform:scale(0.95)}
     <div class="screen-inner">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
         <div class="sec-title">쿠폰 관리</div>
-        <button style="background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:7px 14px;font-size:13px;font-weight:600">+ 쿠폰 발행</button>
+        <button style="background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:7px 14px;font-size:13px;font-weight:600" onclick="openCouponModal()">+ 쿠폰 발행</button>
       </div>
       <div class="coupon-card">
         <div class="coupon-badge">진행중</div>
@@ -661,6 +697,115 @@ button:active{transform:scale(0.95)}
     <div class="drawer-item" onclick="showToast('알림 설정으로 이동합니다');toggleDrawer()">
       <div class="drawer-item-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 1 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
       <span class="drawer-item-text">알림 설정</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       COUPON MODAL
+  ═══════════════════════════════════ -->
+  <div class="coupon-modal" id="coupon-modal">
+    <div class="cm-header">
+      <button class="cm-close" onclick="closeCouponModal()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <span class="cm-title">쿠폰 발행</span>
+    </div>
+
+    <div class="cm-body">
+
+      <!-- 발행 대상 -->
+      <div class="cm-field">
+        <div class="cm-label">발행 대상</div>
+        <select class="cm-select">
+          <option>모든 고객</option>
+          <option>첫 주문 고객</option>
+          <option>배달 주문 고객</option>
+          <option>픽업 주문 고객</option>
+        </select>
+      </div>
+
+      <!-- 할인 방식 -->
+      <div class="cm-field">
+        <div class="cm-label">할인 방식</div>
+        <div class="disc-seg">
+          <div class="disc-seg-btn active" id="dseg-fixed" onclick="setDiscType('fixed')">정액</div>
+          <div class="disc-seg-btn" id="dseg-rate" onclick="setDiscType('rate')">정률</div>
+        </div>
+        <!-- 정액 -->
+        <div id="disc-fixed-field">
+          <div class="cm-input-row">
+            <input class="cm-input" type="number" placeholder="할인 금액">
+            <span class="cm-unit">원</span>
+          </div>
+        </div>
+        <!-- 정률 -->
+        <div id="disc-rate-field" style="display:none">
+          <div class="cm-input-row">
+            <input class="cm-input" type="number" placeholder="할인율" max="100">
+            <span class="cm-unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 최소 주문 금액 -->
+      <div class="cm-field">
+        <div class="cm-label">최소 주문 금액</div>
+        <div class="cm-input-row">
+          <input class="cm-input" type="number" placeholder="0">
+          <span class="cm-unit">원 이상</span>
+        </div>
+      </div>
+
+      <!-- 최대 할인 금액 (정률 시) -->
+      <div class="cm-field" id="max-disc-field" style="display:none">
+        <div class="cm-label">최대 할인 금액</div>
+        <div class="cm-input-row">
+          <input class="cm-input" type="number" placeholder="최대 할인 한도">
+          <span class="cm-unit">원</span>
+        </div>
+      </div>
+
+      <!-- 유효 기간 -->
+      <div class="cm-field">
+        <div class="cm-label">유효 기간</div>
+        <div class="cm-date-row">
+          <input class="cm-input" type="date" id="cm-start" style="flex:1">
+          <span class="cm-date-sep">~</span>
+          <input class="cm-input" type="date" id="cm-end" style="flex:1">
+        </div>
+      </div>
+
+      <!-- 발행 개수 -->
+      <div class="cm-field">
+        <div class="cm-label">발행 개수</div>
+        <div class="cm-input-row">
+          <input class="cm-input" type="number" placeholder="발행할 쿠폰 수" id="cm-qty-input">
+          <span class="cm-unit">개</span>
+        </div>
+        <div class="cm-check-row">
+          <input type="checkbox" id="cm-unlimited" onchange="toggleUnlimited(this)">
+          <label for="cm-unlimited">무제한 발행</label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cm-footer">
+      <button class="cm-cta" onclick="submitCoupon()">쿠폰 발행하기</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       COUPON CONFIRM DIALOG
+  ═══════════════════════════════════ -->
+  <div class="confirm-dialog" id="confirm-dialog">
+    <div class="cd-box">
+      <div class="cd-title">쿠폰을 발행할까요?</div>
+      <div class="cd-desc">쿠폰 발행 시 유효기간 시작일부터 사용자 화면에 노출됩니다. 정말 발행하시겠어요?</div>
+      <div class="cd-actions">
+        <button class="cd-cancel" onclick="closeConfirm()">취소</button>
+        <button class="cd-confirm" onclick="confirmCoupon()">발행하기</button>
+      </div>
     </div>
   </div>
 
@@ -901,6 +1046,37 @@ function applyStatus() {
 function selScope(el){
   document.querySelectorAll('.scope-btn').forEach(b=>b.classList.remove('sel'));
   el.classList.add('sel');
+}
+
+// ── COUPON MODAL ──
+function openCouponModal() {
+  document.getElementById('coupon-modal').classList.add('show');
+}
+function closeCouponModal() {
+  document.getElementById('coupon-modal').classList.remove('show');
+}
+function setDiscType(type) {
+  document.getElementById('dseg-fixed').classList.toggle('active', type==='fixed');
+  document.getElementById('dseg-rate').classList.toggle('active', type==='rate');
+  document.getElementById('disc-fixed-field').style.display = type==='fixed' ? '' : 'none';
+  document.getElementById('disc-rate-field').style.display = type==='rate' ? '' : 'none';
+  document.getElementById('max-disc-field').style.display = type==='rate' ? '' : 'none';
+}
+function toggleUnlimited(cb) {
+  const input = document.getElementById('cm-qty-input');
+  input.disabled = cb.checked;
+  if (cb.checked) input.value = '';
+}
+function submitCoupon() {
+  document.getElementById('confirm-dialog').classList.add('show');
+}
+function closeConfirm() {
+  document.getElementById('confirm-dialog').classList.remove('show');
+}
+function confirmCoupon() {
+  closeConfirm();
+  closeCouponModal();
+  showToast('쿠폰이 등록됐어요');
 }
 
 // ── DRAWER ──
