@@ -19,7 +19,7 @@ export interface Track1TabData {
 
 const HOUR_LABELS = ["06-09", "09-11", "11-13", "13-15", "15-17", "17-19", "19-21"];
 const WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
-const CHANNEL_ORDER = ["해피오더", "배민", "쿠팡이츠", "요기요", "땡겨요"];
+const CHANNEL_ORDER = ["해피오더", "배민", "쿠팡이츠", "요기요테스트", "땡겨요"];
 
 export const today: Track1TabData = {
   kpi: {
