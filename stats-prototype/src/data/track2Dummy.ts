@@ -14,6 +14,14 @@ export const customerComposition = {
   ] as SegmentChip[],
 };
 
+export const demographicDistribution = [
+  { label: "30대 여성", pct: 28 },
+  { label: "20대 여성", pct: 22 },
+  { label: "30대 남성", pct: 18 },
+  { label: "40대 여성", pct: 17 },
+  { label: "20대 남성", pct: 15 },
+];
+
 export const segmentTrend = [
   { month: "2월", 단골: 96, 신규: 41 },
   { month: "3월", 단골: 104, 신규: 38 },
@@ -24,6 +32,42 @@ export const segmentTrend = [
 ];
 
 export const preferredCategory = ["치킨", "후라이드/양념", "순살 옵션"];
+
+export const AGE_GROUPS = ["10대", "20대", "30대", "40대", "50대+"] as const;
+
+export const agePreferredProducts: Record<string, { name: string; revenue: number }[]> = {
+  "10대": [
+    { name: "후라이드치킨", revenue: 245000 },
+    { name: "양념치킨", revenue: 189000 },
+    { name: "치즈볼", revenue: 152000 },
+  ],
+  "20대": [
+    { name: "양념치킨", revenue: 412000 },
+    { name: "후라이드치킨", revenue: 356000 },
+    { name: "반반치킨", revenue: 298000 },
+  ],
+  "30대": [
+    { name: "반반치킨", revenue: 523000 },
+    { name: "양념치킨", revenue: 467000 },
+    { name: "후라이드치킨", revenue: 401000 },
+  ],
+  "40대": [
+    { name: "후라이드치킨", revenue: 388000 },
+    { name: "반반치킨", revenue: 344000 },
+    { name: "마늘치킨", revenue: 276000 },
+  ],
+  "50대+": [
+    { name: "후라이드치킨", revenue: 298000 },
+    { name: "양념치킨", revenue: 234000 },
+    { name: "간장치킨", revenue: 198000 },
+  ],
+};
+
+export const loyalPreferredProducts = [
+  { name: "반반치킨", revenue: 812000 },
+  { name: "양념치킨", revenue: 745000 },
+  { name: "후라이드치킨", revenue: 689000 },
+];
 
 export const visitTimeText = "주 방문시간 오후 3~5시";
 

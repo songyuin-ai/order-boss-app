@@ -473,6 +473,52 @@ body {
   padding: 5px 10px;
 }
 
+/* Chip filter buttons (e.g. 연령대 전환) */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.chip--btn {
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.chip--btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Segment pie chart */
+.pie-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pie {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pie-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.pie-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* Trend chart */
 .trend-chart__legend {
   display: flex;
