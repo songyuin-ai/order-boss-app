@@ -37,7 +37,7 @@ body {
 
 .app {
   width: 100%;
-  max-width: 520px;
+  max-width: 1180px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,8 +46,17 @@ body {
 
 .app__intro {
   width: 100%;
-  max-width: 380px;
+  max-width: 720px;
   text-align: left;
+}
+
+.layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
 }
 
 .app__intro h1 {
@@ -78,6 +87,7 @@ body {
 .mobile-frame {
   width: 380px;
   max-width: 100%;
+  flex-shrink: 0;
   background: #000;
   border-radius: 36px;
   padding: 10px;
@@ -162,65 +172,37 @@ body {
   padding: 16px;
 }
 
-/* Card + hover indicator overlay */
-.ind-hover {
-  position: relative;
-  cursor: pointer;
-}
-
-.ind-hover__badge {
+/* Indicator ID badge */
+.id-badge {
   position: absolute;
   top: 10px;
   right: 10px;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   color: var(--accent);
   background: var(--accent-soft);
-  border-radius: 4px;
-  padding: 2px 5px;
-  pointer-events: none;
-  z-index: 2;
+  border-radius: 5px;
+  padding: 3px 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
-.ind-hover__overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(20, 20, 24, 0.96);
-  border-radius: inherit;
-  padding: 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-  overflow: auto;
-  z-index: 5;
+.id-badge:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
-.ind-hover:hover .ind-hover__overlay,
-.ind-hover__overlay.is-active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.ind-hover__hint {
-  font-size: 10px;
-  color: #9a9aa2;
-  margin-bottom: 6px;
-  text-align: right;
-}
-
-.ind-hover__json {
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  line-height: 1.6;
-  color: #e3e3ea;
-  white-space: pre-wrap;
-  word-break: break-word;
+.id-badge.is-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
 .card {
+  position: relative;
   background: var(--card-bg);
   border-radius: var(--radius-card);
   padding: 14px;
@@ -258,6 +240,7 @@ body {
 }
 
 .kpi-cell {
+  position: relative;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
@@ -693,4 +676,105 @@ body {
   align-self: stretch;
   background: var(--border);
   margin: 0 14px;
+}
+
+/* Indicator panel (right-side table) */
+.panel {
+  flex: 1;
+  min-width: 420px;
+  max-width: 720px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  position: sticky;
+  top: 28px;
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.panel__title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.panel__tab-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.panel__hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.panel table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 640px;
+}
+
+.panel thead th {
+  text-align: left;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  padding: 0 10px 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.panel tbody td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  transition: opacity 0.15s;
+}
+
+.panel tbody tr {
+  transition: opacity 0.15s;
+}
+
+.panel tbody tr.is-dim {
+  opacity: 0.32;
+}
+
+.panel tbody tr.is-active {
+  background: var(--accent-soft);
+}
+
+.panel .row-id {
+  font-family: var(--mono);
+  font-weight: 800;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.panel .col-name {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.panel .col-def,
+.panel .col-src,
+.panel .col-purpose {
+  color: var(--text-secondary);
+  max-width: 180px;
+}
+
+.panel .col-chart {
+  color: var(--text-secondary);
+  max-width: 200px;
 }

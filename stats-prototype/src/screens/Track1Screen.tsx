@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "../components/Card";
 import KpiGrid from "../components/KpiGrid";
 import BarChart from "../components/BarChart";
@@ -8,6 +8,8 @@ import SegmentedNav from "../components/SegmentedNav";
 import { track1Indicators } from "../data/track1Indicators";
 import { today, week, month, type Track1TabData } from "../data/track1Dummy";
 import { formatCompactWon } from "../utils/format";
+import { IndicatorContext } from "../context/IndicatorContext";
+import type { Indicator } from "../data/types";
 
 const TABS = [
   { key: "today", label: "오늘" },
@@ -16,6 +18,47 @@ const TABS = [
 ];
 
 const TAB_DATA: Record<string, Track1TabData> = { today, week, month };
+
+const TAB_LABEL: Record<string, string> = {
+  today: "오늘 탭 기준",
+  week: "이번 주 탭 기준",
+  month: "이번 달 탭 기준",
+};
+
+const TAB_INDICATORS: Record<string, Indicator[]> = {
+  today: [
+    track1Indicators.revenue,
+    track1Indicators.orders,
+    track1Indicators.aov,
+    track1Indicators.cancelRate,
+    track1Indicators.hourly,
+    track1Indicators.topMenu,
+    track1Indicators.deliveryRatio,
+    track1Indicators.channelRevenue,
+  ],
+  week: [
+    track1Indicators.weekdayCumulative,
+    track1Indicators.revenue,
+    track1Indicators.orders,
+    track1Indicators.aov,
+    track1Indicators.cancelRate,
+    track1Indicators.hourly,
+    track1Indicators.topMenu,
+    track1Indicators.deliveryRatio,
+    track1Indicators.channelRevenue,
+  ],
+  month: [
+    track1Indicators.revenue,
+    track1Indicators.orders,
+    track1Indicators.aov,
+    track1Indicators.cancelRate,
+    track1Indicators.hourly,
+    track1Indicators.weekdayAverage,
+    track1Indicators.topMenu,
+    track1Indicators.deliveryRatio,
+    track1Indicators.channelRevenue,
+  ],
+};
 
 function HourlyCard({ data }: { data: Track1TabData }) {
   return (
@@ -110,13 +153,28 @@ function WeekdayAverageCard({ data }: { data: Track1TabData }) {
   );
 }
 
-export default function Track1Screen() {
+interface Props {
+  onPanelChange: (indicators: Indicator[], label: string) => void;
+}
+
+export default function Track1Screen({ onPanelChange }: Props) {
   const [tab, setTab] = useState("today");
+  const { clear } = useContext(IndicatorContext);
   const data = TAB_DATA[tab];
+
+  useEffect(() => {
+    onPanelChange(TAB_INDICATORS[tab], TAB_LABEL[tab]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  const handleTabChange = (t: string) => {
+    setTab(t);
+    clear();
+  };
 
   return (
     <div className="screen">
-      <SegmentedNav options={TABS} active={tab} onChange={setTab} size="sm" />
+      <SegmentedNav options={TABS} active={tab} onChange={handleTabChange} size="sm" />
       <div className="screen__cards">
         {tab === "today" && (
           <>

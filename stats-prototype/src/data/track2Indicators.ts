@@ -3,6 +3,7 @@ import type { Indicator } from "./types";
 // 원본: 사장님앱 통계 데이터 구성안 (v2) - 4-2. 화면 구조: 사장님 질문 3그룹
 export const track2Group1Indicators: Record<string, Indicator> = {
   composition: {
+    id: "data_011",
     지표명: "고객 구성 (헤드라인: 단골비중)",
     정의: "세그먼트별 비중, 매장 기준",
     원천데이터_및_산식: "세그먼트 룰 적용 (4-1 기준), 대비: 30일 전 스냅샷 대비",
@@ -11,6 +12,7 @@ export const track2Group1Indicators: Record<string, Indicator> = {
       '큰 제목/수치 카드: 단골 비중(%) 좌측에 크게 표시, 하단에 신규/일반/휴면 세그먼트 칩 4개 나열 (각 칩: "신규18%" 형태)',
   },
   trend: {
+    id: "data_012",
     지표명: "단골·신규 추이 (최근 6개월)",
     정의: "월별 세그먼트 인원수 변화",
     원천데이터_및_산식: "D-1 배치 스냅샷을 월별로 적재",
@@ -18,6 +20,7 @@ export const track2Group1Indicators: Record<string, Indicator> = {
     차트형태: "세로 막대차트 (6개월=6개 바, 높이로 인원수 표현, 각 막대 우측에 월도 표시)",
   },
   couponCta: {
+    id: "data_013",
     지표명: "세그먼트 타겟 쿠폰 연결 (오픈이슈)",
     정의: "세그먼트 칩 탭 → 쿠폰 발행 화면 연결",
     원천데이터_및_산식: "세그먼트별 회원ID 리스트 추출 필요",
@@ -28,6 +31,7 @@ export const track2Group1Indicators: Record<string, Indicator> = {
 
 export const track2Group2Indicators: Record<string, Indicator> = {
   category: {
+    id: "data_014",
     지표명: "선호 상품·카테고리",
     정의: "매장 기준 회원 구매 상위 카테고리",
     원천데이터_및_산식: "HPC 상품단위 데이터 (⚠있다고 가정, 확인 중)",
@@ -35,6 +39,7 @@ export const track2Group2Indicators: Record<string, Indicator> = {
     차트형태: "정보 카드 (계층 구조: 카테고리1 > 카테고리2 > 카테고리3 텍스트만)",
   },
   visitTime: {
+    id: "data_015",
     지표명: "방문 시간대",
     정의: "매장 기준 회원 사용일시 시간대 분포",
     원천데이터_및_산식: "HPC 사용일시 GROUP BY 시간대",
@@ -42,6 +47,7 @@ export const track2Group2Indicators: Record<string, Indicator> = {
     차트형태: '정보 카드 (텍스트: "주 방문시간 오후 3~5시" 형태)',
   },
   revisitCycle: {
+    id: "data_016",
     지표명: "재방문 주기(고착도)",
     정의: "매장 기준 회원별 재방문 간격 평균",
     원천데이터_및_산식: "연속 구매일 간격 평균",
@@ -52,6 +58,7 @@ export const track2Group2Indicators: Record<string, Indicator> = {
 
 export const track2Group3Indicators: Record<string, Indicator> = {
   hValue: {
+    id: "data_017",
     지표명: "포인트 활용 지표(H값)",
     정의: "최근 30일 적립비용 대비 사용매출 비율",
     원천데이터_및_산식: "사용매출 ÷ 적립비용 × 100, 대비: 30일 전 스냅샷, 추이: 6개월 별도",
@@ -60,6 +67,7 @@ export const track2Group3Indicators: Record<string, Indicator> = {
       "큰 수치 카드 (배경색: 다크, 텍스트: 화이트, 좌측에 H값% 크게 표시, 우하단 작은 텍스트로 전월 대비)",
   },
   segmentContribution: {
+    id: "data_018",
     지표명: "세그먼트별 매출 기여도",
     정의: "세그먼트별 매출 비중 및 객단가",
     원천데이터_및_산식:
@@ -68,6 +76,7 @@ export const track2Group3Indicators: Record<string, Indicator> = {
     차트형태: "표 카드 (4행 3열: 세그먼트명 | 매출비중(%) | 객단가(원), 행마다 구분선)",
   },
   gcrmCompare: {
+    id: "data_019",
     지표명: "G-CRM 인근 가맹점 비교",
     정의: "우리 매장 vs 인근 해피포인트 가맹점 평균",
     원천데이터_및_산식: "기존 G-CRM의 포인트 데이터 기반 확장 파이프라인",

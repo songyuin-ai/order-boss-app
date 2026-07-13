@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "../components/Card";
 import SegmentedNav from "../components/SegmentedNav";
 import TrendChart from "../components/TrendChart";
@@ -18,12 +18,38 @@ import {
   segmentContribution,
   gcrmCompare,
 } from "../data/track2Dummy";
+import { IndicatorContext } from "../context/IndicatorContext";
+import type { Indicator } from "../data/types";
 
 const GROUPS = [
   { key: "group1", label: "누가 오는가" },
   { key: "group2", label: "왜·언제 오는가" },
   { key: "group3", label: "돈이 되는가" },
 ];
+
+const GROUP_LABEL: Record<string, string> = {
+  group1: "누가 오는가 그룹 기준",
+  group2: "왜·언제 오는가 그룹 기준",
+  group3: "돈이 되는가 그룹 기준",
+};
+
+const GROUP_INDICATORS: Record<string, Indicator[]> = {
+  group1: [
+    track2Group1Indicators.composition,
+    track2Group1Indicators.trend,
+    track2Group1Indicators.couponCta,
+  ],
+  group2: [
+    track2Group2Indicators.category,
+    track2Group2Indicators.visitTime,
+    track2Group2Indicators.revisitCycle,
+  ],
+  group3: [
+    track2Group3Indicators.hValue,
+    track2Group3Indicators.segmentContribution,
+    track2Group3Indicators.gcrmCompare,
+  ],
+};
 
 function Group1() {
   return (
@@ -124,12 +150,27 @@ function Group3() {
   );
 }
 
-export default function Track2Screen() {
+interface Props {
+  onPanelChange: (indicators: Indicator[], label: string) => void;
+}
+
+export default function Track2Screen({ onPanelChange }: Props) {
   const [group, setGroup] = useState("group1");
+  const { clear } = useContext(IndicatorContext);
+
+  useEffect(() => {
+    onPanelChange(GROUP_INDICATORS[group], GROUP_LABEL[group]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [group]);
+
+  const handleGroupChange = (g: string) => {
+    setGroup(g);
+    clear();
+  };
 
   return (
     <div className="screen">
-      <SegmentedNav options={GROUPS} active={group} onChange={setGroup} size="sm" />
+      <SegmentedNav options={GROUPS} active={group} onChange={handleGroupChange} size="sm" />
       <div className="screen__cards">
         {group === "group1" && <Group1 />}
         {group === "group2" && <Group2 />}

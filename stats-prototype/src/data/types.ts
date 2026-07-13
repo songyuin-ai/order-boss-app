@@ -1,4 +1,5 @@
 export interface Indicator {
+  id: string;
   지표명: string;
   정의: string;
   원천데이터_및_산식: string;

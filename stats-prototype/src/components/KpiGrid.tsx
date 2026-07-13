@@ -1,6 +1,6 @@
 import type { KpiData, Indicator } from "../data/types";
 import { formatSignedNumber, formatWon } from "../utils/format";
-import IndicatorHover from "./IndicatorHover";
+import IdBadge from "./IdBadge";
 
 interface Props {
   data: KpiData;
@@ -52,11 +52,12 @@ export default function KpiGrid({ data, indicators }: Props) {
   return (
     <div className="kpi-grid">
       {cells.map((cell) => (
-        <IndicatorHover key={cell.key} indicator={cell.indicator} className="kpi-cell">
+        <div key={cell.key} className="kpi-cell">
+          <IdBadge id={cell.indicator.id} />
           <div className="kpi-cell__label">{cell.label}</div>
           <div className="kpi-cell__value">{cell.value}</div>
           <div className={`kpi-cell__delta ${cell.isUp ? "is-up" : "is-down"}`}>{cell.delta}</div>
-        </IndicatorHover>
+        </div>
       ))}
     </div>
   );

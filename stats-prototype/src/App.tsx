@@ -1,8 +1,11 @@
 import { useState } from "react";
 import MobileFrame from "./components/MobileFrame";
 import SegmentedNav from "./components/SegmentedNav";
+import IndicatorPanel from "./components/IndicatorPanel";
 import Track1Screen from "./screens/Track1Screen";
 import Track2Screen from "./screens/Track2Screen";
+import { IndicatorContext } from "./context/IndicatorContext";
+import type { Indicator } from "./data/types";
 
 const MENUS = [
   { key: "track1", label: "실시간 매출 통계" },
@@ -11,24 +14,53 @@ const MENUS = [
 
 export default function App() {
   const [menu, setMenu] = useState("track1");
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [panelIndicators, setPanelIndicators] = useState<Indicator[]>([]);
+  const [panelLabel, setPanelLabel] = useState("");
+
+  const toggle = (id: string) => setActiveId((prev) => (prev === id ? null : id));
+  const clear = () => setActiveId(null);
+
+  const handleMenuChange = (key: string) => {
+    setMenu(key);
+    clear();
+  };
 
   return (
-    <div className="app">
-      <div className="app__intro">
-        <h1>사장님앱 통계 메뉴 프로토타입</h1>
-        <p>
-          더미데이터 기반 6화면 프로토타입입니다. 각 카드에 마우스를 올리거나 탭하면 우측 상단의{" "}
-          <span className="app__intro-badge">JSON</span> 배지가 활성화되며, 해당 차트의 원천데이터·산식이
-          담긴 지표 설명이 팝업으로 노출됩니다.
-        </p>
-      </div>
-      <MobileFrame>
-        <div className="app-bar">
-          <span className="app-bar__title">사장님앱 · 통계</span>
+    <IndicatorContext.Provider value={{ activeId, toggle, clear }}>
+      <div className="app">
+        <div className="app__intro">
+          <h1>사장님앱 통계 메뉴 프로토타입</h1>
+          <p>
+            더미데이터 기반 6화면 프로토타입입니다. 각 차트의 식별자(예: <b>data_001</b>)를 클릭하면
+            우측 지표 표에서 해당 행이 강조되고 나머지는 흐려집니다.
+          </p>
         </div>
-        <SegmentedNav options={MENUS} active={menu} onChange={setMenu} />
-        {menu === "track1" ? <Track1Screen /> : <Track2Screen />}
-      </MobileFrame>
-    </div>
+        <div className="layout" onClick={clear}>
+          <MobileFrame>
+            <div className="app-bar">
+              <span className="app-bar__title">사장님앱 · 통계</span>
+            </div>
+            <SegmentedNav options={MENUS} active={menu} onChange={handleMenuChange} />
+            {menu === "track1" ? (
+              <Track1Screen
+                onPanelChange={(indicators, label) => {
+                  setPanelIndicators(indicators);
+                  setPanelLabel(label);
+                }}
+              />
+            ) : (
+              <Track2Screen
+                onPanelChange={(indicators, label) => {
+                  setPanelIndicators(indicators);
+                  setPanelLabel(label);
+                }}
+              />
+            )}
+          </MobileFrame>
+          <IndicatorPanel indicators={panelIndicators} tabLabel={panelLabel} />
+        </div>
+      </div>
+    </IndicatorContext.Provider>
   );
 }
