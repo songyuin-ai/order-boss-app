@@ -156,7 +156,6 @@ export async function loadLiveData(): Promise<LiveData> {
       원천데이터_및_산식: str(r, "원천데이터_및_산식"),
       제공목적: str(r, "제공목적"),
       차트형태: str(r, "차트형태"),
-      노출: str(r, "노출"),
     };
   });
 
