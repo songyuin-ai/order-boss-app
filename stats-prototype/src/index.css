@@ -794,8 +794,32 @@ body {
 .panel table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   font-size: 12.5px;
   min-width: 640px;
+}
+
+.panel th:nth-child(1),
+.panel td:nth-child(1) {
+  width: 70px;
+}
+
+.panel th:nth-child(2),
+.panel td:nth-child(2) {
+  width: 100px;
+}
+
+.panel th:nth-child(3),
+.panel td:nth-child(3),
+.panel th:nth-child(4),
+.panel td:nth-child(4),
+.panel th:nth-child(5),
+.panel td:nth-child(5),
+.panel th:nth-child(6),
+.panel td:nth-child(6),
+.panel th:nth-child(7),
+.panel td:nth-child(7) {
+  width: 20%;
 }
 
 .panel thead th {
@@ -839,19 +863,11 @@ body {
   white-space: nowrap;
 }
 
-.panel .col-expose {
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
+.panel .col-expose,
 .panel .col-def,
 .panel .col-src,
-.panel .col-purpose {
-  color: var(--text-secondary);
-  max-width: 180px;
-}
-
+.panel .col-purpose,
 .panel .col-chart {
   color: var(--text-secondary);
-  max-width: 200px;
+  word-break: break-word;
 }
