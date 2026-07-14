@@ -1,4 +1,4 @@
-import { fetchSheetTab, num, numOrNull, bool, str, type SheetRow } from "./googleSheet";
+import { fetchSheetTab, num, numOrNull, bool, str, strAny, type SheetRow } from "./googleSheet";
 import type { Indicator, DeliveryRatio, ChannelRevenue, MenuItem, WeekdayBar, HourlyBucket, KpiData } from "../data/types";
 import type { Track1TabData } from "../data/track1Dummy";
 import type { SegmentChip } from "../data/track2Dummy";
@@ -156,7 +156,7 @@ export async function loadLiveData(): Promise<LiveData> {
       원천데이터_및_산식: str(r, "원천데이터_및_산식"),
       제공목적: str(r, "제공목적"),
       차트형태: str(r, "차트형태"),
-      노출: str(r, "노출"),
+      노출: strAny(r, ["노출", "노출시트", "노출여부", "노출 여부"]),
     };
   });
 

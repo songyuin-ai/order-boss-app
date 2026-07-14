@@ -72,3 +72,12 @@ export function bool(row: SheetRow, key: string): boolean {
 export function str(row: SheetRow, key: string, fallback = ""): string {
   return row[key] !== undefined && row[key] !== "" ? row[key] : fallback;
 }
+
+// 시트 작성자가 컬럼명을 살짝 다르게 적어도(예: "노출" vs "노출시트") 인식되도록
+// 후보 헤더명을 순서대로 시도
+export function strAny(row: SheetRow, keys: string[], fallback = ""): string {
+  for (const key of keys) {
+    if (row[key] !== undefined && row[key] !== "") return row[key];
+  }
+  return fallback;
+}
