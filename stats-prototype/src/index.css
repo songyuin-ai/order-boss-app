@@ -83,6 +83,32 @@ body {
   padding: 1px 5px;
 }
 
+.data-status {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.data-status--loading {
+  color: var(--text-secondary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.data-status--live {
+  color: var(--success);
+  background: rgba(26, 152, 80, 0.12);
+}
+
+.data-status--fallback {
+  color: var(--text-secondary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
 /* Mobile frame */
 .mobile-frame {
   width: 380px;

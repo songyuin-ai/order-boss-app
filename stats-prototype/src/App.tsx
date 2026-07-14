@@ -5,6 +5,7 @@ import IndicatorPanel from "./components/IndicatorPanel";
 import Track1Screen from "./screens/Track1Screen";
 import Track2Screen from "./screens/Track2Screen";
 import { IndicatorContext } from "./context/IndicatorContext";
+import { DataProvider, useAppData } from "./context/DataContext";
 import type { Indicator } from "./data/types";
 
 const MENUS = [
@@ -12,7 +13,18 @@ const MENUS = [
   { key: "track2", label: "고객 심층 분석" },
 ];
 
-export default function App() {
+const STATUS_LABEL: Record<string, string> = {
+  loading: "구글시트 연결 중…",
+  live: "구글시트 데이터 연결됨",
+  fallback: "기본 데이터 표시 중 (시트 미연결)",
+};
+
+function DataStatusBadge() {
+  const { status } = useAppData();
+  return <span className={`data-status data-status--${status}`}>{STATUS_LABEL[status]}</span>;
+}
+
+function AppShell() {
   const [menu, setMenu] = useState("track1");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [panelIndicators, setPanelIndicators] = useState<Indicator[]>([]);
@@ -35,6 +47,7 @@ export default function App() {
             더미데이터 기반 6화면 프로토타입입니다. 각 차트의 식별자(예: <b>data_001</b>)를 클릭하면
             우측 지표 표에서 해당 행이 강조되고 나머지는 흐려집니다.
           </p>
+          <DataStatusBadge />
         </div>
         <div className="layout" onClick={clear}>
           <MobileFrame>
@@ -62,5 +75,13 @@ export default function App() {
         </div>
       </div>
     </IndicatorContext.Provider>
+  );
+}
+
+export default function App() {
+  return (
+    <DataProvider>
+      <AppShell />
+    </DataProvider>
   );
 }

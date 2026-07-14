@@ -33,8 +33,6 @@ export const segmentTrend = [
 
 export const preferredCategory = ["치킨", "후라이드/양념", "순살 옵션"];
 
-export const AGE_GROUPS = ["10대", "20대", "30대", "40대", "50대+"] as const;
-
 export const agePreferredProducts: Record<string, { name: string; revenue: number }[]> = {
   "10대": [
     { name: "후라이드치킨", revenue: 245000 },
