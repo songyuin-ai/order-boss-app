@@ -1,36 +1,43 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import type { Indicator } from "../data/types";
-import { track1Indicators as defaultTrack1Indicators } from "../data/track1Indicators";
-import {
-  track2Group1Indicators as defaultGroup1Indicators,
-  track2Group2Indicators as defaultGroup2Indicators,
-  track2Group3Indicators as defaultGroup3Indicators,
-} from "../data/track2Indicators";
-import { today as defaultToday, week as defaultWeek, month as defaultMonth, type Track1TabData } from "../data/track1Dummy";
-import * as defaultTrack2Dummy from "../data/track2Dummy";
-import type { SegmentChip } from "../data/track2Dummy";
+import type { Indicator, PosKpiPeriod, HourlyBucket, OnlineOfflineRatio } from "../data/types";
+import { deliveryIndicators as defaultDeliveryIndicators } from "../data/deliveryIndicators";
+import { customerCompositionIndicators as defaultCustomerCompositionIndicators } from "../data/customerCompositionIndicators";
+import { customerDetailIndicators as defaultCustomerDetailIndicators } from "../data/customerDetailIndicators";
+import { membershipIndicators as defaultMembershipIndicators } from "../data/membershipIndicators";
+import { posIndicators as defaultPosIndicators } from "../data/posIndicators";
+import { today as defaultToday, week as defaultWeek, month as defaultMonth, type DeliveryTabData } from "../data/deliveryDummy";
+import * as defaultCustomerCompositionDummy from "../data/customerCompositionDummy";
+import type { SegmentChip } from "../data/customerCompositionDummy";
+import * as defaultCustomerDetailDummy from "../data/customerDetailDummy";
+import * as defaultMembershipDummy from "../data/membershipDummy";
+import { posKpiPeriods as defaultPosKpiPeriods, posHourly as defaultPosHourly, posOnlineOffline as defaultPosOnlineOffline } from "../data/posDummy";
 import { loadLiveData, type LiveData } from "../lib/loadLiveData";
 import { SHEET_ID } from "../config";
 
-interface Track2Data {
+interface CustomerCompositionData {
   customerComposition: { loyalPct: number; deltaLabel: string; chips: SegmentChip[] };
   demographicDistribution: { label: string; pct: number }[];
   segmentTrend: { month: string; 단골: number; 신규: number }[];
+}
+
+interface CustomerDetailData {
   preferredCategory: string[];
   agePreferredProducts: Record<string, { name: string; revenue: number }[]>;
   loyalPreferredProducts: { name: string; revenue: number }[];
   visitTimeText: string;
   revisitCycle: { value: string; label: string };
+}
+
+interface MembershipData {
   hValue: { pct: number; deltaLabel: string };
   segmentContribution: { segment: string; revenueShare: number; aov: number }[];
-  gcrmCompare: {
-    metric: string;
-    ours: string;
-    nearby: string;
-    secondaryMetric: string;
-    oursSecondary: string;
-    nearbySecondary: string;
-  };
+  membershipRevenue: { memberRevenue: number; totalRevenue: number; pct: number; deltaLabel: string };
+}
+
+interface PosData {
+  kpiPeriods: Record<string, PosKpiPeriod[]>;
+  hourly: Record<string, HourlyBucket[]>;
+  onlineOffline: Record<string, OnlineOfflineRatio>;
 }
 
 type IndicatorMap = Record<string, Indicator>;
@@ -46,22 +53,30 @@ function mergeIndicators<T extends IndicatorMap>(defaults: T, byId: Record<strin
 }
 
 interface DataShape {
-  track1Indicators: typeof defaultTrack1Indicators;
-  track2Group1Indicators: typeof defaultGroup1Indicators;
-  track2Group2Indicators: typeof defaultGroup2Indicators;
-  track2Group3Indicators: typeof defaultGroup3Indicators;
-  track1: { today: Track1TabData; week: Track1TabData; month: Track1TabData };
-  track2: Track2Data;
+  deliveryIndicators: typeof defaultDeliveryIndicators;
+  customerCompositionIndicators: typeof defaultCustomerCompositionIndicators;
+  customerDetailIndicators: typeof defaultCustomerDetailIndicators;
+  membershipIndicators: typeof defaultMembershipIndicators;
+  posIndicators: typeof defaultPosIndicators;
+  delivery: { today: DeliveryTabData; week: DeliveryTabData; month: DeliveryTabData };
+  customerComposition: CustomerCompositionData;
+  customerDetail: CustomerDetailData;
+  membership: MembershipData;
+  pos: PosData;
   status: "loading" | "live" | "fallback";
 }
 
 const defaultShape: DataShape = {
-  track1Indicators: defaultTrack1Indicators,
-  track2Group1Indicators: defaultGroup1Indicators,
-  track2Group2Indicators: defaultGroup2Indicators,
-  track2Group3Indicators: defaultGroup3Indicators,
-  track1: { today: defaultToday, week: defaultWeek, month: defaultMonth },
-  track2: { ...defaultTrack2Dummy },
+  deliveryIndicators: defaultDeliveryIndicators,
+  customerCompositionIndicators: defaultCustomerCompositionIndicators,
+  customerDetailIndicators: defaultCustomerDetailIndicators,
+  membershipIndicators: defaultMembershipIndicators,
+  posIndicators: defaultPosIndicators,
+  delivery: { today: defaultToday, week: defaultWeek, month: defaultMonth },
+  customerComposition: { ...defaultCustomerCompositionDummy },
+  customerDetail: { ...defaultCustomerDetailDummy },
+  membership: { ...defaultMembershipDummy },
+  pos: { kpiPeriods: defaultPosKpiPeriods, hourly: defaultPosHourly, onlineOffline: defaultPosOnlineOffline },
   status: SHEET_ID ? "loading" : "fallback",
 };
 
@@ -82,16 +97,24 @@ export function DataProvider({ children }: { children: ReactNode }) {
       .then((live: LiveData) => {
         if (cancelled) return;
         setData({
-          track1Indicators: mergeIndicators(defaultTrack1Indicators, live.indicatorsById),
-          track2Group1Indicators: mergeIndicators(defaultGroup1Indicators, live.indicatorsById),
-          track2Group2Indicators: mergeIndicators(defaultGroup2Indicators, live.indicatorsById),
-          track2Group3Indicators: mergeIndicators(defaultGroup3Indicators, live.indicatorsById),
-          track1: {
-            today: { ...defaultToday, ...live.track1.today },
-            week: { ...defaultWeek, ...live.track1.week },
-            month: { ...defaultMonth, ...live.track1.month },
+          deliveryIndicators: mergeIndicators(defaultDeliveryIndicators, live.indicatorsById),
+          customerCompositionIndicators: mergeIndicators(defaultCustomerCompositionIndicators, live.indicatorsById),
+          customerDetailIndicators: mergeIndicators(defaultCustomerDetailIndicators, live.indicatorsById),
+          membershipIndicators: mergeIndicators(defaultMembershipIndicators, live.indicatorsById),
+          posIndicators: mergeIndicators(defaultPosIndicators, live.indicatorsById),
+          delivery: {
+            today: { ...defaultToday, ...live.delivery.today },
+            week: { ...defaultWeek, ...live.delivery.week },
+            month: { ...defaultMonth, ...live.delivery.month },
           },
-          track2: { ...defaultTrack2Dummy, ...live.track2 },
+          customerComposition: { ...defaultCustomerCompositionDummy, ...live.customerComposition },
+          customerDetail: { ...defaultCustomerDetailDummy, ...live.customerDetail },
+          membership: { ...defaultMembershipDummy, ...live.membership },
+          pos: {
+            kpiPeriods: live.pos.kpiPeriods ?? defaultPosKpiPeriods,
+            hourly: live.pos.hourly ?? defaultPosHourly,
+            onlineOffline: live.pos.onlineOffline ?? defaultPosOnlineOffline,
+          },
           status: "live",
         });
       })

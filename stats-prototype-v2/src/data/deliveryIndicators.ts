@@ -1,7 +1,7 @@
 import type { Indicator } from "./types";
 
-// 원본: 사장님앱 통계 데이터 구성안 (v2) - 3-4. 지표 매핑, track1_indicators
-export const track1Indicators: Record<string, Indicator> = {
+// 딜리버리 > 딜리버리 통계
+export const deliveryIndicators: Record<string, Indicator> = {
   revenue: {
     id: "data_001",
     지표명: "매출액",
@@ -81,5 +81,21 @@ export const track1Indicators: Record<string, Indicator> = {
     원천데이터_및_산식: "채널 구분 필드 GROUP BY (필드 존재 확인됨)",
     제공목적: "채널별 성과 비교",
     차트형태: "세로 막대차트 (5개 채널, 높이로 매출액 표현, 투명도 단계 적용)",
+  },
+  dailyAvgRevenue: {
+    id: "data_031",
+    지표명: "일평균 매출 (딜리버리)",
+    정의: "이번 주/이번 달 탭의 일 평균 매출",
+    원천데이터_및_산식: "매출액 ÷ 집계일수",
+    제공목적: "기간별 매출 추세 참고",
+    차트형태: "KPI 카드 (이번주/이번달 KPI 내 추가 항목)",
+  },
+  dailyAvgOrders: {
+    id: "data_032",
+    지표명: "일평균 건수 (딜리버리)",
+    정의: "이번 주/이번 달 탭의 일 평균 주문건수",
+    원천데이터_및_산식: "주문건수 ÷ 집계일수",
+    제공목적: "기간별 주문량 추세 참고",
+    차트형태: "KPI 카드 (이번주/이번달 KPI 내 추가 항목)",
   },
 };

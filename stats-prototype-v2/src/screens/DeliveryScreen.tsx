@@ -9,8 +9,8 @@ import { formatCompactWon } from "../utils/format";
 import { IndicatorContext } from "../context/IndicatorContext";
 import { useAppData } from "../context/DataContext";
 import type { Indicator } from "../data/types";
-import type { Track1TabData } from "../data/track1Dummy";
-import type { track1Indicators as Track1IndicatorMap } from "../data/track1Indicators";
+import type { DeliveryTabData } from "../data/deliveryDummy";
+import type { deliveryIndicators as DeliveryIndicatorMap } from "../data/deliveryIndicators";
 
 const TABS = [
   { key: "today", label: "오늘" },
@@ -24,7 +24,7 @@ const TAB_LABEL: Record<string, string> = {
   month: "이번 달 탭 기준",
 };
 
-type IndicatorMap = typeof Track1IndicatorMap;
+type IndicatorMap = typeof DeliveryIndicatorMap;
 
 function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[]> {
   return {
@@ -44,6 +44,8 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.orders,
       indicators.aov,
       indicators.cancelRate,
+      indicators.dailyAvgRevenue,
+      indicators.dailyAvgOrders,
       indicators.hourly,
       indicators.topMenu,
       indicators.deliveryRatio,
@@ -54,6 +56,8 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.orders,
       indicators.aov,
       indicators.cancelRate,
+      indicators.dailyAvgRevenue,
+      indicators.dailyAvgOrders,
       indicators.hourly,
       indicators.weekdayAverage,
       indicators.topMenu,
@@ -63,7 +67,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
   };
 }
 
-function HourlyCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function HourlyCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
   return (
     <Card title="시간대별 분포" indicator={indicators.hourly}>
       <BarChart
@@ -74,7 +78,7 @@ function HourlyCard({ data, indicators }: { data: Track1TabData; indicators: Ind
   );
 }
 
-function KpiCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function KpiCard({ data, indicators, withDailyAvg }: { data: DeliveryTabData; indicators: IndicatorMap; withDailyAvg?: boolean }) {
   return (
     <KpiGrid
       data={data.kpi}
@@ -84,11 +88,14 @@ function KpiCard({ data, indicators }: { data: Track1TabData; indicators: Indica
         aov: indicators.aov,
         cancelRate: indicators.cancelRate,
       }}
+      dailyAvgIndicators={
+        withDailyAvg ? { revenue: indicators.dailyAvgRevenue, orders: indicators.dailyAvgOrders } : undefined
+      }
     />
   );
 }
 
-function TopMenuCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function TopMenuCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
   return (
     <Card title="인기 메뉴 Top 3" indicator={indicators.topMenu}>
       <TopMenuList items={data.topMenu} />
@@ -96,15 +103,20 @@ function TopMenuCard({ data, indicators }: { data: Track1TabData; indicators: In
   );
 }
 
-function DeliveryCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function DeliveryRatioCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
   return (
     <Card title="배달/픽업 비중" indicator={indicators.deliveryRatio}>
-      <DonutChart {...data.deliveryRatio} />
+      <DonutChart
+        primaryValue={data.deliveryRatio.delivery}
+        secondaryValue={data.deliveryRatio.pickup}
+        primaryLabel="배달"
+        secondaryLabel="픽업"
+      />
     </Card>
   );
 }
 
-function ChannelCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function ChannelCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
   const opacities = [1, 0.85, 0.7, 0.55, 0.4];
   return (
     <Card title="채널별 매출" indicator={indicators.channelRevenue}>
@@ -121,7 +133,7 @@ function ChannelCard({ data, indicators }: { data: Track1TabData; indicators: In
   );
 }
 
-function WeekdayCumulativeCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function WeekdayCumulativeCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
   if (!data.weekdayCumulative) return null;
   return (
     <Card title="요일별 누적 (이번 주)" indicator={indicators.weekdayCumulative}>
@@ -139,7 +151,7 @@ function WeekdayCumulativeCard({ data, indicators }: { data: Track1TabData; indi
   );
 }
 
-function WeekdayAverageCard({ data, indicators }: { data: Track1TabData; indicators: IndicatorMap }) {
+function WeekdayAverageCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
   if (!data.weekdayAverage) return null;
   return (
     <Card title="요일별 평균 (이번 달)" indicator={indicators.weekdayAverage}>
@@ -160,17 +172,17 @@ interface Props {
   onPanelChange: (indicators: Indicator[], label: string) => void;
 }
 
-export default function Track1Screen({ onPanelChange }: Props) {
+export default function DeliveryScreen({ onPanelChange }: Props) {
   const [tab, setTab] = useState("today");
   const { clear } = useContext(IndicatorContext);
-  const { track1Indicators, track1 } = useAppData();
-  const data = track1[tab as keyof typeof track1];
-  const tabIndicators = buildTabIndicators(track1Indicators);
+  const { deliveryIndicators, delivery } = useAppData();
+  const data = delivery[tab as keyof typeof delivery];
+  const tabIndicators = buildTabIndicators(deliveryIndicators);
 
   useEffect(() => {
     onPanelChange(tabIndicators[tab], TAB_LABEL[tab]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, track1Indicators]);
+  }, [tab, deliveryIndicators]);
 
   const handleTabChange = (t: string) => {
     setTab(t);
@@ -183,31 +195,31 @@ export default function Track1Screen({ onPanelChange }: Props) {
       <div className="screen__cards">
         {tab === "today" && (
           <>
-            <KpiCard data={data} indicators={track1Indicators} />
-            <HourlyCard data={data} indicators={track1Indicators} />
-            <TopMenuCard data={data} indicators={track1Indicators} />
-            <DeliveryCard data={data} indicators={track1Indicators} />
-            <ChannelCard data={data} indicators={track1Indicators} />
+            <KpiCard data={data} indicators={deliveryIndicators} />
+            <HourlyCard data={data} indicators={deliveryIndicators} />
+            <TopMenuCard data={data} indicators={deliveryIndicators} />
+            <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
+            <ChannelCard data={data} indicators={deliveryIndicators} />
           </>
         )}
         {tab === "week" && (
           <>
-            <WeekdayCumulativeCard data={data} indicators={track1Indicators} />
-            <KpiCard data={data} indicators={track1Indicators} />
-            <HourlyCard data={data} indicators={track1Indicators} />
-            <TopMenuCard data={data} indicators={track1Indicators} />
-            <DeliveryCard data={data} indicators={track1Indicators} />
-            <ChannelCard data={data} indicators={track1Indicators} />
+            <WeekdayCumulativeCard data={data} indicators={deliveryIndicators} />
+            <KpiCard data={data} indicators={deliveryIndicators} withDailyAvg />
+            <HourlyCard data={data} indicators={deliveryIndicators} />
+            <TopMenuCard data={data} indicators={deliveryIndicators} />
+            <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
+            <ChannelCard data={data} indicators={deliveryIndicators} />
           </>
         )}
         {tab === "month" && (
           <>
-            <KpiCard data={data} indicators={track1Indicators} />
-            <HourlyCard data={data} indicators={track1Indicators} />
-            <WeekdayAverageCard data={data} indicators={track1Indicators} />
-            <TopMenuCard data={data} indicators={track1Indicators} />
-            <DeliveryCard data={data} indicators={track1Indicators} />
-            <ChannelCard data={data} indicators={track1Indicators} />
+            <KpiCard data={data} indicators={deliveryIndicators} withDailyAvg />
+            <HourlyCard data={data} indicators={deliveryIndicators} />
+            <WeekdayAverageCard data={data} indicators={deliveryIndicators} />
+            <TopMenuCard data={data} indicators={deliveryIndicators} />
+            <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
+            <ChannelCard data={data} indicators={deliveryIndicators} />
           </>
         )}
       </div>

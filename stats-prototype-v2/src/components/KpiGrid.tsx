@@ -10,9 +10,13 @@ interface Props {
     aov: Indicator;
     cancelRate: Indicator;
   };
+  dailyAvgIndicators?: {
+    revenue: Indicator;
+    orders: Indicator;
+  };
 }
 
-export default function KpiGrid({ data, indicators }: Props) {
+export default function KpiGrid({ data, indicators, dailyAvgIndicators }: Props) {
   const cells = [
     {
       key: "revenue",
@@ -49,6 +53,27 @@ export default function KpiGrid({ data, indicators }: Props) {
     },
   ];
 
+  if (dailyAvgIndicators && data.dailyAvgRevenue !== undefined && data.dailyAvgOrders !== undefined) {
+    cells.push(
+      {
+        key: "dailyAvgRevenue",
+        indicator: dailyAvgIndicators.revenue,
+        label: "일평균 매출",
+        value: formatWon(Math.round(data.dailyAvgRevenue)),
+        delta: "",
+        isUp: true,
+      },
+      {
+        key: "dailyAvgOrders",
+        indicator: dailyAvgIndicators.orders,
+        label: "일평균 건수",
+        value: `${Math.round(data.dailyAvgOrders).toLocaleString("ko-KR")}건`,
+        delta: "",
+        isUp: true,
+      }
+    );
+  }
+
   return (
     <div className="kpi-grid">
       {cells.map((cell) => (
@@ -56,7 +81,9 @@ export default function KpiGrid({ data, indicators }: Props) {
           <IdBadge id={cell.indicator.id} />
           <div className="kpi-cell__label">{cell.label}</div>
           <div className="kpi-cell__value">{cell.value}</div>
-          <div className={`kpi-cell__delta ${cell.isUp ? "is-up" : "is-down"}`}>{cell.delta}</div>
+          {cell.delta && (
+            <div className={`kpi-cell__delta ${cell.isUp ? "is-up" : "is-down"}`}>{cell.delta}</div>
+          )}
         </div>
       ))}
     </div>

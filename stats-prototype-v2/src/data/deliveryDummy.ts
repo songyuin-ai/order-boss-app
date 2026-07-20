@@ -7,7 +7,7 @@ import type {
   WeekdayBar,
 } from "./types";
 
-export interface Track1TabData {
+export interface DeliveryTabData {
   kpi: KpiData;
   hourly: HourlyBucket[];
   weekdayCumulative?: WeekdayBar[];
@@ -18,10 +18,10 @@ export interface Track1TabData {
 }
 
 const HOUR_LABELS = ["06-09", "09-11", "11-13", "13-15", "15-17", "17-19", "19-21"];
-const WEEKDAY_LABELS = ["월월", "화", "수", "목", "금", "토", "일"];
+const WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
 const CHANNEL_ORDER = ["해피오더", "배민", "쿠팡이츠", "요기요테스트", "땡겨요"];
 
-export const today: Track1TabData = {
+export const today: DeliveryTabData = {
   kpi: {
     revenue: 842000,
     orders: 47,
@@ -47,7 +47,7 @@ export const today: Track1TabData = {
 };
 
 // 이번 주 오늘 = 수요일 가정 (월/화/수만 지남)
-export const week: Track1TabData = {
+export const week: DeliveryTabData = {
   kpi: {
     revenue: 5624000,
     orders: 312,
@@ -58,6 +58,8 @@ export const week: Track1TabData = {
     aovDelta: 1.2,
     cancelDelta: -0.3,
     compareLabel: "전주 동일기간 대비",
+    dailyAvgRevenue: 803429,
+    dailyAvgOrders: 45,
   },
   hourly: [15, 34, 58, 92, 47, 41, 25].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
   weekdayCumulative: WEEKDAY_LABELS.map((label, i) => {
@@ -81,7 +83,7 @@ export const week: Track1TabData = {
   })),
 };
 
-export const month: Track1TabData = {
+export const month: DeliveryTabData = {
   kpi: {
     revenue: 24150000,
     orders: 1340,
@@ -92,6 +94,8 @@ export const month: Track1TabData = {
     aovDelta: -0.8,
     cancelDelta: 0.2,
     compareLabel: "전월 동일기간 대비",
+    dailyAvgRevenue: 805000,
+    dailyAvgOrders: 45,
   },
   hourly: [64, 148, 251, 398, 203, 176, 100].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
   weekdayAverage: [

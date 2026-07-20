@@ -1,7 +1,17 @@
 import { fetchSheetTab, num, numOrNull, bool, str, strAny, type SheetRow } from "./googleSheet";
-import type { Indicator, DeliveryRatio, ChannelRevenue, MenuItem, WeekdayBar, HourlyBucket, KpiData } from "../data/types";
-import type { Track1TabData } from "../data/track1Dummy";
-import type { SegmentChip } from "../data/track2Dummy";
+import type {
+  Indicator,
+  DeliveryRatio,
+  ChannelRevenue,
+  MenuItem,
+  WeekdayBar,
+  HourlyBucket,
+  KpiData,
+  PosKpiPeriod,
+  OnlineOfflineRatio,
+} from "../data/types";
+import type { DeliveryTabData } from "../data/deliveryDummy";
+import type { SegmentChip } from "../data/customerCompositionDummy";
 
 async function safeFetch(tab: string): Promise<SheetRow[] | null> {
   try {
@@ -34,6 +44,8 @@ function buildKpi(rows: SheetRow[] | null, tab: string): KpiData | undefined {
     aovDelta: num(row, "aovDelta"),
     cancelDelta: num(row, "cancelDelta"),
     compareLabel: str(row, "compareLabel"),
+    dailyAvgRevenue: row.dailyAvgRevenue ? num(row, "dailyAvgRevenue") : undefined,
+    dailyAvgOrders: row.dailyAvgOrders ? num(row, "dailyAvgOrders") : undefined,
   };
 }
 
@@ -61,7 +73,7 @@ function buildTopMenu(rows: SheetRow[] | null, tab: string): MenuItem[] | undefi
     .map((r) => ({ rank: num(r, "rank"), name: str(r, "name"), count: num(r, "count") }));
 }
 
-function buildDelivery(rows: SheetRow[] | null, tab: string): DeliveryRatio | undefined {
+function buildDeliveryRatio(rows: SheetRow[] | null, tab: string): DeliveryRatio | undefined {
   const row = (rows ?? []).find((r) => r.tab === tab);
   if (!row) return undefined;
   return { delivery: num(row, "delivery"), pickup: num(row, "pickup") };
@@ -75,74 +87,84 @@ function buildChannel(rows: SheetRow[] | null, tab: string): ChannelRevenue[] | 
 
 export interface LiveData {
   indicatorsById: Record<string, Indicator>;
-  track1: {
-    today: Partial<Track1TabData>;
-    week: Partial<Track1TabData>;
-    month: Partial<Track1TabData>;
+  delivery: {
+    today: Partial<DeliveryTabData>;
+    week: Partial<DeliveryTabData>;
+    month: Partial<DeliveryTabData>;
   };
-  track2: {
+  customerComposition: {
     customerComposition?: { loyalPct: number; deltaLabel: string; chips: SegmentChip[] };
     demographicDistribution?: { label: string; pct: number }[];
     segmentTrend?: { month: string; 단골: number; 신규: number }[];
+  };
+  customerDetail: {
     preferredCategory?: string[];
     agePreferredProducts?: Record<string, { name: string; revenue: number }[]>;
     loyalPreferredProducts?: { name: string; revenue: number }[];
     visitTimeText?: string;
     revisitCycle?: { value: string; label: string };
+  };
+  membership: {
     hValue?: { pct: number; deltaLabel: string };
     segmentContribution?: { segment: string; revenueShare: number; aov: number }[];
-    gcrmCompare?: {
-      metric: string;
-      ours: string;
-      nearby: string;
-      secondaryMetric: string;
-      oursSecondary: string;
-      nearbySecondary: string;
-    };
+    membershipRevenue?: { memberRevenue: number; totalRevenue: number; pct: number; deltaLabel: string };
+  };
+  pos: {
+    kpiPeriods?: Record<string, PosKpiPeriod[]>;
+    hourly?: Record<string, HourlyBucket[]>;
+    onlineOffline?: Record<string, OnlineOfflineRatio>;
   };
 }
+
+const POS_TABS = ["daily", "weekly", "monthly"];
 
 export async function loadLiveData(): Promise<LiveData> {
   const [
     indicatorsRows,
-    kpiRows,
-    hourlyRows,
-    weekdayRows,
-    topMenuRows,
-    deliveryRows,
-    channelRows,
+    posKpiRows,
+    posHourlyRows,
+    posOnlineOfflineRows,
     compositionRows,
     chipsRows,
     demographicRows,
     trendRows,
+    categoryRows,
     agePreferredRows,
     loyalPreferredRows,
-    categoryRows,
     visitTimeRows,
     revisitCycleRows,
     hValueRows,
     segmentContributionRows,
-    gcrmCompareRows,
+    membershipRevenueRows,
+    deliveryKpiRows,
+    deliveryHourlyRows,
+    deliveryWeekdayRows,
+    deliveryTopMenuRows,
+    deliveryRatioRows,
+    deliveryChannelRows,
   ] = await Promise.all([
     safeFetch("Indicators"),
-    safeFetch("Track1_KPI"),
-    safeFetch("Track1_Hourly"),
-    safeFetch("Track1_Weekday"),
-    safeFetch("Track1_TopMenu"),
-    safeFetch("Track1_Delivery"),
-    safeFetch("Track1_Channel"),
-    safeFetch("Track2_Composition"),
-    safeFetch("Track2_Chips"),
-    safeFetch("Track2_Demographic"),
-    safeFetch("Track2_Trend"),
-    safeFetch("Track2_AgePreferred"),
-    safeFetch("Track2_LoyalPreferred"),
-    safeFetch("Track2_Category"),
-    safeFetch("Track2_VisitTime"),
-    safeFetch("Track2_RevisitCycle"),
-    safeFetch("Track2_HValue"),
-    safeFetch("Track2_SegmentContribution"),
-    safeFetch("Track2_GcrmCompare"),
+    safeFetch("POS_KPI"),
+    safeFetch("POS_Hourly"),
+    safeFetch("POS_OnlineOffline"),
+    safeFetch("CustomerComposition"),
+    safeFetch("CustomerComposition_Chips"),
+    safeFetch("CustomerComposition_Demographic"),
+    safeFetch("CustomerComposition_Trend"),
+    safeFetch("CustomerDetail_Category"),
+    safeFetch("CustomerDetail_AgePreferred"),
+    safeFetch("CustomerDetail_LoyalPreferred"),
+    safeFetch("CustomerDetail_VisitTime"),
+    safeFetch("CustomerDetail_RevisitCycle"),
+    safeFetch("Membership_HValue"),
+    safeFetch("Membership_SegmentContribution"),
+    safeFetch("Membership_Revenue"),
+    safeFetch("Delivery_KPI"),
+    safeFetch("Delivery_Hourly"),
+    safeFetch("Delivery_Weekday"),
+    safeFetch("Delivery_TopMenu"),
+    safeFetch("Delivery_DeliveryRatio"),
+    safeFetch("Delivery_Channel"),
   ]);
 
   const indicatorsById: Record<string, Indicator> = {};
@@ -160,29 +182,29 @@ export async function loadLiveData(): Promise<LiveData> {
     };
   });
 
-  const track1 = {
+  const delivery = {
     today: compact({
-      kpi: buildKpi(kpiRows, "today"),
-      hourly: buildHourly(hourlyRows, "today"),
-      topMenu: buildTopMenu(topMenuRows, "today"),
-      deliveryRatio: buildDelivery(deliveryRows, "today"),
-      channelRevenue: buildChannel(channelRows, "today"),
+      kpi: buildKpi(deliveryKpiRows, "today"),
+      hourly: buildHourly(deliveryHourlyRows, "today"),
+      topMenu: buildTopMenu(deliveryTopMenuRows, "today"),
+      deliveryRatio: buildDeliveryRatio(deliveryRatioRows, "today"),
+      channelRevenue: buildChannel(deliveryChannelRows, "today"),
     }),
     week: compact({
-      kpi: buildKpi(kpiRows, "week"),
-      hourly: buildHourly(hourlyRows, "week"),
-      weekdayCumulative: buildWeekday(weekdayRows, "week"),
-      topMenu: buildTopMenu(topMenuRows, "week"),
-      deliveryRatio: buildDelivery(deliveryRows, "week"),
-      channelRevenue: buildChannel(channelRows, "week"),
+      kpi: buildKpi(deliveryKpiRows, "week"),
+      hourly: buildHourly(deliveryHourlyRows, "week"),
+      weekdayCumulative: buildWeekday(deliveryWeekdayRows, "week"),
+      topMenu: buildTopMenu(deliveryTopMenuRows, "week"),
+      deliveryRatio: buildDeliveryRatio(deliveryRatioRows, "week"),
+      channelRevenue: buildChannel(deliveryChannelRows, "week"),
     }),
     month: compact({
-      kpi: buildKpi(kpiRows, "month"),
-      hourly: buildHourly(hourlyRows, "month"),
-      weekdayAverage: buildWeekday(weekdayRows, "month"),
-      topMenu: buildTopMenu(topMenuRows, "month"),
-      deliveryRatio: buildDelivery(deliveryRows, "month"),
-      channelRevenue: buildChannel(channelRows, "month"),
+      kpi: buildKpi(deliveryKpiRows, "month"),
+      hourly: buildHourly(deliveryHourlyRows, "month"),
+      weekdayAverage: buildWeekday(deliveryWeekdayRows, "month"),
+      topMenu: buildTopMenu(deliveryTopMenuRows, "month"),
+      deliveryRatio: buildDeliveryRatio(deliveryRatioRows, "month"),
+      channelRevenue: buildChannel(deliveryChannelRows, "month"),
     }),
   };
 
@@ -199,7 +221,7 @@ export async function loadLiveData(): Promise<LiveData> {
     return grouped;
   })();
 
-  const track2 = compact({
+  const customerComposition = compact({
     customerComposition: compositionRows?.length
       ? {
           loyalPct: num(compositionRows[0], "loyalPct"),
@@ -213,6 +235,9 @@ export async function loadLiveData(): Promise<LiveData> {
     segmentTrend: trendRows?.length
       ? trendRows.map((r) => ({ month: str(r, "month"), 단골: num(r, "단골"), 신규: num(r, "신규") }))
       : undefined,
+  });
+
+  const customerDetail = compact({
     preferredCategory: categoryRows?.length
       ? [...categoryRows].sort((a, b) => num(a, "order") - num(b, "order")).map((r) => str(r, "value"))
       : undefined,
@@ -226,6 +251,9 @@ export async function loadLiveData(): Promise<LiveData> {
     revisitCycle: revisitCycleRows?.length
       ? { value: str(revisitCycleRows[0], "value"), label: str(revisitCycleRows[0], "label") }
       : undefined,
+  });
+
+  const membership = compact({
     hValue: hValueRows?.length
       ? { pct: num(hValueRows[0], "pct"), deltaLabel: str(hValueRows[0], "deltaLabel") }
       : undefined,
@@ -236,17 +264,47 @@ export async function loadLiveData(): Promise<LiveData> {
           aov: num(r, "aov"),
         }))
       : undefined,
-    gcrmCompare: gcrmCompareRows?.length
+    membershipRevenue: membershipRevenueRows?.length
       ? {
-          metric: str(gcrmCompareRows[0], "metric"),
-          ours: str(gcrmCompareRows[0], "ours"),
-          nearby: str(gcrmCompareRows[0], "nearby"),
-          secondaryMetric: str(gcrmCompareRows[0], "secondaryMetric"),
-          oursSecondary: str(gcrmCompareRows[0], "oursSecondary"),
-          nearbySecondary: str(gcrmCompareRows[0], "nearbySecondary"),
+          memberRevenue: num(membershipRevenueRows[0], "memberRevenue"),
+          totalRevenue: num(membershipRevenueRows[0], "totalRevenue"),
+          pct: num(membershipRevenueRows[0], "pct"),
+          deltaLabel: str(membershipRevenueRows[0], "deltaLabel"),
         }
       : undefined,
   });
 
-  return { indicatorsById, track1, track2 };
+  const posKpiByTab: Record<string, PosKpiPeriod[]> = {};
+  const posHourlyByTab: Record<string, HourlyBucket[]> = {};
+  const posOnlineOfflineByTab: Record<string, OnlineOfflineRatio> = {};
+
+  POS_TABS.forEach((tab) => {
+    const kpiRows = byTab(posKpiRows, tab);
+    if (kpiRows.length) {
+      posKpiByTab[tab] = kpiRows.map((r) => ({
+        periodLabel: str(r, "periodLabel"),
+        totalRevenue: num(r, "totalRevenue"),
+        totalOrders: num(r, "totalOrders"),
+        dailyAvgRevenue: r.dailyAvgRevenue ? num(r, "dailyAvgRevenue") : undefined,
+        dailyAvgOrders: r.dailyAvgOrders ? num(r, "dailyAvgOrders") : undefined,
+        aov: num(r, "aov"),
+      }));
+    }
+    const hourlyRows = byTab(posHourlyRows, tab);
+    if (hourlyRows.length) {
+      posHourlyByTab[tab] = hourlyRows.map((r) => ({ label: str(r, "label"), value: num(r, "value") }));
+    }
+    const ratioRow = (posOnlineOfflineRows ?? []).find((r) => r.tab === tab);
+    if (ratioRow) {
+      posOnlineOfflineByTab[tab] = { online: num(ratioRow, "online"), offline: num(ratioRow, "offline") };
+    }
+  });
+
+  const pos = compact({
+    kpiPeriods: Object.keys(posKpiByTab).length ? posKpiByTab : undefined,
+    hourly: Object.keys(posHourlyByTab).length ? posHourlyByTab : undefined,
+    onlineOffline: Object.keys(posOnlineOfflineByTab).length ? posOnlineOfflineByTab : undefined,
+  });
+
+  return { indicatorsById, delivery, customerComposition, customerDetail, membership, pos };
 }

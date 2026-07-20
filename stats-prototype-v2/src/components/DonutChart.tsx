@@ -1,10 +1,17 @@
 interface Props {
-  delivery: number;
-  pickup: number;
+  primaryValue: number;
+  secondaryValue: number;
+  primaryLabel?: string;
+  secondaryLabel?: string;
 }
 
-export default function DonutChart({ delivery, pickup }: Props) {
-  const deg = delivery * 3.6;
+export default function DonutChart({
+  primaryValue,
+  secondaryValue,
+  primaryLabel = "배달",
+  secondaryLabel = "픽업",
+}: Props) {
+  const deg = primaryValue * 3.6;
 
   return (
     <div className="donut-wrap">
@@ -15,18 +22,18 @@ export default function DonutChart({ delivery, pickup }: Props) {
         }}
       >
         <div className="donut__hole">
-          <span className="donut__value">{delivery}%</span>
-          <span className="donut__label">배달</span>
+          <span className="donut__value">{primaryValue}%</span>
+          <span className="donut__label">{primaryLabel}</span>
         </div>
       </div>
       <div className="donut-legend">
         <div className="donut-legend__item">
           <span className="dot dot--accent" />
-          배달 {delivery}%
+          {primaryLabel} {primaryValue}%
         </div>
         <div className="donut-legend__item">
           <span className="dot dot--muted" />
-          픽업 {pickup}%
+          {secondaryLabel} {secondaryValue}%
         </div>
       </div>
     </div>

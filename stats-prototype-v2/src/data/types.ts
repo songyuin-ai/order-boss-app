@@ -18,6 +18,22 @@ export interface KpiData {
   aovDelta: number;
   cancelDelta: number;
   compareLabel: string;
+  dailyAvgRevenue?: number;
+  dailyAvgOrders?: number;
+}
+
+export interface PosKpiPeriod {
+  periodLabel: string;
+  totalRevenue: number;
+  totalOrders: number;
+  dailyAvgRevenue?: number;
+  dailyAvgOrders?: number;
+  aov: number;
+}
+
+export interface OnlineOfflineRatio {
+  online: number;
+  offline: number;
 }
 
 export interface HourlyBucket {
