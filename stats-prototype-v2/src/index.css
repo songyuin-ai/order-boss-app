@@ -1114,10 +1114,8 @@ body {
 .panel th:nth-child(5),
 .panel td:nth-child(5),
 .panel th:nth-child(6),
-.panel td:nth-child(6),
-.panel th:nth-child(7),
-.panel td:nth-child(7) {
-  width: 20%;
+.panel td:nth-child(6) {
+  width: 25%;
 }
 
 .panel thead th {
@@ -1158,10 +1156,10 @@ body {
 
 .panel .col-name {
   font-weight: 700;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
-.panel .col-expose,
 .panel .col-def,
 .panel .col-src,
 .panel .col-purpose,

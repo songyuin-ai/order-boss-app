@@ -27,7 +27,6 @@ export default function IndicatorPanel({ indicators, tabLabel }: Props) {
             <tr>
               <th>ID</th>
               <th>지표명</th>
-              <th>노출</th>
               <th>정의</th>
               <th>원천데이터 및 산식</th>
               <th>제공목적</th>
@@ -42,7 +41,6 @@ export default function IndicatorPanel({ indicators, tabLabel }: Props) {
                 <tr key={ind.id} className={`${isActive ? "is-active" : ""}${isDim ? " is-dim" : ""}`}>
                   <td className="row-id">{ind.id}</td>
                   <td className="col-name">{ind.지표명}</td>
-                  <td className="col-expose">{ind.노출}</td>
                   <td className="col-def">{ind.정의}</td>
                   <td className="col-src">
                     {ind.원천데이터_및_산식}
