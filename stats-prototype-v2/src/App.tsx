@@ -156,18 +156,18 @@ function AppShell() {
               </div>
             </div>
             {renderScreen()}
+            <DrawerNav
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              systems={SYSTEMS}
+              activeSystem={system}
+              activeMenu={menu}
+              onNavigate={handleNavigate}
+            />
           </MobileFrame>
           <IndicatorPanel indicators={panelIndicators} tabLabel={panelLabel} />
         </div>
       </div>
-      <DrawerNav
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        systems={SYSTEMS}
-        activeSystem={system}
-        activeMenu={menu}
-        onNavigate={handleNavigate}
-      />
     </IndicatorContext.Provider>
   );
 }

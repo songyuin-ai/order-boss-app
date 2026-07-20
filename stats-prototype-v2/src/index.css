@@ -129,6 +129,7 @@ body {
 }
 
 .mobile-frame__screen {
+  position: relative;
   background: var(--bg);
   border-radius: 26px;
   overflow: hidden;
@@ -188,9 +189,9 @@ body {
   background: var(--text);
 }
 
-/* Drawer nav */
+/* Drawer nav (confined to the mobile mockup screen, not the browser viewport) */
 .drawer-backdrop {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   opacity: 0;
@@ -205,12 +206,12 @@ body {
 }
 
 .drawer {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 260px;
-  max-width: 82%;
+  width: 74%;
+  max-width: 260px;
   background: var(--card-bg);
   box-shadow: 2px 0 24px rgba(0, 0, 0, 0.18);
   transform: translateX(-100%);
