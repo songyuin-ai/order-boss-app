@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import RevenueRankList from "../components/RevenueRankList";
 import { useAppData } from "../context/DataContext";
+import { periodKey, periodDefLabel, type PeriodSelection } from "../lib/period";
 import type { Indicator } from "../data/types";
 
 function AgePreferredCard({
@@ -35,11 +36,13 @@ function AgePreferredCard({
 }
 
 interface Props {
+  period: PeriodSelection;
   onPanelChange: (indicators: Indicator[], label: string) => void;
 }
 
-export default function CustomerDetailScreen({ onPanelChange }: Props) {
-  const { customerDetailIndicators: indicators, customerDetail: data } = useAppData();
+export default function CustomerDetailScreen({ period, onPanelChange }: Props) {
+  const { customerDetailIndicators: indicators, customerDetail } = useAppData();
+  const data = customerDetail.byPeriod[periodKey(period)] ?? customerDetail.byPeriod.recent30;
 
   useEffect(() => {
     onPanelChange(
@@ -50,10 +53,10 @@ export default function CustomerDetailScreen({ onPanelChange }: Props) {
         indicators.visitTime,
         indicators.revisitCycle,
       ],
-      "고객 상세분석 기준"
+      `고객 상세분석 기준 · ${periodDefLabel(period)}`
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [indicators]);
+  }, [indicators, period]);
 
   return (
     <div className="screen__cards">

@@ -5,7 +5,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   category: {
     id: "data_014",
     지표명: "선호 상품·카테고리",
-    정의: "매장 기준 회원 구매 상위 카테고리, 최근 30일 기준",
+    정의: "매장 기준 회원 구매 상위 카테고리, 화면 상단 기간 필터 기준",
     원천데이터_및_산식: "HPC 상품단위 데이터 (⚠있다고 가정, 확인 중)",
     제공목적: "메뉴 추천, 타겟 프로모션",
     차트형태: "정보 카드 (계층 구조: 카테고리1 > 카테고리2 > 카테고리3 텍스트만)",
@@ -13,7 +13,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   agePreferred: {
     id: "data_021",
     지표명: "연령대별 선호상품 Top3",
-    정의: "연령대별 매출 상위 상품 1~3위, 최근 30일 기준",
+    정의: "연령대별 매출 상위 상품 1~3위, 화면 상단 기간 필터 기준",
     원천데이터_및_산식:
       "HPC 상품단위 데이터 (⚠있다고 가정, 확인 중) GROUP BY 연령대, 상품별 매출액 SUM 후 상위 3개 정렬",
     제공목적: "연령대별 맞춤 메뉴 구성, 타겟 프로모션 참고",
@@ -22,7 +22,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   loyalPreferred: {
     id: "data_022",
     지표명: "단골 선호상품 Top3",
-    정의: "단골 세그먼트 매출 상위 상품 1~3위, 최근 30일 기준",
+    정의: "단골 세그먼트 매출 상위 상품 1~3위, 화면 상단 기간 필터 기준",
     원천데이터_및_산식:
       "HPC 상품단위 데이터 (⚠있다고 가정, 확인 중), 단골 세그먼트 필터 후 상품별 매출액 SUM 상위 3개 정렬",
     제공목적: "단골 고객 유지를 위한 메뉴 전략 참고",
@@ -31,7 +31,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   visitTime: {
     id: "data_015",
     지표명: "방문 시간대",
-    정의: "매장 기준 회원 사용일시 시간대 분포, 최근 30일 기준",
+    정의: "매장 기준 회원 사용일시 시간대 분포, 화면 상단 기간 필터 기준",
     원천데이터_및_산식: "HPC 사용일시 GROUP BY 시간대",
     제공목적: "혼잡시간대 파악, 시간대별 프로모션",
     차트형태: '정보 카드 (텍스트: "주 방문시간 오후 3~5시" 형태)',
@@ -39,7 +39,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   revisitCycle: {
     id: "data_016",
     지표명: "재방문 주기(고착도)",
-    정의: "매장 기준 회원별 재방문 간격 평균, 최근 30일 기준",
+    정의: "매장 기준 회원별 재방문 간격 평균, 화면 상단 기간 필터 기준",
     원천데이터_및_산식: "연속 구매일 간격 평균",
     제공목적: "간격 증가 시 이탈 조짐 조기 파악",
     차트형태: '정보 카드 (큰 수치: "9.2일" + 라벨 "평균 재방문 간격")',

@@ -5,30 +5,31 @@ import BarChart from "../components/BarChart";
 import DonutChart from "../components/DonutChart";
 import TopMenuList from "../components/TopMenuList";
 import SegmentedNav from "../components/SegmentedNav";
+import DateNav from "../components/DateNav";
 import { formatCompactWon } from "../utils/format";
 import { IndicatorContext } from "../context/IndicatorContext";
 import { useAppData } from "../context/DataContext";
 import type { Indicator } from "../data/types";
-import type { DeliveryTabData } from "../data/deliveryDummy";
+import type { DeliveryPeriodSetData } from "../data/deliveryDummy";
 import type { deliveryIndicators as DeliveryIndicatorMap } from "../data/deliveryIndicators";
 
 const TABS = [
-  { key: "today", label: "오늘" },
-  { key: "week", label: "이번 주" },
-  { key: "month", label: "이번 달" },
+  { key: "daily", label: "일간" },
+  { key: "weekly", label: "주간" },
+  { key: "monthly", label: "월간" },
 ];
 
 const TAB_LABEL: Record<string, string> = {
-  today: "오늘 탭 기준",
-  week: "이번 주 탭 기준",
-  month: "이번 달 탭 기준",
+  daily: "일간 탭 기준",
+  weekly: "주간 탭 기준",
+  monthly: "월간 탭 기준",
 };
 
 type IndicatorMap = typeof DeliveryIndicatorMap;
 
 function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[]> {
   return {
-    today: [
+    daily: [
       indicators.revenue,
       indicators.orders,
       indicators.aov,
@@ -38,7 +39,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.deliveryRatio,
       indicators.channelRevenue,
     ],
-    week: [
+    weekly: [
       indicators.weekdayCumulative,
       indicators.revenue,
       indicators.orders,
@@ -51,7 +52,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.deliveryRatio,
       indicators.channelRevenue,
     ],
-    month: [
+    monthly: [
       indicators.revenue,
       indicators.orders,
       indicators.aov,
@@ -67,7 +68,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
   };
 }
 
-function HourlyCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
+function HourlyCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
   return (
     <Card title="시간대별 분포" indicator={indicators.hourly}>
       <BarChart
@@ -78,24 +79,7 @@ function HourlyCard({ data, indicators }: { data: DeliveryTabData; indicators: I
   );
 }
 
-function KpiCard({ data, indicators, withDailyAvg }: { data: DeliveryTabData; indicators: IndicatorMap; withDailyAvg?: boolean }) {
-  return (
-    <KpiGrid
-      data={data.kpi}
-      indicators={{
-        revenue: indicators.revenue,
-        orders: indicators.orders,
-        aov: indicators.aov,
-        cancelRate: indicators.cancelRate,
-      }}
-      dailyAvgIndicators={
-        withDailyAvg ? { revenue: indicators.dailyAvgRevenue, orders: indicators.dailyAvgOrders } : undefined
-      }
-    />
-  );
-}
-
-function TopMenuCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
+function TopMenuCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
   return (
     <Card title="인기 메뉴 Top 3" indicator={indicators.topMenu}>
       <TopMenuList items={data.topMenu} />
@@ -103,7 +87,7 @@ function TopMenuCard({ data, indicators }: { data: DeliveryTabData; indicators: 
   );
 }
 
-function DeliveryRatioCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
+function DeliveryRatioCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
   return (
     <Card title="배달/픽업 비중" indicator={indicators.deliveryRatio}>
       <DonutChart
@@ -116,7 +100,7 @@ function DeliveryRatioCard({ data, indicators }: { data: DeliveryTabData; indica
   );
 }
 
-function ChannelCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
+function ChannelCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
   const opacities = [1, 0.85, 0.7, 0.55, 0.4];
   return (
     <Card title="채널별 매출" indicator={indicators.channelRevenue}>
@@ -133,10 +117,10 @@ function ChannelCard({ data, indicators }: { data: DeliveryTabData; indicators: 
   );
 }
 
-function WeekdayCumulativeCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
+function WeekdayCumulativeCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
   if (!data.weekdayCumulative) return null;
   return (
-    <Card title="요일별 누적 (이번 주)" indicator={indicators.weekdayCumulative}>
+    <Card title="요일별 누적 (최근 주)" indicator={indicators.weekdayCumulative}>
       <BarChart
         data={data.weekdayCumulative.map((w) => ({
           label: w.label,
@@ -151,10 +135,10 @@ function WeekdayCumulativeCard({ data, indicators }: { data: DeliveryTabData; in
   );
 }
 
-function WeekdayAverageCard({ data, indicators }: { data: DeliveryTabData; indicators: IndicatorMap }) {
+function WeekdayAverageCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
   if (!data.weekdayAverage) return null;
   return (
-    <Card title="요일별 평균 (이번 달)" indicator={indicators.weekdayAverage}>
+    <Card title="요일별 평균 (최근 달)" indicator={indicators.weekdayAverage}>
       <BarChart
         data={data.weekdayAverage.map((w) => ({
           label: w.label,
@@ -173,11 +157,15 @@ interface Props {
 }
 
 export default function DeliveryScreen({ onPanelChange }: Props) {
-  const [tab, setTab] = useState("today");
+  const [tab, setTab] = useState("daily");
+  const [periodIndex, setPeriodIndex] = useState(0);
   const { clear } = useContext(IndicatorContext);
   const { deliveryIndicators, delivery } = useAppData();
   const data = delivery[tab as keyof typeof delivery];
   const tabIndicators = buildTabIndicators(deliveryIndicators);
+
+  const periods = data.kpiPeriods;
+  const period = periods[periodIndex] ?? periods[0];
 
   useEffect(() => {
     onPanelChange(tabIndicators[tab], TAB_LABEL[tab]);
@@ -186,35 +174,88 @@ export default function DeliveryScreen({ onPanelChange }: Props) {
 
   const handleTabChange = (t: string) => {
     setTab(t);
+    setPeriodIndex(0);
     clear();
   };
+
+  const handlePeriodChange = (delta: number) => {
+    setPeriodIndex((i) => Math.min(Math.max(i + delta, 0), periods.length - 1));
+    clear();
+  };
+
+  if (!period) {
+    return (
+      <div className="screen">
+        <SegmentedNav options={TABS} active={tab} onChange={handleTabChange} size="sm" />
+        <div className="screen__cards">
+          <div className="placeholder">
+            <div className="placeholder__text">표시할 데이터가 없습니다.</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="screen">
       <SegmentedNav options={TABS} active={tab} onChange={handleTabChange} size="sm" />
       <div className="screen__cards">
-        {tab === "today" && (
+        <DateNav
+          label={period.periodLabel}
+          onPrev={() => handlePeriodChange(1)}
+          onNext={() => handlePeriodChange(-1)}
+          canPrev={periodIndex < periods.length - 1}
+          canNext={periodIndex > 0}
+        />
+
+        {tab === "daily" && (
           <>
-            <KpiCard data={data} indicators={deliveryIndicators} />
+            <KpiGrid
+              data={period}
+              indicators={{
+                revenue: deliveryIndicators.revenue,
+                orders: deliveryIndicators.orders,
+                aov: deliveryIndicators.aov,
+                cancelRate: deliveryIndicators.cancelRate,
+              }}
+            />
             <HourlyCard data={data} indicators={deliveryIndicators} />
             <TopMenuCard data={data} indicators={deliveryIndicators} />
             <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
             <ChannelCard data={data} indicators={deliveryIndicators} />
           </>
         )}
-        {tab === "week" && (
+        {tab === "weekly" && (
           <>
             <WeekdayCumulativeCard data={data} indicators={deliveryIndicators} />
-            <KpiCard data={data} indicators={deliveryIndicators} withDailyAvg />
+            <KpiGrid
+              data={period}
+              indicators={{
+                revenue: deliveryIndicators.revenue,
+                orders: deliveryIndicators.orders,
+                aov: deliveryIndicators.aov,
+                cancelRate: deliveryIndicators.cancelRate,
+              }}
+              dailyAvgIndicators={{ revenue: deliveryIndicators.dailyAvgRevenue, orders: deliveryIndicators.dailyAvgOrders }}
+            />
             <HourlyCard data={data} indicators={deliveryIndicators} />
             <TopMenuCard data={data} indicators={deliveryIndicators} />
             <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
             <ChannelCard data={data} indicators={deliveryIndicators} />
           </>
         )}
-        {tab === "month" && (
+        {tab === "monthly" && (
           <>
-            <KpiCard data={data} indicators={deliveryIndicators} withDailyAvg />
+            <KpiGrid
+              data={period}
+              indicators={{
+                revenue: deliveryIndicators.revenue,
+                orders: deliveryIndicators.orders,
+                aov: deliveryIndicators.aov,
+                cancelRate: deliveryIndicators.cancelRate,
+              }}
+              dailyAvgIndicators={{ revenue: deliveryIndicators.dailyAvgRevenue, orders: deliveryIndicators.dailyAvgOrders }}
+            />
             <HourlyCard data={data} indicators={deliveryIndicators} />
             <WeekdayAverageCard data={data} indicators={deliveryIndicators} />
             <TopMenuCard data={data} indicators={deliveryIndicators} />

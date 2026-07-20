@@ -5,7 +5,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
   revenue: {
     id: "data_001",
     지표명: "매출액",
-    정의: "집계기간 총 주문금액",
+    정의: "선택 기간(일간/주간/월간) 총 주문금액, 최근 3개월 내 화살표로 기간 이동 가능",
     원천데이터_및_산식: "주문금액 SUM",
     제공목적: "기본 매출 현황",
     차트형태: "KPI 카드 (2x2 그리드 내, 좌상단)",
@@ -45,7 +45,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
   weekdayCumulative: {
     id: "data_006",
     지표명: "요일별 누적",
-    정의: "이번 주 요일별 매출 누적",
+    정의: "주간 탭 기준, 가장 최근 주의 요일별 매출 누적",
     원천데이터_및_산식: "주문일시 요일 추출, 지난 요일만 표시",
     제공목적: "요일 패턴 파악",
     차트형태: "요일별 막대차트 (월~일 7개, 아직 안 지난 요일은 막대 없음, 오늘은 강조색)",
@@ -53,7 +53,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
   weekdayAverage: {
     id: "data_007",
     지표명: "요일별 평균",
-    정의: "이번 달 요일별 매출 평균",
+    정의: "월간 탭 기준, 가장 최근 달의 요일별 매출 평균",
     원천데이터_및_산식: "요일별 매출합 ÷ 지나간 횟수",
     제공목적: "요일 패턴, 이상치 파악",
     차트형태: "요일별 막대차트 (월~일 7개 전부 표시, 미래 요일도 지나간 데이터로 평균)",
@@ -85,7 +85,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
   dailyAvgRevenue: {
     id: "data_031",
     지표명: "일평균 매출 (딜리버리)",
-    정의: "이번 주/이번 달 탭의 일 평균 매출",
+    정의: "주간/월간 탭의 일 평균 매출",
     원천데이터_및_산식: "매출액 ÷ 집계일수",
     제공목적: "기간별 매출 추세 참고",
     차트형태: "KPI 카드 (이번주/이번달 KPI 내 추가 항목)",
@@ -93,7 +93,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
   dailyAvgOrders: {
     id: "data_032",
     지표명: "일평균 건수 (딜리버리)",
-    정의: "이번 주/이번 달 탭의 일 평균 주문건수",
+    정의: "주간/월간 탭의 일 평균 주문건수",
     원천데이터_및_산식: "주문건수 ÷ 집계일수",
     제공목적: "기간별 주문량 추세 참고",
     차트형태: "KPI 카드 (이번주/이번달 KPI 내 추가 항목)",

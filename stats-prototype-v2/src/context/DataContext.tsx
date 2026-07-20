@@ -5,34 +5,23 @@ import { customerCompositionIndicators as defaultCustomerCompositionIndicators }
 import { customerDetailIndicators as defaultCustomerDetailIndicators } from "../data/customerDetailIndicators";
 import { membershipIndicators as defaultMembershipIndicators } from "../data/membershipIndicators";
 import { posIndicators as defaultPosIndicators } from "../data/posIndicators";
-import { today as defaultToday, week as defaultWeek, month as defaultMonth, type DeliveryTabData } from "../data/deliveryDummy";
-import * as defaultCustomerCompositionDummy from "../data/customerCompositionDummy";
-import type { SegmentChip } from "../data/customerCompositionDummy";
-import * as defaultCustomerDetailDummy from "../data/customerDetailDummy";
-import * as defaultMembershipDummy from "../data/membershipDummy";
+import {
+  daily as defaultDaily,
+  weekly as defaultWeekly,
+  monthly as defaultMonthly,
+  type DeliveryPeriodSetData,
+  type DeliveryKpiPeriod,
+} from "../data/deliveryDummy";
+import {
+  byPeriod as defaultCustomerCompositionByPeriod,
+  segmentTrend as defaultSegmentTrend,
+  type CustomerCompositionPeriodData,
+} from "../data/customerCompositionDummy";
+import { byPeriod as defaultCustomerDetailByPeriod, type CustomerDetailPeriodData } from "../data/customerDetailDummy";
+import { byPeriod as defaultMembershipByPeriod, type MembershipPeriodData } from "../data/membershipDummy";
 import { posKpiPeriods as defaultPosKpiPeriods, posHourly as defaultPosHourly, posOnlineOffline as defaultPosOnlineOffline } from "../data/posDummy";
 import { loadLiveData, type LiveData } from "../lib/loadLiveData";
 import { SHEET_ID } from "../config";
-
-interface CustomerCompositionData {
-  customerComposition: { loyalPct: number; deltaLabel: string; chips: SegmentChip[] };
-  demographicDistribution: { label: string; pct: number }[];
-  segmentTrend: { month: string; 단골: number; 신규: number }[];
-}
-
-interface CustomerDetailData {
-  preferredCategory: string[];
-  agePreferredProducts: Record<string, { name: string; revenue: number }[]>;
-  loyalPreferredProducts: { name: string; revenue: number }[];
-  visitTimeText: string;
-  revisitCycle: { value: string; label: string };
-}
-
-interface MembershipData {
-  hValue: { pct: number; deltaLabel: string };
-  segmentContribution: { segment: string; revenueShare: number; aov: number }[];
-  membershipRevenue: { memberRevenue: number; totalRevenue: number; pct: number; deltaLabel: string };
-}
 
 interface PosData {
   kpiPeriods: Record<string, PosKpiPeriod[]>;
@@ -52,16 +41,21 @@ function mergeIndicators<T extends IndicatorMap>(defaults: T, byId: Record<strin
   return merged;
 }
 
+function mergeLatestPeriod<T extends { periodLabel: string }>(periods: T[], override?: Partial<T>): T[] {
+  if (!override || !periods.length) return periods;
+  return [{ ...periods[0], ...override }, ...periods.slice(1)];
+}
+
 interface DataShape {
   deliveryIndicators: typeof defaultDeliveryIndicators;
   customerCompositionIndicators: typeof defaultCustomerCompositionIndicators;
   customerDetailIndicators: typeof defaultCustomerDetailIndicators;
   membershipIndicators: typeof defaultMembershipIndicators;
   posIndicators: typeof defaultPosIndicators;
-  delivery: { today: DeliveryTabData; week: DeliveryTabData; month: DeliveryTabData };
-  customerComposition: CustomerCompositionData;
-  customerDetail: CustomerDetailData;
-  membership: MembershipData;
+  delivery: { daily: DeliveryPeriodSetData; weekly: DeliveryPeriodSetData; monthly: DeliveryPeriodSetData };
+  customerComposition: { byPeriod: Record<string, CustomerCompositionPeriodData>; segmentTrend: typeof defaultSegmentTrend };
+  customerDetail: { byPeriod: Record<string, CustomerDetailPeriodData> };
+  membership: { byPeriod: Record<string, MembershipPeriodData> };
   pos: PosData;
   status: "loading" | "live" | "fallback";
 }
@@ -72,10 +66,10 @@ const defaultShape: DataShape = {
   customerDetailIndicators: defaultCustomerDetailIndicators,
   membershipIndicators: defaultMembershipIndicators,
   posIndicators: defaultPosIndicators,
-  delivery: { today: defaultToday, week: defaultWeek, month: defaultMonth },
-  customerComposition: { ...defaultCustomerCompositionDummy },
-  customerDetail: { ...defaultCustomerDetailDummy },
-  membership: { ...defaultMembershipDummy },
+  delivery: { daily: defaultDaily, weekly: defaultWeekly, monthly: defaultMonthly },
+  customerComposition: { byPeriod: defaultCustomerCompositionByPeriod, segmentTrend: defaultSegmentTrend },
+  customerDetail: { byPeriod: defaultCustomerDetailByPeriod },
+  membership: { byPeriod: defaultMembershipByPeriod },
   pos: { kpiPeriods: defaultPosKpiPeriods, hourly: defaultPosHourly, onlineOffline: defaultPosOnlineOffline },
   status: SHEET_ID ? "loading" : "fallback",
 };
@@ -84,6 +78,28 @@ const DataContext = createContext<DataShape>(defaultShape);
 
 export function useAppData() {
   return useContext(DataContext);
+}
+
+interface DeliveryTabOverride {
+  kpi?: Partial<DeliveryKpiPeriod>;
+  hourly?: DeliveryPeriodSetData["hourly"];
+  topMenu?: DeliveryPeriodSetData["topMenu"];
+  deliveryRatio?: DeliveryPeriodSetData["deliveryRatio"];
+  channelRevenue?: DeliveryPeriodSetData["channelRevenue"];
+  weekdayCumulative?: DeliveryPeriodSetData["weekdayCumulative"];
+  weekdayAverage?: DeliveryPeriodSetData["weekdayAverage"];
+}
+
+function mergeDeliveryTab(base: DeliveryPeriodSetData, override: DeliveryTabOverride): DeliveryPeriodSetData {
+  return {
+    kpiPeriods: mergeLatestPeriod(base.kpiPeriods, override.kpi),
+    hourly: override.hourly ?? base.hourly,
+    topMenu: override.topMenu ?? base.topMenu,
+    deliveryRatio: override.deliveryRatio ?? base.deliveryRatio,
+    channelRevenue: override.channelRevenue ?? base.channelRevenue,
+    weekdayCumulative: override.weekdayCumulative ?? base.weekdayCumulative,
+    weekdayAverage: override.weekdayAverage ?? base.weekdayAverage,
+  };
 }
 
 export function DataProvider({ children }: { children: ReactNode }) {
@@ -103,13 +119,30 @@ export function DataProvider({ children }: { children: ReactNode }) {
           membershipIndicators: mergeIndicators(defaultMembershipIndicators, live.indicatorsById),
           posIndicators: mergeIndicators(defaultPosIndicators, live.indicatorsById),
           delivery: {
-            today: { ...defaultToday, ...live.delivery.today },
-            week: { ...defaultWeek, ...live.delivery.week },
-            month: { ...defaultMonth, ...live.delivery.month },
+            daily: mergeDeliveryTab(defaultDaily, live.delivery.daily),
+            weekly: mergeDeliveryTab(defaultWeekly, live.delivery.weekly),
+            monthly: mergeDeliveryTab(defaultMonthly, live.delivery.monthly),
           },
-          customerComposition: { ...defaultCustomerCompositionDummy, ...live.customerComposition },
-          customerDetail: { ...defaultCustomerDetailDummy, ...live.customerDetail },
-          membership: { ...defaultMembershipDummy, ...live.membership },
+          // 라이브 시트는 "최근 30일" 스냅샷만 덮어씀 - 최근 7일/월별 값은 항상 더미데이터
+          customerComposition: {
+            byPeriod: {
+              ...defaultCustomerCompositionByPeriod,
+              recent30: { ...defaultCustomerCompositionByPeriod.recent30, ...live.customerComposition },
+            },
+            segmentTrend: live.customerComposition.segmentTrend ?? defaultSegmentTrend,
+          },
+          customerDetail: {
+            byPeriod: {
+              ...defaultCustomerDetailByPeriod,
+              recent30: { ...defaultCustomerDetailByPeriod.recent30, ...live.customerDetail },
+            },
+          },
+          membership: {
+            byPeriod: {
+              ...defaultMembershipByPeriod,
+              recent30: { ...defaultMembershipByPeriod.recent30, ...live.membership },
+            },
+          },
           pos: {
             kpiPeriods: live.pos.kpiPeriods ?? defaultPosKpiPeriods,
             hourly: live.pos.hourly ?? defaultPosHourly,

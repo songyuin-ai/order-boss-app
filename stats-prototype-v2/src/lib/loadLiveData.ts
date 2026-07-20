@@ -10,8 +10,17 @@ import type {
   PosKpiPeriod,
   OnlineOfflineRatio,
 } from "../data/types";
-import type { DeliveryTabData } from "../data/deliveryDummy";
 import type { SegmentChip } from "../data/customerCompositionDummy";
+
+interface DeliveryTabOverride {
+  kpi?: KpiData;
+  hourly?: HourlyBucket[];
+  weekdayCumulative?: WeekdayBar[];
+  weekdayAverage?: WeekdayBar[];
+  topMenu?: MenuItem[];
+  deliveryRatio?: DeliveryRatio;
+  channelRevenue?: ChannelRevenue[];
+}
 
 async function safeFetch(tab: string): Promise<SheetRow[] | null> {
   try {
@@ -88,9 +97,9 @@ function buildChannel(rows: SheetRow[] | null, tab: string): ChannelRevenue[] | 
 export interface LiveData {
   indicatorsById: Record<string, Indicator>;
   delivery: {
-    today: Partial<DeliveryTabData>;
-    week: Partial<DeliveryTabData>;
-    month: Partial<DeliveryTabData>;
+    daily: DeliveryTabOverride;
+    weekly: DeliveryTabOverride;
+    monthly: DeliveryTabOverride;
   };
   customerComposition: {
     customerComposition?: { loyalPct: number; deltaLabel: string; chips: SegmentChip[] };
@@ -183,15 +192,17 @@ export async function loadLiveData(): Promise<LiveData> {
     };
   });
 
+  // 시트의 tab 컬럼 값(today/week/month)은 하위호환을 위해 그대로 유지 -
+  // 딜리버리 화면의 일간/주간/월간 탭 중 "가장 최근 기간" KPI만 덮어씀
   const delivery = {
-    today: compact({
+    daily: compact({
       kpi: buildKpi(deliveryKpiRows, "today"),
       hourly: buildHourly(deliveryHourlyRows, "today"),
       topMenu: buildTopMenu(deliveryTopMenuRows, "today"),
       deliveryRatio: buildDeliveryRatio(deliveryRatioRows, "today"),
       channelRevenue: buildChannel(deliveryChannelRows, "today"),
     }),
-    week: compact({
+    weekly: compact({
       kpi: buildKpi(deliveryKpiRows, "week"),
       hourly: buildHourly(deliveryHourlyRows, "week"),
       weekdayCumulative: buildWeekday(deliveryWeekdayRows, "week"),
@@ -199,7 +210,7 @@ export async function loadLiveData(): Promise<LiveData> {
       deliveryRatio: buildDeliveryRatio(deliveryRatioRows, "week"),
       channelRevenue: buildChannel(deliveryChannelRows, "week"),
     }),
-    month: compact({
+    monthly: compact({
       kpi: buildKpi(deliveryKpiRows, "month"),
       hourly: buildHourly(deliveryHourlyRows, "month"),
       weekdayAverage: buildWeekday(deliveryWeekdayRows, "month"),

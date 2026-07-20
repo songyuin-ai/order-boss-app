@@ -4,6 +4,8 @@ import SegmentedNav from "./components/SegmentedNav";
 import DrawerNav from "./components/DrawerNav";
 import PlaceholderScreen from "./components/PlaceholderScreen";
 import IndicatorPanel from "./components/IndicatorPanel";
+import PeriodFilterButton from "./components/PeriodFilterButton";
+import PeriodFilterModal from "./components/PeriodFilterModal";
 import PosScreen from "./screens/PosScreen";
 import CustomerCompositionScreen from "./screens/CustomerCompositionScreen";
 import CustomerDetailScreen from "./screens/CustomerDetailScreen";
@@ -11,6 +13,7 @@ import MembershipScreen from "./screens/MembershipScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import { IndicatorContext } from "./context/IndicatorContext";
 import { DataProvider, useAppData } from "./context/DataContext";
+import { DEFAULT_PERIOD, type PeriodSelection } from "./lib/period";
 import type { Indicator } from "./data/types";
 
 interface MenuItem {
@@ -72,6 +75,8 @@ function AppShell() {
   const [system, setSystem] = useState("happy");
   const [menu, setMenu] = useState("pos");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [period, setPeriod] = useState<PeriodSelection>(DEFAULT_PERIOD);
+  const [periodModalOpen, setPeriodModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [panelIndicators, setPanelIndicators] = useState<Indicator[]>([]);
   const [panelLabel, setPanelLabel] = useState("");
@@ -109,9 +114,20 @@ function AppShell() {
         return (
           <div className="screen">
             <SegmentedNav options={CUSTOMER_GROUP_MENUS} active={menu} onChange={handleGroupTabChange} size="sm" />
-            {menu === "customerComposition" && <CustomerCompositionScreen onPanelChange={handlePanelChange} />}
-            {menu === "customerDetail" && <CustomerDetailScreen onPanelChange={handlePanelChange} />}
-            {menu === "membership" && <MembershipScreen onPanelChange={handlePanelChange} />}
+            <div className="screen__period-bar">
+              <PeriodFilterButton value={period} onClick={() => setPeriodModalOpen(true)} />
+            </div>
+            {menu === "customerComposition" && (
+              <CustomerCompositionScreen period={period} onPanelChange={handlePanelChange} />
+            )}
+            {menu === "customerDetail" && <CustomerDetailScreen period={period} onPanelChange={handlePanelChange} />}
+            {menu === "membership" && <MembershipScreen period={period} onPanelChange={handlePanelChange} />}
+            <PeriodFilterModal
+              open={periodModalOpen}
+              value={period}
+              onApply={setPeriod}
+              onClose={() => setPeriodModalOpen(false)}
+            />
           </div>
         );
       }

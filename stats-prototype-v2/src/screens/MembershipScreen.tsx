@@ -3,22 +3,25 @@ import Card from "../components/Card";
 import SegmentTable from "../components/SegmentTable";
 import { useAppData } from "../context/DataContext";
 import { formatCompactWon } from "../utils/format";
+import { periodKey, periodDefLabel, type PeriodSelection } from "../lib/period";
 import type { Indicator } from "../data/types";
 
 interface Props {
+  period: PeriodSelection;
   onPanelChange: (indicators: Indicator[], label: string) => void;
 }
 
-export default function MembershipScreen({ onPanelChange }: Props) {
-  const { membershipIndicators: indicators, membership: data } = useAppData();
+export default function MembershipScreen({ period, onPanelChange }: Props) {
+  const { membershipIndicators: indicators, membership } = useAppData();
+  const data = membership.byPeriod[periodKey(period)] ?? membership.byPeriod.recent30;
 
   useEffect(() => {
     onPanelChange(
       [indicators.hValue, indicators.segmentContribution, indicators.membershipRevenue],
-      "멤버십 가치 분석 기준"
+      `멤버십 가치 분석 기준 · ${periodDefLabel(period)}`
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [indicators]);
+  }, [indicators, period]);
 
   return (
     <div className="screen__cards">
