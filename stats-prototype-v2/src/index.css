@@ -728,6 +728,66 @@ body {
   margin-top: 12px;
 }
 
+.composition__segment-info {
+  margin-top: 10px;
+}
+
+.composition__segment-info .tooltip__trigger {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip__trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tooltip__bubble {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  width: 240px;
+  max-width: 60vw;
+  background: #1d1d1f;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.6;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltip__line:empty {
+  height: 4px;
+}
+
+.row-id-note {
+  display: inline-block;
+  margin-left: 5px;
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .chip {
   font-size: 11.5px;
   font-weight: 600;

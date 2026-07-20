@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import type { Indicator } from "../data/types";
 import { IndicatorContext } from "../context/IndicatorContext";
+import Tooltip from "./Tooltip";
 
 interface Props {
   indicators: Indicator[];
@@ -43,7 +44,14 @@ export default function IndicatorPanel({ indicators, tabLabel }: Props) {
                   <td className="col-name">{ind.지표명}</td>
                   <td className="col-expose">{ind.노출}</td>
                   <td className="col-def">{ind.정의}</td>
-                  <td className="col-src">{ind.원천데이터_및_산식}</td>
+                  <td className="col-src">
+                    {ind.원천데이터_및_산식}
+                    {ind.참고 && (
+                      <Tooltip content={ind.참고}>
+                        <span className="row-id-note">ⓘ</span>
+                      </Tooltip>
+                    )}
+                  </td>
                   <td className="col-purpose">{ind.제공목적}</td>
                   <td className="col-chart">{ind.차트형태}</td>
                 </tr>

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Card from "../components/Card";
 import TrendChart from "../components/TrendChart";
 import SegmentPieChart from "../components/SegmentPieChart";
+import Tooltip from "../components/Tooltip";
 import { useAppData } from "../context/DataContext";
 import type { Indicator } from "../data/types";
 
@@ -35,6 +36,9 @@ export default function CustomerCompositionScreen({ onPanelChange }: Props) {
                 {c.label} {c.pct}%
               </span>
             ))}
+          </div>
+          <div className="composition__segment-info">
+            <Tooltip content={indicators.composition.참고}>세그먼트 정의 보기 ⓘ</Tooltip>
           </div>
         </div>
       </Card>

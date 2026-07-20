@@ -179,6 +179,7 @@ export async function loadLiveData(): Promise<LiveData> {
       제공목적: str(r, "제공목적"),
       차트형태: str(r, "차트형태"),
       노출: strAny(r, ["노출", "노출시트", "노출여부", "노출 여부"]),
+      참고: str(r, "참고") || undefined,
     };
   });
 

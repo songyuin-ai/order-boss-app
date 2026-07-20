@@ -6,6 +6,7 @@ export interface Indicator {
   제공목적: string;
   차트형태: string;
   노출?: string;
+  참고?: string;
 }
 
 export interface KpiData {
