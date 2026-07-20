@@ -109,7 +109,7 @@ export interface LiveData {
   customerDetail: {
     preferredCategory?: { name: string; pct: number }[];
     agePreferredProducts?: Record<string, { name: string; orders: number }[]>;
-    loyalPreferredProducts?: { name: string; revenue: number }[];
+    loyalPreferredProducts?: { name: string; orders: number }[];
     visitTimeText?: string;
     revisitCycle?: { value: string; label: string };
   };
@@ -259,7 +259,7 @@ export async function loadLiveData(): Promise<LiveData> {
     loyalPreferredProducts: loyalPreferredRows?.length
       ? [...loyalPreferredRows]
           .sort((a, b) => num(a, "rank") - num(b, "rank"))
-          .map((r) => ({ name: str(r, "name"), revenue: num(r, "revenue") }))
+          .map((r) => ({ name: str(r, "name"), orders: num(r, "orders") }))
       : undefined,
     visitTimeText: visitTimeRows?.length ? str(visitTimeRows[0], "text") : undefined,
     revisitCycle: revisitCycleRows?.length

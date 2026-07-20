@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
-import RevenueRankList from "../components/RevenueRankList";
 import { useAppData } from "../context/DataContext";
 import { periodKey, periodDefLabel, type PeriodSelection } from "../lib/period";
 import type { Indicator } from "../data/types";
@@ -83,7 +82,15 @@ export default function CustomerDetailScreen({ period, onPanelChange }: Props) {
       <AgePreferredCard indicator={indicators.agePreferred} agePreferredProducts={data.agePreferredProducts} />
 
       <Card title="단골 선호상품 Top3" indicator={indicators.loyalPreferred}>
-        <RevenueRankList items={data.loyalPreferredProducts} />
+        <ol className="menu-list">
+          {data.loyalPreferredProducts.map((item, i) => (
+            <li key={item.name} className="menu-list__item">
+              <span className="menu-list__rank">{i + 1}</span>
+              <span className="menu-list__name">{item.name}</span>
+              <span className="menu-list__count">{item.orders.toLocaleString("ko-KR")}건</span>
+            </li>
+          ))}
+        </ol>
       </Card>
 
       <Card title="방문 시간대" indicator={indicators.visitTime}>

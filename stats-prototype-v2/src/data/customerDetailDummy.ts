@@ -6,7 +6,7 @@ export interface CategoryShare {
 export interface CustomerDetailPeriodData {
   preferredCategory: CategoryShare[];
   agePreferredProducts: Record<string, { name: string; orders: number }[]>;
-  loyalPreferredProducts: { name: string; revenue: number }[];
+  loyalPreferredProducts: { name: string; orders: number }[];
   visitTimeText: string;
   revisitCycle: { value: string; label: string };
 }
@@ -57,9 +57,9 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 0.24),
     loyalPreferredProducts: [
-      { name: "반반치킨", revenue: 198000 },
-      { name: "양념치킨", revenue: 176000 },
-      { name: "후라이드치킨", revenue: 162000 },
+      { name: "반반치킨", orders: 11 },
+      { name: "양념치킨", orders: 10 },
+      { name: "후라이드치킨", orders: 9 },
     ],
     visitTimeText: "주 방문시간 오후 3~5시",
     revisitCycle: { value: "8.7일", label: "평균 재방문 간격" },
@@ -72,9 +72,9 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 1),
     loyalPreferredProducts: [
-      { name: "반반치킨", revenue: 812000 },
-      { name: "양념치킨", revenue: 745000 },
-      { name: "후라이드치킨", revenue: 689000 },
+      { name: "반반치킨", orders: 45 },
+      { name: "양념치킨", orders: 41 },
+      { name: "후라이드치킨", orders: 38 },
     ],
     visitTimeText: "주 방문시간 오후 3~5시",
     revisitCycle: { value: "9.2일", label: "평균 재방문 간격" },
@@ -87,9 +87,9 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 1.05),
     loyalPreferredProducts: [
-      { name: "반반치킨", revenue: 852000 },
-      { name: "양념치킨", revenue: 781000 },
-      { name: "후라이드치킨", revenue: 712000 },
+      { name: "반반치킨", orders: 47 },
+      { name: "양념치킨", orders: 43 },
+      { name: "후라이드치킨", orders: 40 },
     ],
     visitTimeText: "주 방문시간 오후 3~5시",
     revisitCycle: { value: "9.0일", label: "평균 재방문 간격" },
@@ -102,9 +102,9 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 0.98),
     loyalPreferredProducts: [
-      { name: "양념치킨", revenue: 768000 },
-      { name: "반반치킨", revenue: 734000 },
-      { name: "후라이드치킨", revenue: 655000 },
+      { name: "양념치킨", orders: 43 },
+      { name: "반반치킨", orders: 41 },
+      { name: "후라이드치킨", orders: 36 },
     ],
     visitTimeText: "주 방문시간 오후 6~8시",
     revisitCycle: { value: "9.4일", label: "평균 재방문 간격" },
@@ -117,9 +117,9 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 1.02),
     loyalPreferredProducts: [
-      { name: "반반치킨", revenue: 798000 },
-      { name: "양념치킨", revenue: 722000 },
-      { name: "후라이드치킨", revenue: 671000 },
+      { name: "반반치킨", orders: 44 },
+      { name: "양념치킨", orders: 40 },
+      { name: "후라이드치킨", orders: 37 },
     ],
     visitTimeText: "주 방문시간 오후 3~5시",
     revisitCycle: { value: "9.3일", label: "평균 재방문 간격" },
