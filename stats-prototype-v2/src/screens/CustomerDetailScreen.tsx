@@ -10,7 +10,7 @@ function AgePreferredCard({
   agePreferredProducts,
 }: {
   indicator: Indicator;
-  agePreferredProducts: Record<string, { name: string; revenue: number }[]>;
+  agePreferredProducts: Record<string, { name: string; orders: number }[]>;
 }) {
   const ageGroups = Object.keys(agePreferredProducts);
   const [age, setAge] = useState<string>(ageGroups[1] ?? ageGroups[0]);
@@ -30,7 +30,15 @@ function AgePreferredCard({
           </button>
         ))}
       </div>
-      <RevenueRankList items={selected} />
+      <ol className="menu-list">
+        {selected.map((item, i) => (
+          <li key={item.name} className="menu-list__item">
+            <span className="menu-list__rank">{i + 1}</span>
+            <span className="menu-list__name">{item.name}</span>
+            <span className="menu-list__count">{item.orders.toLocaleString("ko-KR")}건</span>
+          </li>
+        ))}
+      </ol>
     </Card>
   );
 }

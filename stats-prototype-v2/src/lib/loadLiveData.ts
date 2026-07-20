@@ -108,7 +108,7 @@ export interface LiveData {
   };
   customerDetail: {
     preferredCategory?: { name: string; pct: number }[];
-    agePreferredProducts?: Record<string, { name: string; revenue: number }[]>;
+    agePreferredProducts?: Record<string, { name: string; orders: number }[]>;
     loyalPreferredProducts?: { name: string; revenue: number }[];
     visitTimeText?: string;
     revisitCycle?: { value: string; label: string };
@@ -222,13 +222,13 @@ export async function loadLiveData(): Promise<LiveData> {
 
   const agePreferredProducts = (() => {
     if (!agePreferredRows?.length) return undefined;
-    const grouped: Record<string, { name: string; revenue: number }[]> = {};
+    const grouped: Record<string, { name: string; orders: number }[]> = {};
     [...agePreferredRows]
       .sort((a, b) => num(a, "rank") - num(b, "rank"))
       .forEach((r) => {
         const age = str(r, "ageGroup");
         if (!age) return;
-        (grouped[age] ??= []).push({ name: str(r, "name"), revenue: num(r, "revenue") });
+        (grouped[age] ??= []).push({ name: str(r, "name"), orders: num(r, "orders") });
       });
     return grouped;
   })();

@@ -5,44 +5,44 @@ export interface CategoryShare {
 
 export interface CustomerDetailPeriodData {
   preferredCategory: CategoryShare[];
-  agePreferredProducts: Record<string, { name: string; revenue: number }[]>;
+  agePreferredProducts: Record<string, { name: string; orders: number }[]>;
   loyalPreferredProducts: { name: string; revenue: number }[];
   visitTimeText: string;
   revisitCycle: { value: string; label: string };
 }
 
-const AGE_PREFERRED_BASE: Record<string, { name: string; revenue: number }[]> = {
+const AGE_PREFERRED_BASE: Record<string, { name: string; orders: number }[]> = {
   "10대": [
-    { name: "후라이드치킨", revenue: 245000 },
-    { name: "양념치킨", revenue: 189000 },
-    { name: "치즈볼", revenue: 152000 },
+    { name: "후라이드치킨", orders: 14 },
+    { name: "양념치킨", orders: 10 },
+    { name: "치즈볼", orders: 8 },
   ],
   "20대": [
-    { name: "양념치킨", revenue: 412000 },
-    { name: "후라이드치킨", revenue: 356000 },
-    { name: "반반치킨", revenue: 298000 },
+    { name: "양념치킨", orders: 23 },
+    { name: "후라이드치킨", orders: 20 },
+    { name: "반반치킨", orders: 17 },
   ],
   "30대": [
-    { name: "반반치킨", revenue: 523000 },
-    { name: "양념치킨", revenue: 467000 },
-    { name: "후라이드치킨", revenue: 401000 },
+    { name: "반반치킨", orders: 29 },
+    { name: "양념치킨", orders: 26 },
+    { name: "후라이드치킨", orders: 22 },
   ],
   "40대": [
-    { name: "후라이드치킨", revenue: 388000 },
-    { name: "반반치킨", revenue: 344000 },
-    { name: "마늘치킨", revenue: 276000 },
+    { name: "후라이드치킨", orders: 22 },
+    { name: "반반치킨", orders: 19 },
+    { name: "마늘치킨", orders: 15 },
   ],
   "50대+": [
-    { name: "후라이드치킨", revenue: 298000 },
-    { name: "양념치킨", revenue: 234000 },
-    { name: "간장치킨", revenue: 198000 },
+    { name: "후라이드치킨", orders: 17 },
+    { name: "양념치킨", orders: 13 },
+    { name: "간장치킨", orders: 11 },
   ],
 };
 
-function scale(base: Record<string, { name: string; revenue: number }[]>, factor: number) {
-  const out: Record<string, { name: string; revenue: number }[]> = {};
+function scale(base: Record<string, { name: string; orders: number }[]>, factor: number) {
+  const out: Record<string, { name: string; orders: number }[]> = {};
   Object.entries(base).forEach(([age, items]) => {
-    out[age] = items.map((it) => ({ name: it.name, revenue: Math.round(it.revenue * factor) }));
+    out[age] = items.map((it) => ({ name: it.name, orders: Math.max(1, Math.round(it.orders * factor)) }));
   });
   return out;
 }
