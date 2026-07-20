@@ -1082,21 +1082,6 @@ body {
 }
 
 /* Track2 group2 info cards */
-.category-path {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.category-path__sep {
-  color: var(--text-secondary);
-  margin-left: 6px;
-  font-weight: 400;
-}
-
 .info-text {
   font-size: 15px;
   font-weight: 700;

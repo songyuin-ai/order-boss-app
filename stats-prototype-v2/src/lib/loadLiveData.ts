@@ -107,7 +107,7 @@ export interface LiveData {
     segmentTrend?: { month: string; 단골: number; 신규: number }[];
   };
   customerDetail: {
-    preferredCategory?: string[];
+    preferredCategory?: { name: string; pct: number }[];
     agePreferredProducts?: Record<string, { name: string; revenue: number }[]>;
     loyalPreferredProducts?: { name: string; revenue: number }[];
     visitTimeText?: string;
@@ -251,7 +251,9 @@ export async function loadLiveData(): Promise<LiveData> {
 
   const customerDetail = compact({
     preferredCategory: categoryRows?.length
-      ? [...categoryRows].sort((a, b) => num(a, "order") - num(b, "order")).map((r) => str(r, "value"))
+      ? [...categoryRows]
+          .sort((a, b) => num(a, "order") - num(b, "order"))
+          .map((r) => ({ name: strAny(r, ["name", "value"]), pct: num(r, "pct") }))
       : undefined,
     agePreferredProducts,
     loyalPreferredProducts: loyalPreferredRows?.length

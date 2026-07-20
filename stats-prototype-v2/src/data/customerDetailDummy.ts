@@ -1,5 +1,10 @@
+export interface CategoryShare {
+  name: string;
+  pct: number;
+}
+
 export interface CustomerDetailPeriodData {
-  preferredCategory: string[];
+  preferredCategory: CategoryShare[];
   agePreferredProducts: Record<string, { name: string; revenue: number }[]>;
   loyalPreferredProducts: { name: string; revenue: number }[];
   visitTimeText: string;
@@ -45,7 +50,11 @@ function scale(base: Record<string, { name: string; revenue: number }[]>, factor
 // 기간 필터(최근 7일 / 최근 30일 / 월별, 최근 3개월)별 스냅샷
 export const byPeriod: Record<string, CustomerDetailPeriodData> = {
   recent7: {
-    preferredCategory: ["치킨", "후라이드/양념", "순살 옵션"],
+    preferredCategory: [
+      { name: "치킨", pct: 44 },
+      { name: "사이드", pct: 19 },
+      { name: "음료", pct: 8 },
+    ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 0.24),
     loyalPreferredProducts: [
       { name: "반반치킨", revenue: 198000 },
@@ -56,7 +65,11 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     revisitCycle: { value: "8.7일", label: "평균 재방문 간격" },
   },
   recent30: {
-    preferredCategory: ["치킨", "후라이드/양념", "순살 옵션"],
+    preferredCategory: [
+      { name: "치킨", pct: 42 },
+      { name: "사이드", pct: 18 },
+      { name: "음료", pct: 9 },
+    ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 1),
     loyalPreferredProducts: [
       { name: "반반치킨", revenue: 812000 },
@@ -67,7 +80,11 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     revisitCycle: { value: "9.2일", label: "평균 재방문 간격" },
   },
   "2026-07": {
-    preferredCategory: ["치킨", "후라이드/양념", "순살 옵션"],
+    preferredCategory: [
+      { name: "치킨", pct: 43 },
+      { name: "사이드", pct: 17 },
+      { name: "음료", pct: 9 },
+    ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 1.05),
     loyalPreferredProducts: [
       { name: "반반치킨", revenue: 852000 },
@@ -78,7 +95,11 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     revisitCycle: { value: "9.0일", label: "평균 재방문 간격" },
   },
   "2026-06": {
-    preferredCategory: ["치킨", "후라이드/양념", "볼 사이드"],
+    preferredCategory: [
+      { name: "치킨", pct: 40 },
+      { name: "사이드", pct: 20 },
+      { name: "음료", pct: 8 },
+    ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 0.98),
     loyalPreferredProducts: [
       { name: "양념치킨", revenue: 768000 },
@@ -89,7 +110,11 @@ export const byPeriod: Record<string, CustomerDetailPeriodData> = {
     revisitCycle: { value: "9.4일", label: "평균 재방문 간격" },
   },
   "2026-05": {
-    preferredCategory: ["치킨", "후라이드/양념", "순살 옵션"],
+    preferredCategory: [
+      { name: "치킨", pct: 42 },
+      { name: "사이드", pct: 18 },
+      { name: "음료", pct: 9 },
+    ],
     agePreferredProducts: scale(AGE_PREFERRED_BASE, 1.02),
     loyalPreferredProducts: [
       { name: "반반치킨", revenue: 798000 },

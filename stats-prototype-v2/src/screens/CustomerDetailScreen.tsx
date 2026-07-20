@@ -60,15 +60,16 @@ export default function CustomerDetailScreen({ period, onPanelChange }: Props) {
 
   return (
     <div className="screen__cards">
-      <Card title="선호 상품·카테고리" indicator={indicators.category}>
-        <div className="category-path">
+      <Card title="선호 카테고리 Top3" indicator={indicators.category}>
+        <ol className="menu-list">
           {data.preferredCategory.map((c, i) => (
-            <span key={c} className="category-path__item">
-              {c}
-              {i < data.preferredCategory.length - 1 && <span className="category-path__sep">›</span>}
-            </span>
+            <li key={c.name} className="menu-list__item">
+              <span className="menu-list__rank">{i + 1}</span>
+              <span className="menu-list__name">{c.name}</span>
+              <span className="menu-list__count">{c.pct}%</span>
+            </li>
           ))}
-        </div>
+        </ol>
       </Card>
 
       <AgePreferredCard indicator={indicators.agePreferred} agePreferredProducts={data.agePreferredProducts} />
