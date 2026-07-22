@@ -7,6 +7,7 @@ on:
     paths:
       - "stats-prototype/**"
       - "stats-prototype-v2/**"
+      - "stats-prototype-v3/**"
       - ".github/workflows/deploy-stats-prototype.yml"
   workflow_dispatch:
 
@@ -32,6 +33,7 @@ jobs:
           cache-dependency-path: |
             stats-prototype/package-lock.json
             stats-prototype-v2/package-lock.json
+            stats-prototype-v3/package-lock.json
 
       - name: Install dependencies (v1)
         working-directory: stats-prototype
@@ -49,12 +51,22 @@ jobs:
         working-directory: stats-prototype-v2
         run: npm run build
 
+      - name: Install dependencies (v3)
+        working-directory: stats-prototype-v3
+        run: npm ci
+
+      - name: Build (v3)
+        working-directory: stats-prototype-v3
+        run: npm run build
+
       - name: Combine builds
         run: |
           mkdir -p combined-dist
           cp -r stats-prototype/dist/. combined-dist/
           mkdir -p combined-dist/v2
           cp -r stats-prototype-v2/dist/. combined-dist/v2/
+          mkdir -p combined-dist/v3
+          cp -r stats-prototype-v3/dist/. combined-dist/v3/
 
       - uses: actions/configure-pages@v5
 
