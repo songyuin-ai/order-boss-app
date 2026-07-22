@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Card from "../components/Card";
 import BarChart from "../components/BarChart";
+import DonutChart from "../components/DonutChart";
 import IdBadge from "../components/IdBadge";
 import { useAppData } from "../context/DataContext";
 import { formatWon, formatCompactWon, formatSignedNumber } from "../utils/format";
@@ -21,6 +22,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
     homeRealtimeIndicators.orders,
     homeRealtimeIndicators.aov,
     homeRealtimeIndicators.last30,
+    homeRealtimeIndicators.deliveryShare,
     homeRealtimeIndicators.weekCumulative,
     homeRealtimeIndicators.weeklyHourly,
   ];
@@ -74,49 +76,44 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           </div>
         </div>
 
-        {/* [2순위] 최근 30일 매출 후킹 카드 — 상세분석 관심을 끌어올리는 지점 */}
-        <Card title="최근 30일 매출, 얼마나 알고 계세요?" indicator={homeRealtimeIndicators.last30} className="hook-card">
-          <div className="home-headline" style={{ padding: 0, marginBottom: 14 }}>
-            <span className="home-headline__label">최근 30일 총 매출</span>
-            <span className="home-headline__value" style={{ fontSize: 22 }}>
-              {formatWon(last30.totalRevenue)}
-            </span>
-          </div>
-
-          <div className="meter-row" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
-            <div className="meter-row__head">
-              <span className="meter-row__label">포인트 연관 매출</span>
-              <span className="meter-row__pct">{last30.membershipRevenuePct}%</span>
-            </div>
-            <div className="meter-row__amount">{formatWon(last30.membershipRevenueAmount)}</div>
+        {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드 — 손님 비율 기준으로 바로 상세분석을 어필 */}
+        <Card
+          title={`최근 30일 상세분석 리포트 보기 (우리매장 손님 전체 대비 ${last30.membershipCustomerPct}%)`}
+          indicator={homeRealtimeIndicators.last30}
+          className="hook-card"
+        >
+          <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="meter-bar">
-              <div className="meter-bar__fill" style={{ width: `${last30.membershipRevenuePct}%` }} />
+              <div className="meter-bar__fill" style={{ width: `${last30.membershipCustomerPct}%` }} />
               <div className="meter-bar__marker" style={{ left: `${last30.membershipRegionAvgPct}%` }} />
             </div>
-            <div className="meter-row__region-caption">▸ 지역 평균 {last30.membershipRegionAvgPct}%</div>
-            <span className="meter-row__hook">
-              포인트 연관 매출은 고객 상세분석까지 확인할 수 있어요 — 인근매장은 평균{" "}
-              {last30.membershipRegionAvgPct}%까지 분석 가능해요
-            </span>
-            <span className="meter-row__cta">멤버십 고객 분석 상세보기 ›</span>
+            <p className="hook-cta__desc">
+              우리 매장을 찾은 손님 중 포인트를 적립/사용한 {last30.membershipCustomerPct}%를 기준으로
+              상세분석을 제공해 드려요
+            </p>
+            <p className="hook-cta__desc">
+              주변매장은 평균적으로 매장손님 중 {last30.membershipRegionAvgPct}%의 상세분석 리포트를 보고 있어요
+            </p>
+            <span className="meter-row__cta">상세분석 리포트 보기 ›</span>
           </div>
+        </Card>
 
-          <div className="meter-row" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
-            <div className="meter-row__head">
-              <span className="meter-row__label">딜리버리 매출 비중</span>
-              <span className="meter-row__pct">{last30.deliveryRevenuePct}%</span>
+        {/* 딜리버리 점유율 — 포인트 리포트와 기준(손님 수 vs 매출)이 달라 별도 섹션으로 분리 */}
+        <Card title="딜리버리 점유율" indicator={homeRealtimeIndicators.deliveryShare}>
+          <div className="delivery-share" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
+            <DonutChart
+              primaryValue={last30.deliveryRevenuePct}
+              secondaryValue={Math.round((100 - last30.deliveryRevenuePct) * 10) / 10}
+              primaryLabel="딜리버리"
+              secondaryLabel="그 외"
+            />
+            <div className="delivery-share__body">
+              <div className="delivery-share__amount">최근 30일 딜리버리 매출 {formatWon(last30.deliveryRevenueAmount)}</div>
+              <span className="meter-row__cta">딜리버리 고객 분석 상세보기 ›</span>
             </div>
-            <div className="meter-row__amount">{formatWon(last30.deliveryRevenueAmount)}</div>
-            <div className="meter-bar">
-              <div className="meter-bar__fill meter-bar__fill--alt" style={{ width: `${last30.deliveryRevenuePct}%` }} />
-            </div>
-            <span className="meter-row__cta">딜리버리 고객 분석 상세보기 ›</span>
           </div>
-
           <p className="chart-note">
-            ※ 두 비중은 서로 다른 기준(포인트 적립·사용 여부 / 배달앱 채널 여부)으로 각각 집계되어 일부 주문에서
-            중첩될 수 있습니다 (예: 배달 주문에서 포인트 적립·사용). 두 비중의 합은 전체 매출 비중을 의미하지
-            않습니다.
+            ※ 위 상세분석 리포트 비율은 손님 수 기준, 딜리버리 점유율은 매출 기준으로 서로 다른 지표예요.
           </p>
         </Card>
 

@@ -646,6 +646,7 @@ body {
   font-weight: 700;
   color: var(--text-secondary);
   margin-bottom: 10px;
+  padding-right: 52px;
 }
 
 .card--dark .card__title {
@@ -1722,10 +1723,44 @@ body {
   line-height: 1.5;
 }
 
-/* Hook card (최근 30일 매출 - 상세분석 유도, 2순위 배치) */
+/* Hook card (최근 30일 상세분석 리포트 - 상세분석 유도, 2순위 배치) */
 .hook-card {
   border-color: var(--accent);
   background: linear-gradient(180deg, var(--accent-soft), var(--card-bg) 55%);
+}
+
+.hook-cta {
+  cursor: pointer;
+}
+
+.hook-cta__desc {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* 딜리버리 점유율 (포인트 리포트와 별도 섹션) */
+.delivery-share {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.delivery-share__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.delivery-share__amount {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
 }
 
 /* Daily summary block (1순위 - 일간 매출/주문건수/객단가를 하나로 압축) */
