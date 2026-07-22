@@ -1687,3 +1687,113 @@ body {
   font-weight: 600;
   color: var(--text-secondary);
 }
+
+.meter-row__hook {
+  display: block;
+  margin-top: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.5;
+}
+
+/* Hook card (최근 30일 매출 - 상세분석 유도, 2순위 배치) */
+.hook-card {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, var(--accent-soft), var(--card-bg) 55%);
+}
+
+/* Daily summary block (1순위 - 일간 매출/주문건수/객단가를 하나로 압축) */
+.daily-summary {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 14px 14px;
+}
+
+.daily-summary__headline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.daily-summary__label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding-right: 46px;
+}
+
+.daily-summary__value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.daily-summary__badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.badge--primary {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.badge--muted {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  padding-left: 0;
+  font-weight: 600;
+}
+
+.daily-summary__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.daily-summary__stat {
+  position: relative;
+}
+
+.daily-summary__stat-label {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+  padding-right: 40px;
+}
+
+.daily-summary__stat-value {
+  display: block;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.daily-summary__stat-delta {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+/* Section label (보충 자료 구분선) */
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 4px 2px 0;
+}
