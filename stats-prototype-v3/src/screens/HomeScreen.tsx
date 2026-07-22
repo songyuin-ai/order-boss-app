@@ -88,11 +88,14 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
               <div className="meter-bar__marker" style={{ left: `${last30.membershipRegionAvgPct}%` }} />
             </div>
             <p className="hook-cta__desc">
-              우리 매장을 찾은 손님 중 포인트를 적립/사용한 {last30.membershipCustomerPct}%를 기준으로
-              상세분석을 제공해 드려요
+              우리 매장을 찾은 손님 중 포인트를 적립/사용한{" "}
+              <strong className="hook-cta__num">{last30.membershipCustomerPct}%</strong>를 기준으로 상세분석을
+              제공해 드려요
             </p>
             <p className="hook-cta__desc">
-              주변매장은 평균적으로 매장손님 중 {last30.membershipRegionAvgPct}%의 상세분석 리포트를 보고 있어요
+              주변매장은 평균적으로 매장손님 중{" "}
+              <strong className="hook-cta__num hook-cta__num--muted">{last30.membershipRegionAvgPct}%</strong>의
+              상세분석 리포트를 보고 있어요
             </p>
             <span className="meter-row__cta">상세분석 리포트 보기 ›</span>
           </div>
