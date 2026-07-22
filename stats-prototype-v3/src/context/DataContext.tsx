@@ -1,6 +1,6 @@
 import { createContext, useContext, type ReactNode } from "react";
-import { homeIndicators } from "../data/homeIndicators";
-import { homeDaily, homeWeekly, homeMonthly, type HomeTabData } from "../data/homeDummy";
+import { homeIndicators, homeRealtimeIndicators } from "../data/homeIndicators";
+import { homeDaily, homeWeekly, homeMonthly, homeRealtime, type HomeTabData, type HomeRealtimeData } from "../data/homeDummy";
 import { deliveryIndicators } from "../data/deliveryIndicators";
 import { daily as deliveryDaily, weekly as deliveryWeekly, monthly as deliveryMonthly, type DeliveryPeriodSetData } from "../data/deliveryDummy";
 import { customerCompositionIndicators } from "../data/customerCompositionIndicators";
@@ -15,7 +15,9 @@ import type { PosKpiPeriod, HourlyBucket, OnlineOfflineRatio } from "../data/typ
 
 interface DataShape {
   homeIndicators: typeof homeIndicators;
+  homeRealtimeIndicators: typeof homeRealtimeIndicators;
   home: { daily: HomeTabData; weekly: HomeTabData; monthly: HomeTabData };
+  homeRealtime: HomeRealtimeData;
   deliveryIndicators: typeof deliveryIndicators;
   delivery: { daily: DeliveryPeriodSetData; weekly: DeliveryPeriodSetData; monthly: DeliveryPeriodSetData };
   customerCompositionIndicators: typeof customerCompositionIndicators;
@@ -35,7 +37,9 @@ interface DataShape {
 // v3는 구글시트 연동 없이 더미데이터만 사용 (화면 구조가 먼저 정리된 뒤 별도 요청 시 연동 예정)
 const data: DataShape = {
   homeIndicators,
+  homeRealtimeIndicators,
   home: { daily: homeDaily, weekly: homeWeekly, monthly: homeMonthly },
+  homeRealtime,
   deliveryIndicators,
   delivery: { daily: deliveryDaily, weekly: deliveryWeekly, monthly: deliveryMonthly },
   customerCompositionIndicators,

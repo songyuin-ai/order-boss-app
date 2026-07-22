@@ -1,4 +1,33 @@
-import type { WeekdayBar, ChannelRevenue, OnlineOfflineRatio } from "./types";
+import type { WeekdayBar, ChannelRevenue, HourlyBucket, OnlineOfflineRatio } from "./types";
+
+export interface HomeRealtimeMetric {
+  value: number;
+  vsYesterdayPct: number;
+  vsRegionPct: number;
+}
+
+export interface HomeWeekdayRevenue {
+  label: string;
+  revenue: number | null;
+  aov: number | null;
+  isToday?: boolean;
+}
+
+export interface HomeLast30 {
+  totalRevenue: number;
+  membershipRevenuePct: number;
+  deliveryRevenuePct: number;
+}
+
+export interface HomeRealtimeData {
+  updatedAtLabel: string;
+  revenue: HomeRealtimeMetric;
+  orders: HomeRealtimeMetric;
+  aov: HomeRealtimeMetric;
+  weekCumulative: HomeWeekdayRevenue[];
+  weeklyHourly: HourlyBucket[];
+  last30: HomeLast30;
+}
 
 export interface HomeKpiPeriod {
   periodLabel: string;
@@ -20,6 +49,7 @@ export interface HomeTabData {
 
 const WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
 const CHANNEL_ORDER = ["오프라인", "해피오더", "배민", "쿠팡이츠", "요기요", "땡겨요"];
+const HOUR_LABELS = ["06-09", "09-11", "11-13", "13-15", "15-17", "17-19", "19-21"];
 
 export const homeDaily: HomeTabData = {
   kpiPeriods: [
@@ -85,4 +115,31 @@ export const homeMonthly: HomeTabData = {
     channel: CHANNEL_ORDER[i],
     value: v,
   })),
+};
+
+// 홈 = 사장님앱 실시간 대시보드 (당일 기준, 탭 없음). 이번 주 오늘 = 수요일 가정 (deliveryDummy.ts weekdayCumulative와 동일 컨벤션)
+const CURRENT_WEEKDAY_INDEX = 2;
+
+export const homeRealtime: HomeRealtimeData = {
+  updatedAtLabel: "07/19 14:32 기준",
+  revenue: { value: 1862000, vsYesterdayPct: 8.4, vsRegionPct: 12 },
+  orders: { value: 95, vsYesterdayPct: 5.1, vsRegionPct: 7 },
+  aov: { value: 19600, vsYesterdayPct: 2.9, vsRegionPct: 4 },
+  weekCumulative: WEEKDAY_LABELS.map((label, i) => {
+    const passed = i <= CURRENT_WEEKDAY_INDEX;
+    const revenues = [3120000, 3340000, 1862000];
+    const aovs = [17850, 18120, 19600];
+    return {
+      label,
+      revenue: passed ? revenues[i] : null,
+      aov: passed ? aovs[i] : null,
+      isToday: i === CURRENT_WEEKDAY_INDEX,
+    };
+  }),
+  weeklyHourly: [18, 42, 71, 98, 64, 53, 31].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
+  last30: {
+    totalRevenue: 90000000,
+    membershipRevenuePct: 37.8,
+    deliveryRevenuePct: 29.4,
+  },
 };

@@ -5,6 +5,7 @@ import AccountSwitchSheet, { STORE_ACCOUNTS } from "./components/AccountSwitchSh
 import PlaceholderScreen from "./components/PlaceholderScreen";
 import IndicatorPanel from "./components/IndicatorPanel";
 import HomeScreen from "./screens/HomeScreen";
+import DateRangeViewScreen from "./screens/DateRangeViewScreen";
 import MembershipCustomerAnalysisScreen from "./screens/MembershipCustomerAnalysisScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import { IndicatorContext } from "./context/IndicatorContext";
@@ -46,13 +47,18 @@ const MENU: DrawerMenuItem[] = [
   { key: "settings", label: "설정" },
 ];
 
+// 드로어 메뉴에는 없지만 홈에서 드릴다운으로 진입하는 화면들의 타이틀
+const DRILLDOWN_LABELS: Record<string, string> = {
+  dateRangeView: "날짜별 보기",
+};
+
 function findLabel(items: DrawerMenuItem[], key: string): string {
   for (const item of items) {
     if (item.key === key) return item.label;
     const child = item.children?.find((c) => c.key === key);
     if (child) return child.label;
   }
-  return "";
+  return DRILLDOWN_LABELS[key] ?? "";
 }
 
 function AppShell() {
@@ -87,6 +93,8 @@ function AppShell() {
     switch (menu) {
       case "home":
         return <HomeScreen onPanelChange={handlePanelChange} onNavigate={navigateTo} />;
+      case "dateRangeView":
+        return <DateRangeViewScreen onPanelChange={handlePanelChange} onNavigate={navigateTo} />;
       case "membership":
         return <MembershipCustomerAnalysisScreen onPanelChange={handlePanelChange} />;
       case "deliveryCustomer":

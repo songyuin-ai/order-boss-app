@@ -1,26 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import Card from "../components/Card";
 import BarChart from "../components/BarChart";
-import DonutChart from "../components/DonutChart";
-import SegmentedNav from "../components/SegmentedNav";
-import DateNav from "../components/DateNav";
-import IdBadge from "../components/IdBadge";
-import { IndicatorContext } from "../context/IndicatorContext";
 import { useAppData } from "../context/DataContext";
-import { formatWon, formatCompactWon } from "../utils/format";
+import { formatWon, formatCompactWon, formatSignedNumber } from "../utils/format";
 import type { Indicator } from "../data/types";
-
-const TABS = [
-  { key: "daily", label: "일간" },
-  { key: "weekly", label: "주간" },
-  { key: "monthly", label: "월간" },
-];
-
-const TAB_LABEL: Record<string, string> = {
-  daily: "일간 탭 기준",
-  weekly: "주간 탭 기준",
-  monthly: "월간 탭 기준",
-};
 
 interface Props {
   onPanelChange: (indicators: Indicator[], label: string) => void;
@@ -28,150 +11,133 @@ interface Props {
 }
 
 export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
-  const [tab, setTab] = useState("daily");
-  const [periodIndex, setPeriodIndex] = useState(0);
-  const { clear } = useContext(IndicatorContext);
-  const { homeIndicators, home, membership, delivery } = useAppData();
+  const { homeRealtimeIndicators, homeRealtime } = useAppData();
+  const { revenue, orders, aov, weekCumulative, weeklyHourly, last30, updatedAtLabel } = homeRealtime;
 
-  const data = home[tab as keyof typeof home];
-  const periods = data.kpiPeriods;
-  const period = periods[periodIndex] ?? periods[0];
-  const isToday = tab === "daily" && periodIndex === 0;
-
-  const tabIndicators: Indicator[] = [
-    homeIndicators.revenue,
-    homeIndicators.orders,
-    homeIndicators.aov,
-    ...(isToday ? [homeIndicators.live] : []),
-    homeIndicators.weekday,
-    homeIndicators.onlineOffline,
-    homeIndicators.channelRevenue,
+  const indicators: Indicator[] = [
+    homeRealtimeIndicators.revenue,
+    homeRealtimeIndicators.orders,
+    homeRealtimeIndicators.aov,
+    homeRealtimeIndicators.weekCumulative,
+    homeRealtimeIndicators.weeklyHourly,
+    homeRealtimeIndicators.last30,
   ];
 
   useEffect(() => {
-    onPanelChange(tabIndicators, TAB_LABEL[tab]);
+    onPanelChange(indicators, "홈 · 실시간 대시보드");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, periodIndex, homeIndicators]);
-
-  const handleTabChange = (t: string) => {
-    setTab(t);
-    setPeriodIndex(0);
-    clear();
-  };
-
-  const handlePeriodChange = (delta: number) => {
-    setPeriodIndex((i) => Math.min(Math.max(i + delta, 0), periods.length - 1));
-    clear();
-  };
-
-  const membershipPct = membership.byPeriod.recent30.membershipRevenue.pct;
-  const deliveryTodayOrders = delivery.daily.kpiPeriods[0]?.orders ?? 0;
-
-  if (!period) {
-    return (
-      <div className="screen">
-        <SegmentedNav options={TABS} active={tab} onChange={handleTabChange} size="sm" />
-        <div className="screen__cards">
-          <div className="placeholder">
-            <div className="placeholder__text">표시할 데이터가 없습니다.</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  }, [homeRealtimeIndicators]);
 
   return (
     <div className="screen">
-      <SegmentedNav options={TABS} active={tab} onChange={handleTabChange} size="sm" />
       <div className="screen__cards">
-        <DateNav
-          label={period.periodLabel}
-          onPrev={() => handlePeriodChange(1)}
-          onNext={() => handlePeriodChange(-1)}
-          canPrev={periodIndex < periods.length - 1}
-          canNext={periodIndex > 0}
-        />
-
-        <div className="home-headline">
-          <IdBadge id={homeIndicators.revenue.id} />
-          <span className="home-headline__label">전체 매출 (POS)</span>
-          <span className="home-headline__value">{formatWon(period.revenue)}</span>
-          <span className="badge">{period.revenueComparisonBadge}</span>
+        <div className="home-updated">
+          <span>홈 · 실시간 · {updatedAtLabel}</span>
         </div>
 
-        <div className="kpi-grid">
-          <div className="kpi-cell">
-            <IdBadge id={homeIndicators.orders.id} />
-            <div className="kpi-cell__label">주문건수</div>
-            <div className="kpi-cell__value">{period.orders.toLocaleString("ko-KR")}건</div>
+        <button type="button" className="daterange-entry" onClick={() => onNavigate("dateRangeView")}>
+          <span>날짜별 보기 (일간 · 주간 · 월간)</span>
+          <span className="daterange-entry__chevron">›</span>
+        </button>
+
+        {/* 1~3. 일간 매출/주문건수/객단가 누적 (전일 대비 · 지역 평균 대비) */}
+        <Card title="일간 매출 누적" indicator={homeRealtimeIndicators.revenue}>
+          <div className="realtime-kpi__value">{formatWon(revenue.value)}</div>
+          <div className="realtime-kpi__badges">
+            <span className="badge">전일 대비 {formatSignedNumber(revenue.vsYesterdayPct, "%")}</span>
+            <span className="badge">지역 평균 대비 {formatSignedNumber(revenue.vsRegionPct, "%")}</span>
           </div>
-          {isToday && period.liveRevenue !== undefined && (
-            <div className="kpi-cell kpi-cell--live">
-              <IdBadge id={homeIndicators.live.id} />
-              <div className="kpi-cell__label">
-                <span className="live-dot" />
-                실시간
+        </Card>
+
+        <Card title="일간 주문건수 누적" indicator={homeRealtimeIndicators.orders}>
+          <div className="realtime-kpi__value">{orders.value.toLocaleString("ko-KR")}건</div>
+          <div className="realtime-kpi__badges">
+            <span className="badge">전일 대비 {formatSignedNumber(orders.vsYesterdayPct, "%")}</span>
+            <span className="badge">지역 평균 대비 {formatSignedNumber(orders.vsRegionPct, "%")}</span>
+          </div>
+        </Card>
+
+        <Card title="일간 객단가 누적" indicator={homeRealtimeIndicators.aov}>
+          <div className="realtime-kpi__value">{formatWon(aov.value)}</div>
+          <div className="realtime-kpi__badges">
+            <span className="badge">전일 대비 {formatSignedNumber(aov.vsYesterdayPct, "%")}</span>
+            <span className="badge">지역 평균 대비 {formatSignedNumber(aov.vsRegionPct, "%")}</span>
+          </div>
+        </Card>
+
+        {/* 4. 주간 매출 누적 막대 그래프 (요일별 매출·객단가, 아직 도래하지 않은 요일은 막대 없음) */}
+        <Card title="주간 매출 누적 (이번 주)" indicator={homeRealtimeIndicators.weekCumulative}>
+          <div className="weekday-strip">
+            {weekCumulative.map((d) => (
+              <div key={d.label} className={`weekday-strip__col${d.isToday ? " is-today" : ""}`}>
+                <span className="weekday-strip__day">{d.label}</span>
+                <span className="weekday-strip__revenue">
+                  {d.revenue !== null ? formatCompactWon(d.revenue) : "–"}
+                </span>
+                <span className="weekday-strip__aov">
+                  {d.aov !== null ? `객단가 ${formatCompactWon(d.aov)}` : "예정"}
+                </span>
               </div>
-              <div className="kpi-cell__value">{formatCompactWon(period.liveRevenue)}</div>
-              <div className="kpi-cell__delta">{period.liveOrders}건</div>
-            </div>
-          )}
-        </div>
-
-        <Card title="객단가 · 요일별 매출" indicator={homeIndicators.weekday}>
-          <div className="home-aov-row">
-            <span className="home-aov-row__value">{formatWon(period.aov)}</span>
-            {period.aovComparisonBadge && <span className="badge">{period.aovComparisonBadge}</span>}
+            ))}
           </div>
           <BarChart
-            data={data.weekday.map((w) => ({
-              label: w.label,
-              value: w.value,
-              highlight: w.isToday,
-              valueLabel: w.value !== null ? formatCompactWon(w.value) : "",
+            data={weekCumulative.map((d) => ({
+              label: d.label,
+              value: d.revenue,
+              highlight: d.isToday,
             }))}
-            showValueLabels
           />
         </Card>
 
-        <Card title="온라인/오프라인 점유율" indicator={homeIndicators.onlineOffline}>
-          <DonutChart
-            primaryValue={data.onlineOffline.offline}
-            secondaryValue={data.onlineOffline.online}
-            primaryLabel="오프라인"
-            secondaryLabel="온라인"
-          />
-        </Card>
-
-        <Card title="채널별 매출" indicator={homeIndicators.channelRevenue}>
+        {/* 5. 주간 시간대별 주문건수 */}
+        <Card title="주간 시간대별 주문건수" indicator={homeRealtimeIndicators.weeklyHourly}>
           <BarChart
-            data={data.channelRevenue.map((c, i) => ({
-              label: c.channel,
-              value: c.value,
-              valueLabel: formatCompactWon(c.value),
-              opacity: 1 - i * 0.13,
+            data={weeklyHourly.map((h) => ({
+              label: h.label,
+              value: h.value,
+              valueLabel: `${h.value}건`,
             }))}
             showValueLabels
           />
         </Card>
 
-        <div className="cta-drill" onClick={() => onNavigate("membership")}>
-          <span className="cta-drill__text">
-            점주님, 포인트 연관 매출<b>(전체 대비 {membershipPct}%)</b> 상세분석을 확인해보세요
-          </span>
-          <span className="cta-drill__chevron">›</span>
-        </div>
+        {/* 6. 최근 30일 매출 - 포인트/딜리버리 연관 비중 (각각 독립 표시, 드릴다운 진입점) */}
+        <Card title="최근 30일 매출" indicator={homeRealtimeIndicators.last30}>
+          <div className="home-headline" style={{ padding: 0, marginBottom: 12 }}>
+            <span className="home-headline__label">총 매출</span>
+            <span className="home-headline__value" style={{ fontSize: 22 }}>
+              {formatWon(last30.totalRevenue)}
+            </span>
+          </div>
 
-        <div className="cta-drill" onClick={() => onNavigate("deliveryCustomer")}>
-          <span className="cta-drill__text">
-            점주님, 딜리버리 매출 상세 분석을 확인해보세요 <span className="cta-drill__hint">오늘 {deliveryTodayOrders}건</span>
-          </span>
-          <span className="cta-drill__chevron">›</span>
-        </div>
+          <div className="meter-row" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
+            <div className="meter-row__head">
+              <span className="meter-row__label">포인트 연관 매출 비중</span>
+              <span className="meter-row__pct">{last30.membershipRevenuePct}%</span>
+            </div>
+            <div className="meter-bar">
+              <div className="meter-bar__fill" style={{ width: `${last30.membershipRevenuePct}%` }} />
+            </div>
+            <span className="meter-row__cta">멤버십 고객 분석 상세보기 ›</span>
+          </div>
 
-        <p className="chart-note">
-          ※ 포인트 연관 매출·딜리버리 매출은 집계 기준이 달라 일부 중첩될 수 있습니다 (예: 배달 주문에서 포인트 적립/사용).
-        </p>
+          <div className="meter-row" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
+            <div className="meter-row__head">
+              <span className="meter-row__label">딜리버리 연관 매출 비중</span>
+              <span className="meter-row__pct">{last30.deliveryRevenuePct}%</span>
+            </div>
+            <div className="meter-bar">
+              <div className="meter-bar__fill meter-bar__fill--alt" style={{ width: `${last30.deliveryRevenuePct}%` }} />
+            </div>
+            <span className="meter-row__cta">딜리버리 고객 분석 상세보기 ›</span>
+          </div>
+
+          <p className="chart-note">
+            ※ 두 비중은 서로 다른 기준(포인트 적립·사용 여부 / 배달앱 채널 여부)으로 각각 집계되어 일부 주문에서
+            중첩될 수 있습니다 (예: 배달 주문에서 포인트 적립·사용). 두 비중의 합은 전체 매출 비중을 의미하지
+            않습니다.
+          </p>
+        </Card>
       </div>
     </div>
   );
