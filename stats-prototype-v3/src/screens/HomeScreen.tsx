@@ -13,7 +13,7 @@ interface Props {
 
 export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const { homeRealtimeIndicators, homeRealtime } = useAppData();
-  const { revenue, orders, aov, weekCumulative, weeklyHourly, last30, updatedAtLabel } = homeRealtime;
+  const { revenue, orders, aov, weekCumulative, weekTotal, weekdayHourly, last30, updatedAtLabel } = homeRealtime;
 
   // 1순위(일간 요약) → 2순위(30일 후킹) → 3순위(주간 보충) 순서로, 지표표에도 동일한 우선순위로 노출
   const indicators: Indicator[] = [
@@ -29,8 +29,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
     onPanelChange(indicators, "홈 · 실시간 대시보드");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeRealtimeIndicators]);
-
-  const remainingPct = Math.max(0, Math.round((100 - last30.membershipRevenuePct) * 10) / 10);
 
   return (
     <div className="screen">
@@ -87,23 +85,28 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
 
           <div className="meter-row" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="meter-row__head">
-              <span className="meter-row__label">포인트 연관 매출 비중</span>
+              <span className="meter-row__label">포인트 연관 매출</span>
               <span className="meter-row__pct">{last30.membershipRevenuePct}%</span>
             </div>
+            <div className="meter-row__amount">{formatWon(last30.membershipRevenueAmount)}</div>
             <div className="meter-bar">
               <div className="meter-bar__fill" style={{ width: `${last30.membershipRevenuePct}%` }} />
+              <div className="meter-bar__marker" style={{ left: `${last30.membershipRegionAvgPct}%` }} />
             </div>
+            <div className="meter-row__region-caption">▸ 지역 평균 {last30.membershipRegionAvgPct}%</div>
             <span className="meter-row__hook">
-              나머지 {remainingPct}% 고객은 아직 잘 모르는 상태예요 — 어떤 분들인지 확인해볼까요?
+              포인트 연관 매출은 고객 상세분석까지 확인할 수 있어요 — 인근매장은 평균{" "}
+              {last30.membershipRegionAvgPct}%까지 분석 가능해요
             </span>
             <span className="meter-row__cta">멤버십 고객 분석 상세보기 ›</span>
           </div>
 
           <div className="meter-row" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
             <div className="meter-row__head">
-              <span className="meter-row__label">딜리버리 연관 매출 비중</span>
+              <span className="meter-row__label">딜리버리 매출 비중</span>
               <span className="meter-row__pct">{last30.deliveryRevenuePct}%</span>
             </div>
+            <div className="meter-row__amount">{formatWon(last30.deliveryRevenueAmount)}</div>
             <div className="meter-bar">
               <div className="meter-bar__fill meter-bar__fill--alt" style={{ width: `${last30.deliveryRevenuePct}%` }} />
             </div>
@@ -121,6 +124,13 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         <div className="section-label">주간 상세</div>
 
         <Card title="주간 매출 누적 (이번 주)" indicator={homeRealtimeIndicators.weekCumulative}>
+          <div className="week-total">
+            <span className="week-total__value">{formatWon(weekTotal.value)}</span>
+            <div className="week-total__badges">
+              <span className="badge badge--primary">전주 대비 {formatSignedNumber(weekTotal.vsLastWeekPct, "%")}</span>
+              <span className="badge badge--muted">지역 평균 대비 {formatSignedNumber(weekTotal.vsRegionPct, "%")}</span>
+            </div>
+          </div>
           <div className="weekday-strip">
             {weekCumulative.map((d) => (
               <div key={d.label} className={`weekday-strip__col${d.isToday ? " is-today" : ""}`}>
@@ -144,14 +154,23 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         </Card>
 
         <Card title="주간 시간대별 주문건수" indicator={homeRealtimeIndicators.weeklyHourly}>
-          <BarChart
-            data={weeklyHourly.map((h) => ({
-              label: h.label,
-              value: h.value,
-              valueLabel: `${h.value}건`,
-            }))}
-            showValueLabels
-          />
+          {weekdayHourly.map((day) => (
+            <div key={day.day} className="weekday-hourly-group">
+              <div className="weekday-hourly-group__day">
+                {day.day}
+                {day.isToday ? " (오늘)" : ""}
+              </div>
+              <BarChart
+                data={day.hourly.map((h) => ({
+                  label: h.label,
+                  value: h.value,
+                  valueLabel: h.value !== null ? `${h.value}건` : "",
+                }))}
+                height={64}
+                showValueLabels
+              />
+            </div>
+          ))}
         </Card>
       </div>
     </div>

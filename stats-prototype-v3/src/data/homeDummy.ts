@@ -1,4 +1,4 @@
-import type { WeekdayBar, ChannelRevenue, HourlyBucket, OnlineOfflineRatio } from "./types";
+import type { WeekdayBar, ChannelRevenue, OnlineOfflineRatio } from "./types";
 
 export interface HomeRealtimeMetric {
   value: number;
@@ -13,9 +13,29 @@ export interface HomeWeekdayRevenue {
   isToday?: boolean;
 }
 
+export interface HomeWeeklyTotal {
+  value: number;
+  vsLastWeekPct: number;
+  vsRegionPct: number;
+}
+
+export interface HourlyBucketNullable {
+  label: string;
+  value: number | null;
+}
+
+export interface WeekdayHourlyGroup {
+  day: string;
+  isToday?: boolean;
+  hourly: HourlyBucketNullable[];
+}
+
 export interface HomeLast30 {
   totalRevenue: number;
+  membershipRevenueAmount: number;
   membershipRevenuePct: number;
+  membershipRegionAvgPct: number;
+  deliveryRevenueAmount: number;
   deliveryRevenuePct: number;
 }
 
@@ -25,7 +45,8 @@ export interface HomeRealtimeData {
   orders: HomeRealtimeMetric;
   aov: HomeRealtimeMetric;
   weekCumulative: HomeWeekdayRevenue[];
-  weeklyHourly: HourlyBucket[];
+  weekTotal: HomeWeeklyTotal;
+  weekdayHourly: WeekdayHourlyGroup[];
   last30: HomeLast30;
 }
 
@@ -120,11 +141,12 @@ export const homeMonthly: HomeTabData = {
 // 홈 = 사장님앱 실시간 대시보드 (당일 기준, 탭 없음). 이번 주 오늘 = 수요일 가정 (deliveryDummy.ts weekdayCumulative와 동일 컨벤션)
 const CURRENT_WEEKDAY_INDEX = 2;
 
+// 매출·객단가는 지역 평균보다 높게, 주문건수는 지역 평균보다 낮게 (매출 우위는 "건수"가 아니라 "단가·전체 볼륨"에서 온다는 인사이트)
 export const homeRealtime: HomeRealtimeData = {
   updatedAtLabel: "07/19 14:32 기준",
   revenue: { value: 1862000, vsYesterdayPct: 8.4, vsRegionPct: 12 },
-  orders: { value: 95, vsYesterdayPct: 5.1, vsRegionPct: 7 },
-  aov: { value: 19600, vsYesterdayPct: 2.9, vsRegionPct: 4 },
+  orders: { value: 95, vsYesterdayPct: 5.1, vsRegionPct: -6 },
+  aov: { value: 19600, vsYesterdayPct: 2.9, vsRegionPct: 5 },
   weekCumulative: WEEKDAY_LABELS.map((label, i) => {
     const passed = i <= CURRENT_WEEKDAY_INDEX;
     const revenues = [3120000, 3340000, 1862000];
@@ -136,10 +158,18 @@ export const homeRealtime: HomeRealtimeData = {
       isToday: i === CURRENT_WEEKDAY_INDEX,
     };
   }),
-  weeklyHourly: [18, 42, 71, 98, 64, 53, 31].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
+  weekTotal: { value: 3120000 + 3340000 + 1862000, vsLastWeekPct: 6.8, vsRegionPct: 9 },
+  weekdayHourly: [
+    { day: "월", hourly: [3, 8, 13, 17, 11, 9, 6].map((v, i) => ({ label: HOUR_LABELS[i], value: v })) },
+    { day: "화", hourly: [4, 9, 15, 19, 12, 10, 7].map((v, i) => ({ label: HOUR_LABELS[i], value: v })) },
+    { day: "수", isToday: true, hourly: [3, 7, 10, 4, 2, 1, 0].map((v, i) => ({ label: HOUR_LABELS[i], value: v })) },
+  ],
   last30: {
     totalRevenue: 90000000,
+    membershipRevenueAmount: 34000000,
     membershipRevenuePct: 37.8,
+    membershipRegionAvgPct: 50,
+    deliveryRevenueAmount: 26460000,
     deliveryRevenuePct: 29.4,
   },
 };

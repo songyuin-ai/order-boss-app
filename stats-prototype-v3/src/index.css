@@ -1663,7 +1663,15 @@ body {
   color: var(--accent);
 }
 
+.meter-row__amount {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
 .meter-bar {
+  position: relative;
   height: 8px;
   background: var(--track);
   border-radius: 999px;
@@ -1678,6 +1686,23 @@ body {
 
 .meter-bar__fill--alt {
   background: var(--success);
+}
+
+.meter-bar__marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--text);
+  opacity: 0.55;
+  transform: translateX(-50%);
+}
+
+.meter-row__region-caption {
+  margin-top: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .meter-row__cta {
@@ -1786,6 +1811,41 @@ body {
   margin-top: 3px;
   font-size: 10.5px;
   color: var(--text-secondary);
+}
+
+/* Weekly cumulative total header (주간 매출 누적 카드 좌상단) */
+.week-total {
+  margin-bottom: 12px;
+}
+
+.week-total__value {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+}
+
+.week-total__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Weekday hourly groups (주간 시간대별 주문건수 - 요일별 미니 차트) */
+.weekday-hourly-group {
+  margin-bottom: 16px;
+}
+
+.weekday-hourly-group:last-child {
+  margin-bottom: 0;
+}
+
+.weekday-hourly-group__day {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
 }
 
 /* Section label (보충 자료 구분선) */
