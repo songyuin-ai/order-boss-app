@@ -122,7 +122,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             </div>
 
             <div className={`case-badge case-badge--${caseTone}`}>
-              {isBelowRegionAvg ? "놓치고 있어요" : "상위권이에요"}
+              {isBelowRegionAvg ? "지역 평균에 못 미쳐요" : "상위권이에요"}
             </div>
 
             <p className="hook-cta__desc">
