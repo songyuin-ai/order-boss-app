@@ -90,26 +90,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             숫자·조건을 헤드라인에 먼저 밝히면 "아 일부만이네"로 곧장 넘어가버려 기대감이 생략되므로,
             일반적인 혜택 문장을 먼저 보여준 뒤에야 게이지 숫자를 그 질문에 대한 답처럼 등장시킴 */}
         <Card title="최근 30일 상세분석 리포트 보기" indicator={homeRealtimeIndicators.last30} className="hook-card">
-          <div className="case-toggle">
-            <span className="case-toggle__label">케이스 전환 (프로토타입 데모용)</span>
-            <div className="case-toggle__buttons">
-              <button
-                type="button"
-                className={`case-toggle__btn${membershipCase === "low" ? " is-active" : ""}`}
-                onClick={() => setMembershipCase("low")}
-              >
-                주변 평균보다 낮음
-              </button>
-              <button
-                type="button"
-                className={`case-toggle__btn${membershipCase === "high" ? " is-active" : ""}`}
-                onClick={() => setMembershipCase("high")}
-              >
-                주변 평균보다 높음
-              </button>
-            </div>
-          </div>
-
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="benefit-lead">우리 매장 손님, 상세히 알 수 있어요</div>
             <div className="gauge-question">몇 명이나 확인할 수 있을까요?</div>
@@ -138,6 +118,15 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             </p>
             <p className="hook-cta__desc hook-cta__desc--muted">적립 손님이 늘수록 이 숫자도 함께 올라가요.</p>
             <span className="meter-row__cta">상세분석 리포트 보기 ›</span>
+          </div>
+          <div className="case-toggle-row">
+            <button
+              type="button"
+              className="case-toggle-link"
+              onClick={() => setMembershipCase((c) => (c === "low" ? "high" : "low"))}
+            >
+              케이스 전환
+            </button>
           </div>
         </Card>
 
