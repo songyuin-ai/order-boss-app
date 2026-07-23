@@ -16,6 +16,10 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const { homeRealtimeIndicators, homeRealtime } = useAppData();
   const { revenue, orders, aov, weekCumulative, weekTotal, weekdayHourly, last30, updatedAtLabel } = homeRealtime;
 
+  const regionGapRaw = last30.membershipRegionAvgPct - last30.membershipCustomerPct;
+  const isBelowRegionAvg = regionGapRaw > 0;
+  const regionGap = Math.round(Math.abs(regionGapRaw) * 10) / 10;
+
   // 1순위(일간 요약) → 2순위(30일 후킹) → 3순위(주간 보충) 순서로, 지표표에도 동일한 우선순위로 노출
   const indicators: Indicator[] = [
     homeRealtimeIndicators.revenue,
@@ -76,12 +80,18 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           </div>
         </div>
 
-        {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드 — 게이지 하나에 우리 수치·지역 평균을 모두 담아 중복 설명 없이 바로 이해되게 */}
+        {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드
+            읽는 순서 = 기대(혜택) → 질문 → 숫자(답) → 이유 → 지역 비교 → CTA.
+            숫자·조건을 헤드라인에 먼저 밝히면 "아 일부만이네"로 곧장 넘어가버려 기대감이 생략되므로,
+            일반적인 혜택 문장을 먼저 보여준 뒤에야 게이지 숫자를 그 질문에 대한 답처럼 등장시킴 */}
         <Card title="최근 30일 상세분석 리포트 보기" indicator={homeRealtimeIndicators.last30} className="hook-card">
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
-            <div className="gauge-hero">
+            <div className="benefit-lead">우리 매장 손님, 상세히 알 수 있어요</div>
+            <div className="gauge-question">몇 명이나 확인할 수 있을까요?</div>
+
+            <div className="gauge-mini">
               <div
-                className="gauge-hero__ring"
+                className="gauge-mini__ring"
                 style={{
                   background: `conic-gradient(from -90deg, var(--accent) 0deg, var(--accent) ${
                     last30.membershipCustomerPct * 1.8
@@ -89,20 +99,19 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
                 }}
               />
               <div
-                className="gauge-hero__marker"
+                className="gauge-mini__marker"
                 style={{ transform: `translateX(-50%) rotate(${(last30.membershipRegionAvgPct - 50) * 1.8}deg)` }}
               />
-              <div className="gauge-hero__hole">
-                <div className="gauge-hero__num">{last30.membershipCustomerPct}%</div>
-                <div className="gauge-hero__caption">상세분석 가능한 손님 비율</div>
-                <div className="gauge-hero__region">
-                  지역 평균 <b>{last30.membershipRegionAvgPct}%</b>
-                </div>
+              <div className="gauge-mini__hole">
+                <div className="gauge-mini__num">{last30.membershipCustomerPct}%</div>
               </div>
             </div>
+
             <p className="hook-cta__desc">
-              포인트를 적립·사용한 손님만큼 상세분석이 가능해요. 적립 손님이 늘수록 리포트도 더 자세해져요.
+              포인트를 적립·사용한 손님만 보여드려요. 지역 평균보다{" "}
+              <b>{regionGap}%p</b> {isBelowRegionAvg ? "낮아요" : "더 많아요"}.
             </p>
+            <p className="hook-cta__desc hook-cta__desc--muted">적립 손님이 늘수록 이 숫자도 함께 올라가요.</p>
             <span className="meter-row__cta">상세분석 리포트 보기 ›</span>
           </div>
         </Card>
