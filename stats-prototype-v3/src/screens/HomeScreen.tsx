@@ -88,50 +88,28 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         </div>
 
         {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드
-            읽는 순서 = 기대(혜택) → 질문 → 숫자(답) → 이유 → 지역 비교 → CTA.
-            숫자·조건을 헤드라인에 먼저 밝히면 "아 일부만이네"로 곧장 넘어가버려 기대감이 생략되므로,
-            일반적인 혜택 문장을 먼저 보여준 뒤에야 게이지 숫자를 그 질문에 대한 답처럼 등장시킴 */}
+            "리포트 제공"(혜택)과 "포인트 적립·사용 주문 기준"(조건)을 별개 정보로 나열하지 않고
+            한 문장으로 묶어 인과관계 자체가 후킹이 되도록 함. 그다음 성장 동기 → 지역 비교가
+            구분선 없이 자연스러운 문단 흐름으로 이어짐 */}
         <Card
           title="최근 30일 상세분석 리포트 보기"
           indicator={homeRealtimeIndicators.last30}
           className={`hook-card hook-card--${caseTone}`}
         >
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
-            <div className="benefit-lead">우리 매장 손님, 상세히 알 수 있어요</div>
-            <div className="gauge-question">몇 건이나 확인할 수 있을까요?</div>
-
-            <div className="gauge-mini">
-              <div
-                className="gauge-mini__ring"
-                style={{
-                  background: `conic-gradient(from -90deg, ${caseToneColor} 0deg, ${caseToneColor} ${
-                    membershipOrderPct * 1.8
-                  }deg, var(--track) ${membershipOrderPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
-                }}
-              />
-              <div
-                className="gauge-mini__marker"
-                style={{ transform: `translateX(-50%) rotate(${(last30.membershipRegionAvgPct - 50) * 1.8}deg)` }}
-              />
-              <div className="gauge-mini__hole">
-                <div className="gauge-mini__num" style={{ color: caseToneColor }}>
-                  {membershipOrderPct}%
-                </div>
-              </div>
+            <div className="merged-sentence">
+              포인트 적립·사용 주문{" "}
+              <span className="merged-sentence__num" style={{ color: caseToneColor }}>
+                {membershipOrderPct}%
+              </span>
+              를 기반으로, 손님 상세분석 리포트를 보여드려요
             </div>
 
-            <div className={`case-badge case-badge--${caseTone}`}>
-              {isBelowRegionAvg ? "지역 평균에 못 미쳐요" : "상위권이에요"}
-            </div>
+            <p className="grow-line">적립·사용이 늘어날수록 리포트는 더 정확하고 쓸모 있어져요.</p>
 
-            <p className="hook-cta__desc">
-              포인트가 적립·사용된 주문만 보여드려요. 지역 평균보다{" "}
-              <b style={{ color: caseToneColor }}>{regionGap}%p</b> {isBelowRegionAvg ? "낮아요" : "더 많아요"}.
-            </p>
-            <p className="hook-cta__desc hook-cta__desc--muted">
-              {isBelowRegionAvg
-                ? "적립·사용 주문이 늘수록 지역 평균을 따라잡을 수 있어요."
-                : "잘하고 있어요! 지금처럼 적립·사용 주문을 계속 늘려보세요."}
+            <p className="region-line" style={{ color: caseToneColor }}>
+              지역 평균보다 {regionGap}%p {isBelowRegionAvg ? "낮아요" : "더 높아요! 계속 유지해보세요"}{" "}
+              <span className="region-badge">주변매장 평균 {last30.membershipRegionAvgPct}%</span>
             </p>
 
             <div className="hook-cta__button">

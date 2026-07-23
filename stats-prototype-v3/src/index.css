@@ -1670,111 +1670,47 @@ body {
   opacity: 1;
 }
 
-.benefit-lead {
-  font-size: 15.5px;
-  font-weight: 800;
-  color: var(--text);
-  text-align: center;
-  line-height: 1.4;
-  letter-spacing: -0.2px;
-}
-
-.gauge-question {
-  margin-top: 4px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-align: center;
-}
-
-/* 반원형 게이지 (보조 증거로 축소 — 헤드라인이 주인공, 게이지는 질문에 대한 답만 짧게) */
-.gauge-mini {
-  position: relative;
-  width: 118px;
-  height: 61px;
-  margin: 10px auto 0;
-  overflow: hidden;
-}
-
-.gauge-mini__ring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 118px;
-  height: 118px;
-  border-radius: 50%;
-}
-
-.gauge-mini__marker {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 2px;
-  height: 43px;
-  background: var(--text);
-  opacity: 0.4;
-  transform-origin: bottom center;
-}
-
-.gauge-mini__hole {
-  position: absolute;
-  left: 17px;
-  top: 17px;
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: var(--card-bg);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 10px;
-}
-
-.gauge-mini__num {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--accent);
-  letter-spacing: -0.2px;
-}
-
-.hook-cta__desc {
-  margin: 10px 0 0;
-  font-size: 12.5px;
-  font-weight: 600;
+/* 통합 문장 — "리포트 제공"(혜택)과 "포인트 적립·사용 주문 기준"(조건)을 한 문장으로 묶어 후킹 자체로 삼음 */
+.merged-sentence {
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text);
   line-height: 1.55;
-  text-align: center;
 }
 
-.hook-cta__desc b {
-  color: var(--accent);
+.merged-sentence__num {
+  font-weight: 800;
+  font-size: 17px;
 }
 
-.hook-cta__desc--muted {
-  font-size: 11px;
+.grow-line {
+  margin: 12px 0 0;
+  font-size: 12px;
   color: var(--text-secondary);
   font-weight: 600;
+  line-height: 1.6;
 }
 
-/* 케이스 뱃지 — 게이지 숫자 바로 아래에서 즉시 감정적으로 읽히게 (포모 / 우월감) */
-.case-badge {
-  display: block;
-  width: fit-content;
-  margin: 8px auto 0;
-  font-size: 11px;
+.region-line {
+  margin: 6px 0 0;
+  font-size: 13px;
   font-weight: 800;
-  padding: 4px 12px;
+  line-height: 1.6;
+}
+
+.region-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 999px;
-}
-
-.case-badge--warning {
-  color: var(--warning);
-  background: var(--warning-soft);
-}
-
-.case-badge--success {
-  color: var(--success);
-  background: var(--success-soft);
+  padding: 3px 8px;
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 /* 상세분석 리포트 CTA — 다른 화면으로 이동한다는 게 한눈에 보이도록 실제 버튼처럼 채워서 표시 */
