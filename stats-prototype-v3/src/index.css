@@ -1468,30 +1468,11 @@ body {
   align-self: flex-start;
 }
 
-.kpi-cell--live {
-  position: relative;
-}
-
-.live-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--danger);
-  margin-right: 4px;
-}
-
-.home-aov-row {
+.kpi-cell__badges {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
   flex-wrap: wrap;
-}
-
-.home-aov-row__value {
-  font-size: 19px;
-  font-weight: 800;
+  gap: 4px;
+  margin-top: 6px;
 }
 
 .cta-drill {

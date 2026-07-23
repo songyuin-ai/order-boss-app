@@ -4,7 +4,7 @@ import BarChart from "../components/BarChart";
 import DonutChart from "../components/DonutChart";
 import IdBadge from "../components/IdBadge";
 import { useAppData } from "../context/DataContext";
-import { MEMBERSHIP_CUSTOMER_PCT_BY_CASE } from "../data/homeDummy";
+import { MEMBERSHIP_ORDER_PCT_BY_CASE } from "../data/homeDummy";
 import { formatWon, formatCompactWon, formatSignedNumber } from "../utils/format";
 import type { Indicator } from "../data/types";
 
@@ -15,13 +15,13 @@ interface Props {
 
 export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const { homeRealtimeIndicators, homeRealtime } = useAppData();
-  const { revenue, orders, aov, weekCumulative, weekTotal, weekdayHourly, last30, updatedAtLabel } = homeRealtime;
+  const { revenue, orders, aov, weekCumulative, weekTotal, last30, updatedAtLabel } = homeRealtime;
 
   // 프로토타입 데모용 — 지역 평균 대비 낮음/높음 두 시나리오를 케이스 전환 버튼으로 바로 보여줌
   const [membershipCase, setMembershipCase] = useState<"low" | "high">("low");
-  const membershipCustomerPct = MEMBERSHIP_CUSTOMER_PCT_BY_CASE[membershipCase];
+  const membershipOrderPct = MEMBERSHIP_ORDER_PCT_BY_CASE[membershipCase];
 
-  const regionGapRaw = last30.membershipRegionAvgPct - membershipCustomerPct;
+  const regionGapRaw = last30.membershipRegionAvgPct - membershipOrderPct;
   const isBelowRegionAvg = regionGapRaw > 0;
   const regionGap = Math.round(Math.abs(regionGapRaw) * 10) / 10;
   // 지역 평균보다 낮음 = 포모(뒤처지고 있다는 위기감), 높음 = 우월감·유지 동기 — 색·문구를 케이스별로 다르게
@@ -36,7 +36,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
     homeRealtimeIndicators.last30,
     homeRealtimeIndicators.deliveryShare,
     homeRealtimeIndicators.weekCumulative,
-    homeRealtimeIndicators.weeklyHourly,
   ];
 
   useEffect(() => {
@@ -99,15 +98,15 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         >
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="benefit-lead">우리 매장 손님, 상세히 알 수 있어요</div>
-            <div className="gauge-question">몇 명이나 확인할 수 있을까요?</div>
+            <div className="gauge-question">몇 건이나 확인할 수 있을까요?</div>
 
             <div className="gauge-mini">
               <div
                 className="gauge-mini__ring"
                 style={{
                   background: `conic-gradient(from -90deg, ${caseToneColor} 0deg, ${caseToneColor} ${
-                    membershipCustomerPct * 1.8
-                  }deg, var(--track) ${membershipCustomerPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
+                    membershipOrderPct * 1.8
+                  }deg, var(--track) ${membershipOrderPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
                 }}
               />
               <div
@@ -116,7 +115,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
               />
               <div className="gauge-mini__hole">
                 <div className="gauge-mini__num" style={{ color: caseToneColor }}>
-                  {membershipCustomerPct}%
+                  {membershipOrderPct}%
                 </div>
               </div>
             </div>
@@ -126,13 +125,13 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             </div>
 
             <p className="hook-cta__desc">
-              포인트를 적립·사용한 손님만 보여드려요. 지역 평균보다{" "}
+              포인트가 적립·사용된 주문만 보여드려요. 지역 평균보다{" "}
               <b style={{ color: caseToneColor }}>{regionGap}%p</b> {isBelowRegionAvg ? "낮아요" : "더 많아요"}.
             </p>
             <p className="hook-cta__desc hook-cta__desc--muted">
               {isBelowRegionAvg
-                ? "적립 손님을 늘리면 지역 평균을 따라잡을 수 있어요."
-                : "잘하고 있어요! 지금처럼 적립 손님을 계속 늘려보세요."}
+                ? "적립·사용 주문이 늘수록 지역 평균을 따라잡을 수 있어요."
+                : "잘하고 있어요! 지금처럼 적립·사용 주문을 계속 늘려보세요."}
             </p>
 
             <div className="hook-cta__button">
@@ -165,7 +164,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             </div>
           </div>
           <p className="chart-note">
-            ※ 위 상세분석 리포트 비율은 손님 수 기준, 딜리버리 점유율은 매출 기준으로 서로 다른 지표예요.
+            ※ 위 상세분석 리포트 비율은 주문건수 기준, 딜리버리 점유율은 매출 기준으로 서로 다른 지표예요.
           </p>
         </Card>
 
@@ -200,26 +199,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
               highlight: d.isToday,
             }))}
           />
-        </Card>
-
-        <Card title="주간 시간대별 주문건수" indicator={homeRealtimeIndicators.weeklyHourly}>
-          {weekdayHourly.map((day) => (
-            <div key={day.day} className="weekday-hourly-group">
-              <div className="weekday-hourly-group__day">
-                {day.day}
-                {day.isToday ? " (오늘)" : ""}
-              </div>
-              <BarChart
-                data={day.hourly.map((h) => ({
-                  label: h.label,
-                  value: h.value,
-                  valueLabel: h.value !== null ? `${h.value}건` : "",
-                }))}
-                height={64}
-                showValueLabels
-              />
-            </div>
-          ))}
         </Card>
       </div>
     </div>

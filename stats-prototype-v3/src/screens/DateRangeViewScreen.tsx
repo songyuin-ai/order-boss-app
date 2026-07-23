@@ -36,16 +36,18 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
   const data = home[tab as keyof typeof home];
   const periods = data.kpiPeriods;
   const period = periods[periodIndex] ?? periods[0];
-  const isToday = tab === "daily" && periodIndex === 0;
+  const isDaily = tab === "daily";
 
+  // 날짜별 보기는 전일자 마감 데이터까지만 조회하므로 "실시간" 개념이 없음. 일간만 전일 대비 배지를 추가로 보여줌
   const tabIndicators: Indicator[] = [
     homeIndicators.revenue,
     homeIndicators.orders,
     homeIndicators.aov,
-    ...(isToday ? [homeIndicators.live] : []),
-    homeIndicators.weekday,
+    ...(!isDaily ? [homeIndicators.weekday] : []),
     homeIndicators.onlineOffline,
     homeIndicators.channelRevenue,
+    homeIndicators.topProducts,
+    homeIndicators.hourlyOrders,
   ];
 
   useEffect(() => {
@@ -99,7 +101,10 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
           <IdBadge id={homeIndicators.revenue.id} />
           <span className="home-headline__label">전체 매출 (POS)</span>
           <span className="home-headline__value">{formatWon(period.revenue)}</span>
-          <span className="badge">{period.revenueComparisonBadge}</span>
+          <div className="daily-summary__badges">
+            {isDaily && period.revenueDeltaBadge && <span className="badge badge--primary">{period.revenueDeltaBadge}</span>}
+            <span className="badge badge--muted">{period.revenueRegionBadge}</span>
+          </div>
         </div>
 
         <div className="kpi-grid">
@@ -107,35 +112,36 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
             <IdBadge id={homeIndicators.orders.id} />
             <div className="kpi-cell__label">주문건수</div>
             <div className="kpi-cell__value">{period.orders.toLocaleString("ko-KR")}건</div>
-          </div>
-          {isToday && period.liveRevenue !== undefined && (
-            <div className="kpi-cell kpi-cell--live">
-              <IdBadge id={homeIndicators.live.id} />
-              <div className="kpi-cell__label">
-                <span className="live-dot" />
-                실시간
-              </div>
-              <div className="kpi-cell__value">{formatCompactWon(period.liveRevenue)}</div>
-              <div className="kpi-cell__delta">{period.liveOrders}건</div>
+            <div className="kpi-cell__badges">
+              {isDaily && period.ordersDeltaBadge && <span className="badge badge--primary">{period.ordersDeltaBadge}</span>}
+              <span className="badge badge--muted">{period.ordersRegionBadge}</span>
             </div>
-          )}
+          </div>
+          <div className="kpi-cell">
+            <IdBadge id={homeIndicators.aov.id} />
+            <div className="kpi-cell__label">객단가</div>
+            <div className="kpi-cell__value">{formatWon(period.aov)}</div>
+            <div className="kpi-cell__badges">
+              {isDaily && period.aovDeltaBadge && <span className="badge badge--primary">{period.aovDeltaBadge}</span>}
+              <span className="badge badge--muted">{period.aovRegionBadge}</span>
+            </div>
+          </div>
         </div>
 
-        <Card title="객단가 · 요일별 매출" indicator={homeIndicators.weekday}>
-          <div className="home-aov-row">
-            <span className="home-aov-row__value">{formatWon(period.aov)}</span>
-            {period.aovComparisonBadge && <span className="badge">{period.aovComparisonBadge}</span>}
-          </div>
-          <BarChart
-            data={data.weekday.map((w) => ({
-              label: w.label,
-              value: w.value,
-              highlight: w.isToday,
-              valueLabel: w.value !== null ? formatCompactWon(w.value) : "",
-            }))}
-            showValueLabels
-          />
-        </Card>
+        {/* 일간 탭에는 요일별 매출을 노출하지 않음 (하루치 조회에는 요일 분포 차트가 맞지 않음) */}
+        {!isDaily && (
+          <Card title="요일별 매출" indicator={homeIndicators.weekday}>
+            <BarChart
+              data={data.weekday.map((w) => ({
+                label: w.label,
+                value: w.value,
+                highlight: w.isToday,
+                valueLabel: w.value !== null ? formatCompactWon(w.value) : "",
+              }))}
+              showValueLabels
+            />
+          </Card>
+        )}
 
         <Card title="온라인/오프라인 점유율" indicator={homeIndicators.onlineOffline}>
           <DonutChart
@@ -153,6 +159,34 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
               value: c.value,
               valueLabel: formatCompactWon(c.value),
               opacity: 1 - i * 0.13,
+            }))}
+            showValueLabels
+          />
+        </Card>
+
+        <Card title="인기상품 TOP3" indicator={homeIndicators.topProducts}>
+          <ul className="menu-list">
+            {data.topProducts.map((p) => (
+              <li className="menu-list__item" key={p.rank}>
+                <span className="menu-list__rank">{p.rank}</span>
+                <span className="menu-list__name">{p.name}</span>
+                <span className="menu-list__count">{p.orderCount}건</span>
+                <span className="badge badge--muted">매출 비중 {p.revenueSharePct}%</span>
+              </li>
+            ))}
+          </ul>
+          <p className="chart-note">※ 주문건수 기준 상위 3개 상품이에요.</p>
+        </Card>
+
+        <Card
+          title={isDaily ? "시간대별 주문건수" : "시간대별 주문건수 (일평균)"}
+          indicator={homeIndicators.hourlyOrders}
+        >
+          <BarChart
+            data={data.hourlyOrders.map((h) => ({
+              label: h.label,
+              value: h.value,
+              valueLabel: `${h.value}건`,
             }))}
             showValueLabels
           />
