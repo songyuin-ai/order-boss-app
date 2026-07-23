@@ -141,6 +141,12 @@ export const homeMonthly: HomeTabData = {
 // 홈 = 사장님앱 실시간 대시보드 (당일 기준, 탭 없음). 이번 주 오늘 = 수요일 가정 (deliveryDummy.ts weekdayCumulative와 동일 컨벤션)
 const CURRENT_WEEKDAY_INDEX = 2;
 
+// 프로토타입 데모용 — 홈 화면의 "케이스 전환" 버튼으로 두 시나리오(지역 평균보다 낮음/높음)를 보여주기 위한 값
+export const MEMBERSHIP_CUSTOMER_PCT_BY_CASE = {
+  low: 37.8,
+  high: 61.5,
+};
+
 // 매출·객단가는 지역 평균보다 높게, 주문건수는 지역 평균보다 낮게 (매출 우위는 "건수"가 아니라 "단가·전체 볼륨"에서 온다는 인사이트)
 export const homeRealtime: HomeRealtimeData = {
   updatedAtLabel: "07/19 14:32 기준",
@@ -165,7 +171,7 @@ export const homeRealtime: HomeRealtimeData = {
     { day: "수", isToday: true, hourly: [3, 7, 10, 4, 2, 1, 0].map((v, i) => ({ label: HOUR_LABELS[i], value: v })) },
   ],
   last30: {
-    membershipCustomerPct: 37.8,
+    membershipCustomerPct: MEMBERSHIP_CUSTOMER_PCT_BY_CASE.low,
     membershipRegionAvgPct: 50,
     deliveryRevenueAmount: 26460000,
     deliveryRevenuePct: 29.4,

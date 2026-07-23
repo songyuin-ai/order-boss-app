@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import BarChart from "../components/BarChart";
 import DonutChart from "../components/DonutChart";
 import IdBadge from "../components/IdBadge";
 import { useAppData } from "../context/DataContext";
+import { MEMBERSHIP_CUSTOMER_PCT_BY_CASE } from "../data/homeDummy";
 import { formatWon, formatCompactWon, formatSignedNumber } from "../utils/format";
 import type { Indicator } from "../data/types";
 
@@ -16,7 +17,11 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const { homeRealtimeIndicators, homeRealtime } = useAppData();
   const { revenue, orders, aov, weekCumulative, weekTotal, weekdayHourly, last30, updatedAtLabel } = homeRealtime;
 
-  const regionGapRaw = last30.membershipRegionAvgPct - last30.membershipCustomerPct;
+  // 프로토타입 데모용 — 지역 평균 대비 낮음/높음 두 시나리오를 케이스 전환 버튼으로 바로 보여줌
+  const [membershipCase, setMembershipCase] = useState<"low" | "high">("low");
+  const membershipCustomerPct = MEMBERSHIP_CUSTOMER_PCT_BY_CASE[membershipCase];
+
+  const regionGapRaw = last30.membershipRegionAvgPct - membershipCustomerPct;
   const isBelowRegionAvg = regionGapRaw > 0;
   const regionGap = Math.round(Math.abs(regionGapRaw) * 10) / 10;
 
@@ -85,6 +90,26 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             숫자·조건을 헤드라인에 먼저 밝히면 "아 일부만이네"로 곧장 넘어가버려 기대감이 생략되므로,
             일반적인 혜택 문장을 먼저 보여준 뒤에야 게이지 숫자를 그 질문에 대한 답처럼 등장시킴 */}
         <Card title="최근 30일 상세분석 리포트 보기" indicator={homeRealtimeIndicators.last30} className="hook-card">
+          <div className="case-toggle">
+            <span className="case-toggle__label">케이스 전환 (프로토타입 데모용)</span>
+            <div className="case-toggle__buttons">
+              <button
+                type="button"
+                className={`case-toggle__btn${membershipCase === "low" ? " is-active" : ""}`}
+                onClick={() => setMembershipCase("low")}
+              >
+                주변 평균보다 낮음
+              </button>
+              <button
+                type="button"
+                className={`case-toggle__btn${membershipCase === "high" ? " is-active" : ""}`}
+                onClick={() => setMembershipCase("high")}
+              >
+                주변 평균보다 높음
+              </button>
+            </div>
+          </div>
+
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="benefit-lead">우리 매장 손님, 상세히 알 수 있어요</div>
             <div className="gauge-question">몇 명이나 확인할 수 있을까요?</div>
@@ -94,8 +119,8 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
                 className="gauge-mini__ring"
                 style={{
                   background: `conic-gradient(from -90deg, var(--accent) 0deg, var(--accent) ${
-                    last30.membershipCustomerPct * 1.8
-                  }deg, var(--track) ${last30.membershipCustomerPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
+                    membershipCustomerPct * 1.8
+                  }deg, var(--track) ${membershipCustomerPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
                 }}
               />
               <div
@@ -103,7 +128,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
                 style={{ transform: `translateX(-50%) rotate(${(last30.membershipRegionAvgPct - 50) * 1.8}deg)` }}
               />
               <div className="gauge-mini__hole">
-                <div className="gauge-mini__num">{last30.membershipCustomerPct}%</div>
+                <div className="gauge-mini__num">{membershipCustomerPct}%</div>
               </div>
             </div>
 

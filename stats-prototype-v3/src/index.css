@@ -1657,6 +1657,47 @@ body {
   cursor: pointer;
 }
 
+/* 케이스 전환 버튼 (프로토타입 데모용 — 지역 평균 대비 낮음/높음 시나리오 전환) */
+.case-toggle {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.case-toggle__label {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+
+.case-toggle__buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.case-toggle__btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 4px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.case-toggle__btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 .benefit-lead {
   font-size: 15.5px;
   font-weight: 800;
