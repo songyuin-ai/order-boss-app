@@ -98,11 +98,11 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         >
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="merged-sentence">
-              포인트 적립·사용 주문{" "}
+              전체 주문 중 해피포인트 적립/사용한{" "}
               <span className="merged-sentence__num" style={{ color: caseToneColor }}>
                 {membershipOrderPct}%
-              </span>
-              를 기반으로, 손님 상세분석 리포트를 보여드려요
+              </span>{" "}
+              주문 건 기반으로, 손님 상세분석 리포트를 보여드려요
             </div>
 
             <p className="grow-line">적립·사용이 늘어날수록 리포트는 더 정확하고 쓸모 있어져요.</p>
