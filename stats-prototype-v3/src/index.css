@@ -1633,79 +1633,7 @@ body {
   color: var(--text-secondary);
 }
 
-/* Meter row (최근 30일 포인트/딜리버리 연관 매출 비중 - 독립 표시) */
-.meter-row {
-  cursor: pointer;
-  padding: 10px 0;
-  border-top: 1px solid var(--border);
-}
-
-.meter-row:first-of-type {
-  border-top: none;
-  padding-top: 0;
-}
-
-.meter-row__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-
-.meter-row__label {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.meter-row__pct {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--accent);
-}
-
-.meter-row__amount {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
-.meter-bar {
-  position: relative;
-  height: 8px;
-  background: var(--track);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.meter-bar__fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 999px;
-}
-
-.meter-bar__fill--alt {
-  background: var(--success);
-}
-
-.meter-bar__marker {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--text);
-  opacity: 0.55;
-  transform: translateX(-50%);
-}
-
-.meter-row__region-caption {
-  margin-top: 5px;
-  font-size: 10.5px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
+/* 최근 30일 상세분석 리포트 카드의 CTA 링크 텍스트 (포인트/딜리버리 공용) */
 .meter-row__cta {
   display: block;
   margin-top: 6px;
@@ -1714,13 +1642,76 @@ body {
   color: var(--text-secondary);
 }
 
-.meter-row__hook {
-  display: block;
-  margin-top: 8px;
-  font-size: 11.5px;
-  font-weight: 600;
+/* 반원형 게이지 (컴팩트, 가로 배치 — 게이지 + 숫자 판독을 나란히 둬서 세로 공간 절약) */
+.gauge-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 2px;
+}
+
+.gauge-compact {
+  position: relative;
+  width: 96px;
+  height: 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.gauge-compact__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+}
+
+.gauge-compact__hole {
+  position: absolute;
+  left: 13px;
+  top: 13px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--card-bg);
+}
+
+.gauge-compact__marker {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 33px;
+  background: var(--text);
+  opacity: 0.5;
+  transform-origin: bottom center;
+}
+
+.gauge-compact__readout {
+  flex: 1;
+  min-width: 0;
+}
+
+.gauge-compact__num {
+  font-size: 20px;
+  font-weight: 800;
   color: var(--accent);
-  line-height: 1.5;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+
+.gauge-compact__label {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.gauge-compact__region {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 3px;
 }
 
 /* Hook card (최근 30일 상세분석 리포트 - 상세분석 유도, 2순위 배치) */
@@ -1734,11 +1725,11 @@ body {
 }
 
 .hook-cta__desc {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: 12.5px;
   font-weight: 600;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .hook-cta__num {

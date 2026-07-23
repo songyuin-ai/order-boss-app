@@ -83,9 +83,27 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           className="hook-card"
         >
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
-            <div className="meter-bar">
-              <div className="meter-bar__fill" style={{ width: `${last30.membershipCustomerPct}%` }} />
-              <div className="meter-bar__marker" style={{ left: `${last30.membershipRegionAvgPct}%` }} />
+            <div className="gauge-row">
+              <div className="gauge-compact">
+                <div
+                  className="gauge-compact__ring"
+                  style={{
+                    background: `conic-gradient(from -90deg, var(--accent) 0deg, var(--accent) ${
+                      last30.membershipCustomerPct * 1.8
+                    }deg, var(--track) ${last30.membershipCustomerPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
+                  }}
+                />
+                <div className="gauge-compact__hole" />
+                <div
+                  className="gauge-compact__marker"
+                  style={{ transform: `translateX(-50%) rotate(${(last30.membershipRegionAvgPct - 50) * 1.8}deg)` }}
+                />
+              </div>
+              <div className="gauge-compact__readout">
+                <div className="gauge-compact__num">{last30.membershipCustomerPct}%</div>
+                <div className="gauge-compact__label">상세분석 리포트 커버리지</div>
+                <div className="gauge-compact__region">지역 평균 {last30.membershipRegionAvgPct}%</div>
+              </div>
             </div>
             <p className="hook-cta__desc">
               우리 매장을 찾은 손님 중 포인트를 적립/사용한{" "}
