@@ -76,44 +76,32 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           </div>
         </div>
 
-        {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드 — 손님 비율 기준으로 바로 상세분석을 어필 */}
-        <Card
-          title={`최근 30일 상세분석 리포트 보기 (우리매장 손님 전체 대비 ${last30.membershipCustomerPct}%)`}
-          indicator={homeRealtimeIndicators.last30}
-          className="hook-card"
-        >
+        {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드 — 게이지 하나에 우리 수치·지역 평균을 모두 담아 중복 설명 없이 바로 이해되게 */}
+        <Card title="최근 30일 상세분석 리포트 보기" indicator={homeRealtimeIndicators.last30} className="hook-card">
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
-            <div className="gauge-row">
-              <div className="gauge-compact">
-                <div
-                  className="gauge-compact__ring"
-                  style={{
-                    background: `conic-gradient(from -90deg, var(--accent) 0deg, var(--accent) ${
-                      last30.membershipCustomerPct * 1.8
-                    }deg, var(--track) ${last30.membershipCustomerPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
-                  }}
-                />
-                <div className="gauge-compact__hole" />
-                <div
-                  className="gauge-compact__marker"
-                  style={{ transform: `translateX(-50%) rotate(${(last30.membershipRegionAvgPct - 50) * 1.8}deg)` }}
-                />
-              </div>
-              <div className="gauge-compact__readout">
-                <div className="gauge-compact__num">{last30.membershipCustomerPct}%</div>
-                <div className="gauge-compact__label">상세분석 리포트 커버리지</div>
-                <div className="gauge-compact__region">지역 평균 {last30.membershipRegionAvgPct}%</div>
+            <div className="gauge-hero">
+              <div
+                className="gauge-hero__ring"
+                style={{
+                  background: `conic-gradient(from -90deg, var(--accent) 0deg, var(--accent) ${
+                    last30.membershipCustomerPct * 1.8
+                  }deg, var(--track) ${last30.membershipCustomerPct * 1.8}deg 180deg, transparent 180deg 360deg)`,
+                }}
+              />
+              <div
+                className="gauge-hero__marker"
+                style={{ transform: `translateX(-50%) rotate(${(last30.membershipRegionAvgPct - 50) * 1.8}deg)` }}
+              />
+              <div className="gauge-hero__hole">
+                <div className="gauge-hero__num">{last30.membershipCustomerPct}%</div>
+                <div className="gauge-hero__caption">상세분석 리포트 커버리지</div>
+                <div className="gauge-hero__region">
+                  지역 평균 <b>{last30.membershipRegionAvgPct}%</b>
+                </div>
               </div>
             </div>
             <p className="hook-cta__desc">
-              우리 매장을 찾은 손님 중 포인트를 적립/사용한{" "}
-              <strong className="hook-cta__num">{last30.membershipCustomerPct}%</strong>를 기준으로 상세분석을
-              제공해 드려요
-            </p>
-            <p className="hook-cta__desc">
-              주변매장은 평균적으로 매장손님 중{" "}
-              <strong className="hook-cta__num hook-cta__num--muted">{last30.membershipRegionAvgPct}%</strong>의
-              상세분석 리포트를 보고 있어요
+              포인트를 적립·사용한 손님만큼 상세분석이 가능해요. 적립 손님이 늘수록 리포트도 더 자세해져요.
             </p>
             <span className="meter-row__cta">상세분석 리포트 보기 ›</span>
           </div>
