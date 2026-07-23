@@ -24,7 +24,6 @@ export interface HomeLast30 {
   membershipOrderPct: number;
   membershipRegionAvgPct: number;
   // 딜리버리 점유율 (매출 기준, 포인트 지표와는 별도 섹션·별도 기준)
-  deliveryRevenueAmount: number;
   deliveryRevenuePct: number;
 }
 
@@ -316,7 +315,6 @@ export const homeRealtime: HomeRealtimeData = {
   last30: {
     membershipOrderPct: MEMBERSHIP_ORDER_PCT_BY_CASE.low,
     membershipRegionAvgPct: 50,
-    deliveryRevenueAmount: 26460000,
     deliveryRevenuePct: 29.4,
   },
 };

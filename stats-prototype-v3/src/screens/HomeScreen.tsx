@@ -128,7 +128,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         </Card>
 
         {/* 딜리버리 점유율 — 포인트 리포트와 기준(손님 수 vs 매출)이 달라 별도 섹션으로 분리 */}
-        <Card title="딜리버리 점유율" indicator={homeRealtimeIndicators.deliveryShare}>
+        <Card title="딜리버리 점유율 (최근 30일)" indicator={homeRealtimeIndicators.deliveryShare}>
           <div className="delivery-share" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
             <DonutChart
               primaryValue={last30.deliveryRevenuePct}
@@ -137,7 +137,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
               secondaryLabel="그 외"
             />
             <div className="delivery-share__body">
-              <div className="delivery-share__amount">최근 30일 딜리버리 매출 {formatWon(last30.deliveryRevenueAmount)}</div>
               <span className="meter-row__cta">딜리버리 고객 분석 상세보기 ›</span>
             </div>
           </div>

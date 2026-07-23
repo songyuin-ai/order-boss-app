@@ -1747,12 +1747,6 @@ body {
   min-width: 0;
 }
 
-.delivery-share__amount {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text);
-}
-
 /* Daily summary block (1순위 - 일간 매출/주문건수/객단가를 하나로 압축) */
 .daily-summary {
   position: relative;
