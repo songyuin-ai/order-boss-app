@@ -94,7 +94,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
               />
               <div className="gauge-hero__hole">
                 <div className="gauge-hero__num">{last30.membershipCustomerPct}%</div>
-                <div className="gauge-hero__caption">상세분석 리포트 커버리지</div>
+                <div className="gauge-hero__caption">상세분석 가능한 손님 비율</div>
                 <div className="gauge-hero__region">
                   지역 평균 <b>{last30.membershipRegionAvgPct}%</b>
                 </div>
