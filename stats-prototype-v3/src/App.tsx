@@ -96,7 +96,7 @@ function AppShell() {
       case "dateRangeView":
         return <DateRangeViewScreen onPanelChange={handlePanelChange} onNavigate={navigateTo} />;
       case "membership":
-        return <MembershipCustomerAnalysisScreen onPanelChange={handlePanelChange} />;
+        return <MembershipCustomerAnalysisScreen onPanelChange={handlePanelChange} storeName={currentStore.name} />;
       case "deliveryCustomer":
         return <DeliveryScreen onPanelChange={handlePanelChange} />;
       default:

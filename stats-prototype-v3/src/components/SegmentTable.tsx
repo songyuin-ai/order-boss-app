@@ -1,7 +1,6 @@
 interface Row {
   segment: string;
-  revenueShare: number;
-  aov: number;
+  contributionPct: number;
 }
 
 export default function SegmentTable({ rows }: { rows: Row[] }) {
@@ -10,16 +9,14 @@ export default function SegmentTable({ rows }: { rows: Row[] }) {
       <thead>
         <tr>
           <th>세그먼트</th>
-          <th>매출비중</th>
-          <th>객단가</th>
+          <th>POS 대비 매출 기여도</th>
         </tr>
       </thead>
       <tbody>
         {rows.map((r) => (
           <tr key={r.segment}>
             <td>{r.segment}</td>
-            <td>{r.revenueShare}%</td>
-            <td>{r.aov.toLocaleString("ko-KR")}원</td>
+            <td>{r.contributionPct}%</td>
           </tr>
         ))}
       </tbody>

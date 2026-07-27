@@ -7,6 +7,8 @@ import { customerCompositionIndicators } from "../data/customerCompositionIndica
 import { byPeriod as customerCompositionByPeriod, segmentTrend, type CustomerCompositionPeriodData } from "../data/customerCompositionDummy";
 import { customerDetailIndicators } from "../data/customerDetailIndicators";
 import { byPeriod as customerDetailByPeriod, type CustomerDetailPeriodData } from "../data/customerDetailDummy";
+import { segmentDetailIndicators } from "../data/segmentDetailIndicators";
+import { byPeriod as segmentDetailByPeriod, type SegmentDetailPeriodData } from "../data/segmentDetailDummy";
 import { membershipIndicators } from "../data/membershipIndicators";
 import { byPeriod as membershipByPeriod, type MembershipPeriodData } from "../data/membershipDummy";
 import { posIndicators } from "../data/posIndicators";
@@ -24,6 +26,8 @@ interface DataShape {
   customerComposition: { byPeriod: Record<string, CustomerCompositionPeriodData>; segmentTrend: typeof segmentTrend };
   customerDetailIndicators: typeof customerDetailIndicators;
   customerDetail: { byPeriod: Record<string, CustomerDetailPeriodData> };
+  segmentDetailIndicators: typeof segmentDetailIndicators;
+  segmentDetail: { byPeriod: Record<string, SegmentDetailPeriodData> };
   membershipIndicators: typeof membershipIndicators;
   membership: { byPeriod: Record<string, MembershipPeriodData> };
   posIndicators: typeof posIndicators;
@@ -46,6 +50,8 @@ const data: DataShape = {
   customerComposition: { byPeriod: customerCompositionByPeriod, segmentTrend },
   customerDetailIndicators,
   customerDetail: { byPeriod: customerDetailByPeriod },
+  segmentDetailIndicators,
+  segmentDetail: { byPeriod: segmentDetailByPeriod },
   membershipIndicators,
   membership: { byPeriod: membershipByPeriod },
   posIndicators,
