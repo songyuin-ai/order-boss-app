@@ -1,9 +1,10 @@
-import type { KpiData, Indicator } from "../data/types";
-import { formatSignedNumber, formatWon } from "../utils/format";
+import type { Indicator } from "../data/types";
+import type { DeliveryKpiPeriod } from "../data/deliveryDummy";
+import { formatWon } from "../utils/format";
 import IdBadge from "./IdBadge";
 
 interface Props {
-  data: KpiData;
+  data: DeliveryKpiPeriod;
   indicators: {
     revenue: Indicator;
     orders: Indicator;
@@ -23,56 +24,34 @@ export default function KpiGrid({ data, indicators, dailyAvgIndicators }: Props)
       indicator: indicators.revenue,
       label: "매출액",
       value: formatWon(data.revenue),
-      delta: `${formatSignedNumber(data.revenueDelta, "%")} ${data.compareLabel}`,
-      isUp: data.revenueDelta >= 0,
+      deltaBadge: data.revenueDeltaBadge,
+      regionBadge: data.revenueRegionBadge,
     },
     {
       key: "orders",
       indicator: indicators.orders,
       label: "주문 건수",
       value: `${data.orders.toLocaleString("ko-KR")}건`,
-      delta: `${formatSignedNumber(data.ordersDelta, "건")} ${data.compareLabel}`,
-      isUp: data.ordersDelta >= 0,
+      deltaBadge: data.ordersDeltaBadge,
+      regionBadge: data.ordersRegionBadge,
     },
     {
       key: "aov",
       indicator: indicators.aov,
       label: "객단가",
       value: formatWon(Math.round(data.aov)),
-      delta: `${formatSignedNumber(data.aovDelta, "%")} ${data.compareLabel}`,
-      isUp: data.aovDelta >= 0,
+      deltaBadge: data.aovDeltaBadge,
+      regionBadge: data.aovRegionBadge,
     },
     {
       key: "cancelRate",
       indicator: indicators.cancelRate,
       label: "취소율",
       value: `${data.cancelRate}%`,
-      delta: `${formatSignedNumber(data.cancelDelta, "%p")} ${data.compareLabel}`,
-      // 취소율은 증가가 나쁨 -> 부호 반전
-      isUp: data.cancelDelta <= 0,
+      deltaBadge: data.cancelRateDeltaBadge,
+      regionBadge: data.cancelRateRegionBadge,
     },
   ];
-
-  if (dailyAvgIndicators && data.dailyAvgRevenue !== undefined && data.dailyAvgOrders !== undefined) {
-    cells.push(
-      {
-        key: "dailyAvgRevenue",
-        indicator: dailyAvgIndicators.revenue,
-        label: "일평균 매출",
-        value: formatWon(Math.round(data.dailyAvgRevenue)),
-        delta: "",
-        isUp: true,
-      },
-      {
-        key: "dailyAvgOrders",
-        indicator: dailyAvgIndicators.orders,
-        label: "일평균 건수",
-        value: `${Math.round(data.dailyAvgOrders).toLocaleString("ko-KR")}건`,
-        delta: "",
-        isUp: true,
-      }
-    );
-  }
 
   return (
     <div className="kpi-grid">
@@ -81,11 +60,26 @@ export default function KpiGrid({ data, indicators, dailyAvgIndicators }: Props)
           <IdBadge id={cell.indicator.id} />
           <div className="kpi-cell__label">{cell.label}</div>
           <div className="kpi-cell__value">{cell.value}</div>
-          {cell.delta && (
-            <div className={`kpi-cell__delta ${cell.isUp ? "is-up" : "is-down"}`}>{cell.delta}</div>
-          )}
+          <div className="kpi-cell__badges">
+            {cell.deltaBadge && <span className="badge badge--primary">{cell.deltaBadge}</span>}
+            <span className="badge badge--muted">{cell.regionBadge}</span>
+          </div>
         </div>
       ))}
+      {dailyAvgIndicators && data.dailyAvgRevenue !== undefined && data.dailyAvgOrders !== undefined && (
+        <>
+          <div className="kpi-cell">
+            <IdBadge id={dailyAvgIndicators.revenue.id} />
+            <div className="kpi-cell__label">일평균 매출</div>
+            <div className="kpi-cell__value">{formatWon(Math.round(data.dailyAvgRevenue))}</div>
+          </div>
+          <div className="kpi-cell">
+            <IdBadge id={dailyAvgIndicators.orders.id} />
+            <div className="kpi-cell__label">일평균 건수</div>
+            <div className="kpi-cell__value">{Math.round(data.dailyAvgOrders).toLocaleString("ko-KR")}건</div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

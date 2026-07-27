@@ -9,20 +9,6 @@ export interface Indicator {
   참고?: string;
 }
 
-export interface KpiData {
-  revenue: number;
-  orders: number;
-  aov: number;
-  cancelRate: number;
-  revenueDelta: number;
-  ordersDelta: number;
-  aovDelta: number;
-  cancelDelta: number;
-  compareLabel: string;
-  dailyAvgRevenue?: number;
-  dailyAvgOrders?: number;
-}
-
 export interface PosKpiPeriod {
   periodLabel: string;
   totalRevenue: number;

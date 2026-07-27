@@ -1,14 +1,21 @@
-import type {
-  ChannelRevenue,
-  DeliveryRatio,
-  HourlyBucket,
-  KpiData,
-  MenuItem,
-  WeekdayBar,
-} from "./types";
+import type { ChannelRevenue, DeliveryRatio, HourlyBucket, MenuItem, WeekdayBar } from "./types";
 
-export interface DeliveryKpiPeriod extends KpiData {
+export interface DeliveryKpiPeriod {
   periodLabel: string;
+  revenue: number;
+  revenueRegionBadge: string;
+  revenueDeltaBadge?: string; // 전일/전주/전월 대비 — 마감된 기간에서만 존재(진행 중인 현재 기간은 없음)
+  orders: number;
+  ordersRegionBadge: string;
+  ordersDeltaBadge?: string;
+  aov: number;
+  aovRegionBadge: string;
+  aovDeltaBadge?: string;
+  cancelRate: number;
+  cancelRateRegionBadge: string;
+  cancelRateDeltaBadge?: string;
+  dailyAvgRevenue?: number;
+  dailyAvgOrders?: number;
 }
 
 export interface DeliveryPeriodSetData {
@@ -26,14 +33,97 @@ const WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
 const CHANNEL_ORDER = ["해피오더", "배민", "쿠팡이츠", "요기요테스트", "땡겨요"];
 
 // 기간변경 UI는 최근 3개월 범위만 지원 (배열 끝에 도달하면 화살표 비활성화)
+// 각 탭의 가장 최근 항목(index 0)은 아직 마감되지 않은 진행 중 기간(오늘/이번 주/이번 달)이라
+// 전일·전주·전월 대비 배지가 없고 인근매장/브랜드 평균 대비 배지만 표시함(홈 화면의 날짜별 보기와 동일 기준)
 export const daily: DeliveryPeriodSetData = {
   kpiPeriods: [
-    { periodLabel: "07/19", revenue: 842000, orders: 47, aov: 17915, cancelRate: 4.3, revenueDelta: 12.4, ordersDelta: 8, aovDelta: -2.1, cancelDelta: -0.5, compareLabel: "전일 대비" },
-    { periodLabel: "07/18", revenue: 795000, orders: 44, aov: 18068, cancelRate: 3.9, revenueDelta: -5.6, ordersDelta: -3, aovDelta: 0.9, cancelDelta: 0.2, compareLabel: "전일 대비" },
-    { periodLabel: "07/17", revenue: 918000, orders: 51, aov: 18000, cancelRate: 4.5, revenueDelta: 8.2, ordersDelta: 5, aovDelta: -1.4, cancelDelta: 0.4, compareLabel: "전일 대비" },
-    { periodLabel: "07/16", revenue: 763000, orders: 42, aov: 18167, cancelRate: 3.6, revenueDelta: -3.1, ordersDelta: -2, aovDelta: 1.1, cancelDelta: -0.6, compareLabel: "전일 대비" },
-    { periodLabel: "07/15", revenue: 856000, orders: 47, aov: 18213, cancelRate: 4.1, revenueDelta: 6.7, ordersDelta: 4, aovDelta: -0.5, cancelDelta: 0.3, compareLabel: "전일 대비" },
-    { periodLabel: "07/14", revenue: 812000, orders: 45, aov: 18044, cancelRate: 3.8, revenueDelta: -1.9, ordersDelta: -1, aovDelta: 0.6, cancelDelta: -0.2, compareLabel: "전일 대비" },
+    {
+      // 진행 중(오늘) — 전일 대비 배지 없음
+      periodLabel: "오늘",
+      revenue: 842000,
+      revenueRegionBadge: "인근매장 평균 대비 +9%",
+      orders: 47,
+      ordersRegionBadge: "인근매장 평균 대비 +4%",
+      aov: 17915,
+      aovRegionBadge: "브랜드 평균 대비 -3%",
+      cancelRate: 4.3,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.4%p",
+    },
+    {
+      periodLabel: "07/18",
+      revenue: 795000,
+      revenueRegionBadge: "인근매장 평균 대비 +5%",
+      revenueDeltaBadge: "전일 대비 -5.6%",
+      orders: 44,
+      ordersRegionBadge: "인근매장 평균 대비 -2%",
+      ordersDeltaBadge: "전일 대비 -3건",
+      aov: 18068,
+      aovRegionBadge: "브랜드 평균 대비 -1%",
+      aovDeltaBadge: "전일 대비 +0.9%",
+      cancelRate: 3.9,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.2%p",
+      cancelRateDeltaBadge: "전일 대비 +0.2%p",
+    },
+    {
+      periodLabel: "07/17",
+      revenue: 918000,
+      revenueRegionBadge: "인근매장 평균 대비 +11%",
+      revenueDeltaBadge: "전일 대비 +8.2%",
+      orders: 51,
+      ordersRegionBadge: "인근매장 평균 대비 +6%",
+      ordersDeltaBadge: "전일 대비 +5건",
+      aov: 18000,
+      aovRegionBadge: "브랜드 평균 대비 -2%",
+      aovDeltaBadge: "전일 대비 -1.4%",
+      cancelRate: 4.5,
+      cancelRateRegionBadge: "브랜드 평균 대비 +0.1%p",
+      cancelRateDeltaBadge: "전일 대비 +0.4%p",
+    },
+    {
+      periodLabel: "07/16",
+      revenue: 763000,
+      revenueRegionBadge: "인근매장 평균 대비 -4%",
+      revenueDeltaBadge: "전일 대비 -3.1%",
+      orders: 42,
+      ordersRegionBadge: "인근매장 평균 대비 -5%",
+      ordersDeltaBadge: "전일 대비 -2건",
+      aov: 18167,
+      aovRegionBadge: "브랜드 평균 대비 +2%",
+      aovDeltaBadge: "전일 대비 +1.1%",
+      cancelRate: 3.6,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.5%p",
+      cancelRateDeltaBadge: "전일 대비 -0.6%p",
+    },
+    {
+      periodLabel: "07/15",
+      revenue: 856000,
+      revenueRegionBadge: "인근매장 평균 대비 +7%",
+      revenueDeltaBadge: "전일 대비 +6.7%",
+      orders: 47,
+      ordersRegionBadge: "인근매장 평균 대비 +3%",
+      ordersDeltaBadge: "전일 대비 +4건",
+      aov: 18213,
+      aovRegionBadge: "브랜드 평균 대비 +1%",
+      aovDeltaBadge: "전일 대비 -0.5%",
+      cancelRate: 4.1,
+      cancelRateRegionBadge: "브랜드 평균 대비 +0.2%p",
+      cancelRateDeltaBadge: "전일 대비 +0.3%p",
+    },
+    {
+      periodLabel: "07/14",
+      revenue: 812000,
+      revenueRegionBadge: "인근매장 평균 대비 +2%",
+      revenueDeltaBadge: "전일 대비 -1.9%",
+      orders: 45,
+      ordersRegionBadge: "인근매장 평균 대비 -1%",
+      ordersDeltaBadge: "전일 대비 -1건",
+      aov: 18044,
+      aovRegionBadge: "브랜드 평균 대비 -2%",
+      aovDeltaBadge: "전일 대비 +0.6%",
+      cancelRate: 3.8,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.3%p",
+      cancelRateDeltaBadge: "전일 대비 -0.2%p",
+    },
   ],
   hourly: [2, 5, 9, 14, 7, 6, 4].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
   topMenu: [
@@ -50,10 +140,71 @@ export const daily: DeliveryPeriodSetData = {
 
 export const weekly: DeliveryPeriodSetData = {
   kpiPeriods: [
-    { periodLabel: "07/13~07/19", revenue: 5624000, orders: 312, aov: 18025, cancelRate: 3.8, revenueDelta: 9.1, ordersDelta: 21, aovDelta: 1.2, cancelDelta: -0.3, compareLabel: "전주 동일기간 대비", dailyAvgRevenue: 803429, dailyAvgOrders: 45 },
-    { periodLabel: "07/06~07/12", revenue: 5156000, orders: 289, aov: 17840, cancelRate: 4.1, revenueDelta: 3.4, ordersDelta: 9, aovDelta: -0.8, cancelDelta: 0.2, compareLabel: "전주 동일기간 대비", dailyAvgRevenue: 736571, dailyAvgOrders: 41 },
-    { periodLabel: "06/29~07/05", revenue: 4988000, orders: 278, aov: 17942, cancelRate: 3.9, revenueDelta: -2.1, ordersDelta: -6, aovDelta: 0.5, cancelDelta: -0.4, compareLabel: "전주 동일기간 대비", dailyAvgRevenue: 712571, dailyAvgOrders: 40 },
-    { periodLabel: "06/22~06/28", revenue: 5094000, orders: 284, aov: 17937, cancelRate: 4.3, revenueDelta: 1.8, ordersDelta: 3, aovDelta: -0.2, cancelDelta: 0.6, compareLabel: "전주 동일기간 대비", dailyAvgRevenue: 727714, dailyAvgOrders: 41 },
+    {
+      // 진행 중(이번 주) — 전주 동일기간 대비 배지 없음
+      periodLabel: "이번 주",
+      revenue: 5624000,
+      revenueRegionBadge: "인근매장 평균 대비 +9%",
+      orders: 312,
+      ordersRegionBadge: "인근매장 평균 대비 +3%",
+      aov: 18025,
+      aovRegionBadge: "브랜드 평균 대비 -1%",
+      cancelRate: 3.8,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.3%p",
+      dailyAvgRevenue: 803429,
+      dailyAvgOrders: 45,
+    },
+    {
+      periodLabel: "07/06~07/12",
+      revenue: 5156000,
+      revenueRegionBadge: "인근매장 평균 대비 +4%",
+      revenueDeltaBadge: "전주 동일기간 대비 +3.4%",
+      orders: 289,
+      ordersRegionBadge: "인근매장 평균 대비 +1%",
+      ordersDeltaBadge: "전주 동일기간 대비 +9건",
+      aov: 17840,
+      aovRegionBadge: "브랜드 평균 대비 -2%",
+      aovDeltaBadge: "전주 동일기간 대비 -0.8%",
+      cancelRate: 4.1,
+      cancelRateRegionBadge: "브랜드 평균 대비 +0.1%p",
+      cancelRateDeltaBadge: "전주 동일기간 대비 +0.2%p",
+      dailyAvgRevenue: 736571,
+      dailyAvgOrders: 41,
+    },
+    {
+      periodLabel: "06/29~07/05",
+      revenue: 4988000,
+      revenueRegionBadge: "인근매장 평균 대비 -3%",
+      revenueDeltaBadge: "전주 동일기간 대비 -2.1%",
+      orders: 278,
+      ordersRegionBadge: "인근매장 평균 대비 -4%",
+      ordersDeltaBadge: "전주 동일기간 대비 -6건",
+      aov: 17942,
+      aovRegionBadge: "브랜드 평균 대비 +1%",
+      aovDeltaBadge: "전주 동일기간 대비 +0.5%",
+      cancelRate: 3.9,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.2%p",
+      cancelRateDeltaBadge: "전주 동일기간 대비 -0.4%p",
+      dailyAvgRevenue: 712571,
+      dailyAvgOrders: 40,
+    },
+    {
+      periodLabel: "06/22~06/28",
+      revenue: 5094000,
+      revenueRegionBadge: "인근매장 평균 대비 +2%",
+      revenueDeltaBadge: "전주 동일기간 대비 +1.8%",
+      orders: 284,
+      ordersRegionBadge: "인근매장 평균 대비 +1%",
+      ordersDeltaBadge: "전주 동일기간 대비 +3건",
+      aov: 17937,
+      aovRegionBadge: "브랜드 평균 대비 -1%",
+      aovDeltaBadge: "전주 동일기간 대비 -0.2%",
+      cancelRate: 4.3,
+      cancelRateRegionBadge: "브랜드 평균 대비 +0.3%p",
+      cancelRateDeltaBadge: "전주 동일기간 대비 +0.6%p",
+      dailyAvgRevenue: 727714,
+      dailyAvgOrders: 41,
+    },
   ],
   hourly: [15, 34, 58, 92, 47, 41, 25].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
   // 이번 주(가장 최근 주간 기간)만 기준, 오늘 = 수요일 가정 (월/화/수만 지남)
@@ -80,9 +231,54 @@ export const weekly: DeliveryPeriodSetData = {
 
 export const monthly: DeliveryPeriodSetData = {
   kpiPeriods: [
-    { periodLabel: "2026년 7월", revenue: 24150000, orders: 1340, aov: 18022, cancelRate: 4.1, revenueDelta: 5.4, ordersDelta: 64, aovDelta: -0.8, cancelDelta: 0.2, compareLabel: "전월 동일기간 대비", dailyAvgRevenue: 805000, dailyAvgOrders: 45 },
-    { periodLabel: "2026년 6월", revenue: 22860000, orders: 1276, aov: 17916, cancelRate: 3.9, revenueDelta: -1.6, ordersDelta: -18, aovDelta: 0.4, cancelDelta: -0.1, compareLabel: "전월 동일기간 대비", dailyAvgRevenue: 762000, dailyAvgOrders: 43 },
-    { periodLabel: "2026년 5월", revenue: 23240000, orders: 1298, aov: 17904, cancelRate: 4.0, revenueDelta: 2.9, ordersDelta: 32, aovDelta: -0.3, cancelDelta: 0.3, compareLabel: "전월 동일기간 대비", dailyAvgRevenue: 749677, dailyAvgOrders: 42 },
+    {
+      // 진행 중(이번 달) — 전월 동일기간 대비 배지 없음
+      periodLabel: "이번 달",
+      revenue: 24150000,
+      revenueRegionBadge: "인근매장 평균 대비 +8%",
+      orders: 1340,
+      ordersRegionBadge: "인근매장 평균 대비 +5%",
+      aov: 18022,
+      aovRegionBadge: "브랜드 평균 대비 -2%",
+      cancelRate: 4.1,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.3%p",
+      dailyAvgRevenue: 805000,
+      dailyAvgOrders: 45,
+    },
+    {
+      periodLabel: "2026년 6월",
+      revenue: 22860000,
+      revenueRegionBadge: "인근매장 평균 대비 +3%",
+      revenueDeltaBadge: "전월 동일기간 대비 -1.6%",
+      orders: 1276,
+      ordersRegionBadge: "인근매장 평균 대비 +1%",
+      ordersDeltaBadge: "전월 동일기간 대비 -18건",
+      aov: 17916,
+      aovRegionBadge: "브랜드 평균 대비 -1%",
+      aovDeltaBadge: "전월 동일기간 대비 +0.4%",
+      cancelRate: 3.9,
+      cancelRateRegionBadge: "브랜드 평균 대비 -0.2%p",
+      cancelRateDeltaBadge: "전월 동일기간 대비 -0.1%p",
+      dailyAvgRevenue: 762000,
+      dailyAvgOrders: 43,
+    },
+    {
+      periodLabel: "2026년 5월",
+      revenue: 23240000,
+      revenueRegionBadge: "인근매장 평균 대비 +5%",
+      revenueDeltaBadge: "전월 동일기간 대비 +2.9%",
+      orders: 1298,
+      ordersRegionBadge: "인근매장 평균 대비 +2%",
+      ordersDeltaBadge: "전월 동일기간 대비 +32건",
+      aov: 17904,
+      aovRegionBadge: "브랜드 평균 대비 -2%",
+      aovDeltaBadge: "전월 동일기간 대비 -0.3%",
+      cancelRate: 4.0,
+      cancelRateRegionBadge: "브랜드 평균 대비 +0.1%p",
+      cancelRateDeltaBadge: "전월 동일기간 대비 +0.3%p",
+      dailyAvgRevenue: 749677,
+      dailyAvgOrders: 42,
+    },
   ],
   hourly: [64, 148, 251, 398, 203, 176, 100].map((v, i) => ({ label: HOUR_LABELS[i], value: v })),
   weekdayAverage: [780000, 812000, 940000, 865000, 1024000, 1188000, 902000].map((v, i) => ({
