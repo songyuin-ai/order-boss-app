@@ -99,9 +99,8 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
         memberOrderPct={memberOrderPct}
         regionAvgMemberOrderPct={segmentData.regionAvgMemberOrderPct}
         hValuePct={membershipData.hValue.pct}
-        hValueDeltaLabel={membershipData.hValue.deltaLabel}
+        regionAvgHValuePct={membershipData.hValue.regionAvgPct}
         memberCustomersIndicator={kpiIndicators.memberCustomers}
-        memberOrderShareIndicator={kpiIndicators.memberOrderShare}
         hValueIndicator={membershipIndicators.hValue}
       />
 
