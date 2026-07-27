@@ -2034,6 +2034,15 @@ body {
   flex-shrink: 0;
 }
 
+.ranked-list__name {
+  flex: 1;
+}
+
+.ranked-list__pct {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
 /* 추이 차트: 월별 우리매장 vs 주변매장 평균 나란히 비교 */
 .trend-chart__diff {
   font-size: 10.5px;

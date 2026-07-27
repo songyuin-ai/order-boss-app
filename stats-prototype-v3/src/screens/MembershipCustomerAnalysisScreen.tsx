@@ -132,7 +132,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
           <TrendChart data={customerComposition.segmentTrend} />
         </Card>
 
-        <Card title="우리 가게는 어떤 손님이 많이 올까요?" indicator={customerCompositionIndicators.demographic}>
+        <Card title="연령/성별 구성" indicator={customerCompositionIndicators.demographic}>
           <SegmentPieChart
             segments={composition.demographicDistribution}
             highlightLoyalLabel={loyalHighlight}

@@ -86,7 +86,8 @@ export default function SegmentStoryCard({ data, segment, onSegmentChange, perio
                   {seg.demographicTop3.map((d, i) => (
                     <li key={d.name} className="ranked-list__item">
                       <span className="ranked-list__rank">{i + 1}</span>
-                      {d.name}
+                      <span className="ranked-list__name">{d.name}</span>
+                      <span className="ranked-list__pct">{d.pct}%</span>
                     </li>
                   ))}
                 </ol>
