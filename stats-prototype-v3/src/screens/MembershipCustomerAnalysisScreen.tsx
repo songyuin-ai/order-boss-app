@@ -86,9 +86,10 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
 
   return (
     <div className="screen">
-      <p className="chart-note chart-note--plain">
-        해피포인트 멤버십을 적립·사용한 손님 데이터를 기반으로 분석했어요. POS 전체 매출/객단가와는 다른 수치예요.
-      </p>
+      <div className="intro-banner">
+        <p className="intro-banner__headline">해피포인트 멤버십을 적립·사용한 손님 데이터를 기반으로 분석했어요</p>
+        <p className="intro-banner__caption">POS 전체 매출/객단가와는 다른 수치예요</p>
+      </div>
       <div className="screen__period-bar">
         <PeriodFilterButton value={period} onClick={() => setPeriodModalOpen(true)} />
       </div>
