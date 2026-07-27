@@ -1,16 +1,25 @@
 import { useState } from "react";
 import MobileFrame from "./components/MobileFrame";
 import DrawerNav, { type DrawerMenuItem } from "./components/DrawerNav";
-import AccountSwitchSheet, { STORE_ACCOUNTS } from "./components/AccountSwitchSheet";
+import AccountSwitchSheet from "./components/AccountSwitchSheet";
+import AddAccountModal from "./components/AddAccountModal";
 import PlaceholderScreen from "./components/PlaceholderScreen";
 import IndicatorPanel from "./components/IndicatorPanel";
 import HomeScreen from "./screens/HomeScreen";
 import DateRangeViewScreen from "./screens/DateRangeViewScreen";
 import MembershipCustomerAnalysisScreen from "./screens/MembershipCustomerAnalysisScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
+import LoginScreen from "./screens/LoginScreen";
 import { IndicatorContext } from "./context/IndicatorContext";
 import { DataProvider } from "./context/DataContext";
+import { useRealtimeRevenue } from "./hooks/useRealtimeRevenue";
 import type { Indicator } from "./data/types";
+import type { StoreAccount } from "./data/accounts";
+
+interface Session {
+  accounts: StoreAccount[];
+  activeStoreId: string;
+}
 
 const MENU: DrawerMenuItem[] = [
   { key: "home", label: "홈" },
@@ -61,14 +70,15 @@ function findLabel(items: DrawerMenuItem[], key: string): string {
   return DRILLDOWN_LABELS[key] ?? "";
 }
 
-function AppShell() {
+function AppShell({ session, setSession }: { session: Session; setSession: (session: Session) => void }) {
   const [menu, setMenu] = useState("home");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [storeId, setStoreId] = useState(STORE_ACCOUNTS[0].id);
+  const [addAccountOpen, setAddAccountOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [panelIndicators, setPanelIndicators] = useState<Indicator[]>([]);
   const [panelLabel, setPanelLabel] = useState("");
+  const revenueByStoreId = useRealtimeRevenue();
 
   const toggle = (id: string) => setActiveId((prev) => (prev === id ? null : id));
   const clear = () => setActiveId(null);
@@ -86,7 +96,7 @@ function AppShell() {
     clear();
   };
 
-  const currentStore = STORE_ACCOUNTS.find((s) => s.id === storeId) ?? STORE_ACCOUNTS[0];
+  const currentStore = session.accounts.find((s) => s.id === session.activeStoreId) ?? session.accounts[0];
   const currentMenuLabel = findLabel(MENU, menu);
 
   const renderScreen = () => {
@@ -157,11 +167,24 @@ function AppShell() {
             />
             <AccountSwitchSheet
               open={sheetOpen}
-              currentStoreId={storeId}
+              currentStoreId={session.activeStoreId}
+              accounts={session.accounts}
+              revenueByStoreId={revenueByStoreId}
               onClose={() => setSheetOpen(false)}
               onSwitch={(id) => {
-                setStoreId(id);
+                setSession({ ...session, activeStoreId: id });
                 setSheetOpen(false);
+              }}
+              onAddAccount={() => {
+                setSheetOpen(false);
+                setAddAccountOpen(true);
+              }}
+            />
+            <AddAccountModal
+              open={addAccountOpen}
+              onClose={() => setAddAccountOpen(false)}
+              onAdded={(store) => {
+                setSession({ ...session, accounts: [...session.accounts, store] });
               }}
             />
           </MobileFrame>
@@ -172,10 +195,32 @@ function AppShell() {
   );
 }
 
+function AppRoot() {
+  const [session, setSession] = useState<Session | null>(null);
+
+  if (!session) {
+    return (
+      <div className="app">
+        <div className="app__intro">
+          <h1>사장님앱 통계 프로토타입 v3</h1>
+          <p>매장 계정으로 로그인해주세요. 계정은 가입이 아니라 본사에서 매장당 1개씩 발급합니다.</p>
+        </div>
+        <div className="layout">
+          <MobileFrame>
+            <LoginScreen onSuccess={(store) => setSession({ accounts: [store], activeStoreId: store.id })} />
+          </MobileFrame>
+        </div>
+      </div>
+    );
+  }
+
+  return <AppShell session={session} setSession={setSession} />;
+}
+
 export default function App() {
   return (
     <DataProvider>
-      <AppShell />
+      <AppRoot />
     </DataProvider>
   );
 }

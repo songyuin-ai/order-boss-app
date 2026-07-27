@@ -1330,6 +1330,163 @@ body {
   text-align: center;
 }
 
+.sheet__sum {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 6px 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sheet__sum-label {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.sheet__sum-value {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.store-revenue {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.store-row--add {
+  border: 1px dashed var(--border);
+  color: var(--accent);
+  font-weight: 700;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.store-row--add .store-row__addicon {
+  font-size: 14px;
+}
+
+/* 로그인/점유인증/계정추가 공용 폼 스타일 */
+.auth-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--card-bg);
+  margin-top: 10px;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.auth-input--code {
+  letter-spacing: 4px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 16px;
+}
+
+.auth-error {
+  margin: 8px 2px 0;
+  font-size: 11.5px;
+  color: var(--danger);
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: 16px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.auth-step {
+  position: relative;
+}
+
+.auth-step__back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: var(--bg);
+  border-radius: 50%;
+  font-size: 16px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.auth-step__title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 2px 0 4px 34px;
+}
+
+.auth-step__desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 로그인 화면 (모바일 프레임 내부 풀스크린) */
+.login-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.login-screen__brand {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.login-screen__note {
+  margin: 14px 2px 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.login-screen__demo {
+  margin-top: 20px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.login-screen__demo span:first-child {
+  font-weight: 700;
+  color: var(--text);
+}
+
 /* 비교 배지 (인근매장/브랜드 평균 대비) */
 .badge {
   display: inline-flex;
