@@ -55,14 +55,14 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           <span className="daterange-entry__chevron">›</span>
         </button>
 
-        {/* [1순위] 일간 요약 — 매출/주문건수/객단가를 카드 3장이 아니라 하나의 압축 블록으로 */}
+        {/* [1순위] 일간 요약 — 매출/주문건수/객단가를 카드 3장이 아니라 하나의 압축 블록으로
+            "오늘"은 아직 마감되지 않은 진행 중인 기간이라 전일 대비는 표시하지 않음 (지역 평균 대비만 상시 표시) */}
         <div className="daily-summary">
           <div className="daily-summary__headline">
             <IdBadge id={homeRealtimeIndicators.revenue.id} />
             <span className="daily-summary__label">오늘 매출</span>
             <span className="daily-summary__value">{formatWon(revenue.value)}</span>
             <div className="daily-summary__badges">
-              <span className="badge badge--primary">전일 대비 {formatSignedNumber(revenue.vsYesterdayPct, "%")}</span>
               <span className="badge badge--muted">지역 평균 대비 {formatSignedNumber(revenue.vsRegionPct, "%")}</span>
             </div>
           </div>
@@ -72,17 +72,13 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
               <IdBadge id={homeRealtimeIndicators.orders.id} />
               <span className="daily-summary__stat-label">주문건수</span>
               <span className="daily-summary__stat-value">{orders.value.toLocaleString("ko-KR")}건</span>
-              <span className="daily-summary__stat-delta">
-                전일 {formatSignedNumber(orders.vsYesterdayPct, "%")} · 지역 {formatSignedNumber(orders.vsRegionPct, "%")}
-              </span>
+              <span className="daily-summary__stat-delta">지역 {formatSignedNumber(orders.vsRegionPct, "%")}</span>
             </div>
             <div className="daily-summary__stat">
               <IdBadge id={homeRealtimeIndicators.aov.id} />
               <span className="daily-summary__stat-label">객단가</span>
               <span className="daily-summary__stat-value">{formatWon(aov.value)}</span>
-              <span className="daily-summary__stat-delta">
-                전일 {formatSignedNumber(aov.vsYesterdayPct, "%")} · 지역 {formatSignedNumber(aov.vsRegionPct, "%")}
-              </span>
+              <span className="daily-summary__stat-delta">지역 {formatSignedNumber(aov.vsRegionPct, "%")}</span>
             </div>
           </div>
         </div>
@@ -152,7 +148,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           <div className="week-total">
             <span className="week-total__value">{formatWon(weekTotal.value)}</span>
             <div className="week-total__badges">
-              <span className="badge badge--primary">전주 대비 {formatSignedNumber(weekTotal.vsLastWeekPct, "%")}</span>
               <span className="badge badge--muted">지역 평균 대비 {formatSignedNumber(weekTotal.vsRegionPct, "%")}</span>
             </div>
           </div>
