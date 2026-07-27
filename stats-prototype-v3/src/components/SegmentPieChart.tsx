@@ -31,8 +31,12 @@ export default function SegmentPieChart({ segments, highlightLoyalLabel, highlig
           <div key={s.label} className="pie-legend__item">
             <span className="dot" style={{ background: COLORS[i % COLORS.length] }} />
             {s.label} {s.pct}%
-            {s.label === highlightLoyalLabel && <span className="pie-badge pie-badge--loyal">단골비율 최고</span>}
-            {s.label === highlightDormantLabel && <span className="pie-badge pie-badge--dormant">휴면비율 최고</span>}
+            {s.label === highlightLoyalLabel && (
+              <span className="pie-badge pie-badge--loyal">단골 비중이 가장 높아요</span>
+            )}
+            {s.label === highlightDormantLabel && (
+              <span className="pie-badge pie-badge--dormant">휴면 비중이 가장 높아요</span>
+            )}
           </div>
         ))}
       </div>

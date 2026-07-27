@@ -91,7 +91,7 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     general: active("general", { customerCount: 80, orderCount: 96, revenue: 1_104_000, revenueContributionPct: 5.4 }),
     dormant: { customerCount: 15, lastPurchaseNote: DORMANT_NOTE },
     posTotalOrders: 1640,
-    regionAvgMemberOrderPct: 13.2,
+    regionAvgMemberOrderPct: 16.4,
   },
   recent30: {
     all: active("all", { customerCount: 582, orderCount: 1276, revenue: 16_098_200, revenueContributionPct: 17.9 }),
@@ -100,7 +100,7 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     general: active("general", { customerCount: 262, orderCount: 406, revenue: 4_709_600, revenueContributionPct: 5.2 }),
     dormant: { customerCount: 58, lastPurchaseNote: DORMANT_NOTE },
     posTotalOrders: 7200,
-    regionAvgMemberOrderPct: 15.5,
+    regionAvgMemberOrderPct: 19.6,
   },
   "2026-07": {
     all: active("all", { customerCount: 601, orderCount: 1352, revenue: 17_212_400, revenueContributionPct: 18.6 }),
@@ -109,7 +109,7 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     general: active("general", { customerCount: 258, orderCount: 408, revenue: 4_773_600, revenueContributionPct: 5.2 }),
     dormant: { customerCount: 59, lastPurchaseNote: DORMANT_NOTE },
     posTotalOrders: 7392,
-    regionAvgMemberOrderPct: 15.9,
+    regionAvgMemberOrderPct: 20.1,
   },
   "2026-06": {
     all: active("all", { customerCount: 540, orderCount: 1141, revenue: 14_154_700, revenueContributionPct: 16.0 }),
@@ -118,7 +118,7 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     general: active("general", { customerCount: 252, orderCount: 378, revenue: 4_309_200, revenueContributionPct: 4.9 }),
     dormant: { customerCount: 60, lastPurchaseNote: DORMANT_NOTE },
     posTotalOrders: 7096,
-    regionAvgMemberOrderPct: 16.6,
+    regionAvgMemberOrderPct: 18.0,
   },
   "2026-05": {
     all: active("all", { customerCount: 564, orderCount: 1226, revenue: 15_405_000, revenueContributionPct: 17.1 }),
@@ -127,6 +127,6 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     general: active("general", { customerCount: 254, orderCount: 389, revenue: 4_492_950, revenueContributionPct: 5.0 }),
     dormant: { customerCount: 56, lastPurchaseNote: DORMANT_NOTE },
     posTotalOrders: 7212,
-    regionAvgMemberOrderPct: 15.8,
+    regionAvgMemberOrderPct: 18.9,
   },
 };

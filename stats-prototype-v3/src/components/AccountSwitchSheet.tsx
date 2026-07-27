@@ -5,9 +5,9 @@ export interface StoreAccount {
 }
 
 export const STORE_ACCOUNTS: StoreAccount[] = [
-  { id: "gangnam", name: "행복치킨 강남점", addr: "서울 강남구" },
-  { id: "hongdae", name: "행복치킨 홍대점", addr: "서울 마포구" },
-  { id: "bundang", name: "행복치킨 분당점", addr: "경기 성남시" },
+  { id: "gangnam", name: "파리바게뜨 과천점", addr: "경기 과천시" },
+  { id: "hongdae", name: "파리바게뜨 홍대점", addr: "서울 마포구" },
+  { id: "bundang", name: "파리바게뜨 분당점", addr: "경기 성남시" },
 ];
 
 interface Props {

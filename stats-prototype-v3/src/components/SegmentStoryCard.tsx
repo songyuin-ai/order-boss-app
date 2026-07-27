@@ -2,21 +2,13 @@ import SegmentedNav from "./SegmentedNav";
 import type { SegmentDetailPeriodData, SegmentKey } from "../data/segmentDetailDummy";
 import { formatCompactWon } from "../utils/format";
 
-const SEGMENT_TABS: { key: SegmentKey; label: string; icon: string }[] = [
-  { key: "all", label: "전체", icon: "👥" },
-  { key: "loyal", label: "단골", icon: "🧡" },
-  { key: "new", label: "신규", icon: "⭐" },
-  { key: "general", label: "일반", icon: "🙂" },
-  { key: "dormant", label: "휴면", icon: "😴" },
+const SEGMENT_TABS: { key: SegmentKey; label: string }[] = [
+  { key: "all", label: "전체" },
+  { key: "loyal", label: "단골" },
+  { key: "new", label: "신규" },
+  { key: "general", label: "일반" },
+  { key: "dormant", label: "휴면" },
 ];
-
-const CATEGORY_ICONS: Record<string, string> = {
-  "커피/음료": "☕",
-  디저트: "🍰",
-  케이크: "🎂",
-  "빙수/아이스크림": "🍧",
-  "샌드위치/샐러드": "🥪",
-};
 
 interface Props {
   data: SegmentDetailPeriodData;
@@ -31,20 +23,12 @@ export default function SegmentStoryCard({ data, segment, onSegmentChange, perio
 
   return (
     <div className="story-card">
-      <SegmentedNav
-        options={SEGMENT_TABS.map((t) => ({ key: t.key, label: `${t.icon} ${t.label}` }))}
-        active={segment}
-        onChange={(k) => onSegmentChange(k as SegmentKey)}
-        size="sm"
-      />
+      <SegmentedNav options={SEGMENT_TABS} active={segment} onChange={(k) => onSegmentChange(k as SegmentKey)} size="sm" />
       {segment === "dormant" ? (
         <div className="story-card__dormant">
           <div className="story-card__headline">
-            <span className="story-card__icon">{tab.icon}</span>
-            <div>
-              <div className="story-card__headline-value">{data.dormant.customerCount.toLocaleString("ko-KR")}명</div>
-              <div className="story-card__headline-sub">{storeName} 휴면 손님</div>
-            </div>
+            <div className="story-card__headline-value">{data.dormant.customerCount.toLocaleString("ko-KR")}명</div>
+            <div className="story-card__headline-sub">{storeName} 휴면 손님</div>
           </div>
           <p className="story-card__dormant-note">{data.dormant.lastPurchaseNote}</p>
         </div>
@@ -56,12 +40,9 @@ export default function SegmentStoryCard({ data, segment, onSegmentChange, perio
           return (
             <div>
               <div className="story-card__headline">
-                <span className="story-card__icon">{tab.icon}</span>
-                <div>
-                  <div className="story-card__headline-value">{seg.customerCount.toLocaleString("ko-KR")}명</div>
-                  <div className="story-card__headline-sub">
-                    {periodLabel} {storeName} {tab.label}손님 방문
-                  </div>
+                <div className="story-card__headline-value">{seg.customerCount.toLocaleString("ko-KR")}명</div>
+                <div className="story-card__headline-sub">
+                  {periodLabel} {storeName} {tab.label}손님 방문
                 </div>
               </div>
 
@@ -93,7 +74,7 @@ export default function SegmentStoryCard({ data, segment, onSegmentChange, perio
                 <div className="chip-row">
                   {seg.topCategories.map((c) => (
                     <span key={c.name} className="chip chip--category">
-                      {CATEGORY_ICONS[c.name] ?? "🍽"} {c.name}
+                      {c.name}
                     </span>
                   ))}
                 </div>

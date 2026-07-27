@@ -1007,6 +1007,7 @@ body {
 .pie-legend__item {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
@@ -1811,14 +1812,17 @@ body {
   color: var(--text-secondary);
 }
 
-/* 파이차트 하이라이트 배지 (단골비율/휴면비율 최고 계열) */
+/* 파이차트 하이라이트 배지 (단골/휴면 비중 최고 계열) */
 .pie-badge {
-  margin-left: 6px;
+  flex-basis: 100%;
+  margin: 2px 0 0 16px;
+  width: fit-content;
   font-size: 9.5px;
   font-weight: 700;
   color: #fff;
-  border-radius: 999px;
-  padding: 2px 6px;
+  border-radius: 8px;
+  padding: 2px 7px;
+  word-break: keep-all;
 }
 
 .pie-badge--loyal {
@@ -1928,15 +1932,7 @@ body {
 
 /* 손님 상세분석 스토리텔링 카드 */
 .story-card__headline {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   margin-top: 10px;
-}
-
-.story-card__icon {
-  font-size: 28px;
-  line-height: 1;
 }
 
 .story-card__headline-value {
