@@ -1793,6 +1793,7 @@ body {
 /* 멤버십 고객 분석: 상단 안내 문구 (담백한 텍스트 한 줄) */
 .chart-note--plain {
   margin: 0 0 10px;
+  padding: 0 16px;
   font-size: 11px;
   line-height: 1.5;
   color: var(--text-secondary);
@@ -1821,6 +1822,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  padding: 0 16px;
   margin-bottom: 14px;
   align-items: stretch;
 }
