@@ -1866,11 +1866,13 @@ body {
 
 .kpi-tile__badge {
   margin-top: 5px;
-  display: inline-block;
-  font-size: 9.5px;
+  display: block;
+  font-size: 9px;
   font-weight: 700;
-  border-radius: 999px;
-  padding: 2px 6px;
+  line-height: 1.35;
+  border-radius: 8px;
+  padding: 3px 6px;
+  word-break: keep-all;
 }
 
 .kpi-tile__badge--up {
