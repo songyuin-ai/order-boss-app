@@ -6,9 +6,8 @@ import SegmentPieChart from "../components/SegmentPieChart";
 import TrendChart from "../components/TrendChart";
 import SegmentStoryCard from "../components/SegmentStoryCard";
 import AgePopularProductsTable from "../components/AgePopularProductsTable";
-import SegmentTable from "../components/SegmentTable";
+import KpiStrip from "../components/KpiStrip";
 import { useAppData } from "../context/DataContext";
-import { formatCompactWon } from "../utils/format";
 import { DEFAULT_PERIOD, periodKey, periodDefLabel, type PeriodSelection } from "../lib/period";
 import { ageGenderRatios } from "../data/customerCompositionDummy";
 import type { SegmentKey } from "../data/segmentDetailDummy";
@@ -46,6 +45,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
     customerDetail,
     membershipIndicators,
     membership,
+    kpiIndicators,
   } = useAppData();
 
   const [period, setPeriod] = useState<PeriodSelection>(DEFAULT_PERIOD);
@@ -61,21 +61,23 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
   const membershipData = membership.byPeriod[key] ?? membership.byPeriod.recent30;
   const showRevisitCycle = period.mode !== "recent7";
 
+  const memberOrderPct = Math.round((segmentData.all.orderCount / segmentData.posTotalOrders) * 1000) / 10;
+
   const loyalHighlight = highlightLabel(composition.demographicDistribution, "loyalRatio");
   const dormantHighlight = highlightLabel(composition.demographicDistribution, "dormantRatio");
 
   useEffect(() => {
     onPanelChange(
       [
+        kpiIndicators.memberCustomers,
+        kpiIndicators.memberOrderShare,
+        membershipIndicators.hValue,
         customerCompositionIndicators.composition,
         segmentDetailIndicators.segmentStory,
         customerCompositionIndicators.trend,
         customerCompositionIndicators.demographic,
         customerDetailIndicators.agePreferred,
         ...(showRevisitCycle ? [customerDetailIndicators.revisitCycle] : []),
-        membershipIndicators.hValue,
-        membershipIndicators.segmentContribution,
-        membershipIndicators.membershipRevenue,
       ],
       `멤버십 고객 분석 기준 · ${periodLabel}`
     );
@@ -84,13 +86,24 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
 
   return (
     <div className="screen">
-      <p className="chart-note chart-note--banner">
-        ※ 이 리포트는 해피포인트 적립·사용이 발생한 주문 건만 기준으로 분석돼요. POS 전체 매출/객단가와는 다른
-        수치예요.
+      <p className="chart-note chart-note--plain">
+        해피포인트 멤버십을 적립·사용한 손님 데이터를 기반으로 분석했어요. POS 전체 매출/객단가와는 다른 수치예요.
       </p>
       <div className="screen__period-bar">
         <PeriodFilterButton value={period} onClick={() => setPeriodModalOpen(true)} />
       </div>
+
+      <KpiStrip
+        periodLabel={periodLabel}
+        memberCustomerCount={segmentData.all.customerCount}
+        memberOrderPct={memberOrderPct}
+        regionAvgMemberOrderPct={segmentData.regionAvgMemberOrderPct}
+        hValuePct={membershipData.hValue.pct}
+        hValueDeltaLabel={membershipData.hValue.deltaLabel}
+        memberCustomersIndicator={kpiIndicators.memberCustomers}
+        memberOrderShareIndicator={kpiIndicators.memberOrderShare}
+        hValueIndicator={membershipIndicators.hValue}
+      />
 
       <div className="screen__cards">
         <Card title="우리 매장 고객 구성" indicator={customerCompositionIndicators.composition}>
@@ -119,7 +132,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
           <TrendChart data={customerComposition.segmentTrend} />
         </Card>
 
-        <Card title="연령/성별 세그먼트" indicator={customerCompositionIndicators.demographic}>
+        <Card title="우리 가게는 어떤 손님이 많이 올까요?" indicator={customerCompositionIndicators.demographic}>
           <SegmentPieChart
             segments={composition.demographicDistribution}
             highlightLoyalLabel={loyalHighlight}
@@ -143,42 +156,6 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
             </div>
           </Card>
         )}
-
-        <Card title="포인트 활용 지표(H값)" indicator={membershipIndicators.hValue} tone="dark">
-          <div className="h-value">
-            <span className="h-value__pct">{membershipData.hValue.pct}%</span>
-            <span className="h-value__delta">{membershipData.hValue.deltaLabel}</span>
-          </div>
-        </Card>
-
-        <Card title="멤버십 매출 기여도" indicator={membershipIndicators.membershipRevenue}>
-          <div className="membership-revenue">
-            <div className="membership-revenue__pct">{membershipData.membershipRevenue.pct}%</div>
-            <div className="membership-revenue__delta">{membershipData.membershipRevenue.deltaLabel}</div>
-            <div className="compare-card">
-              <div className="compare-card__col">
-                <span className="compare-card__title">멤버십 연관매출</span>
-                <span className="compare-card__metric">
-                  {formatCompactWon(membershipData.membershipRevenue.memberRevenue)}
-                </span>
-              </div>
-              <div className="compare-card__divider" />
-              <div className="compare-card__col">
-                <span className="compare-card__title">전체매출(POS)</span>
-                <span className="compare-card__metric">
-                  {formatCompactWon(membershipData.membershipRevenue.totalRevenue)}
-                </span>
-              </div>
-            </div>
-          </div>
-          <SegmentTable
-            rows={[
-              { segment: "단골", contributionPct: segmentData.loyal.revenueContributionPct },
-              { segment: "신규", contributionPct: segmentData.new.revenueContributionPct },
-              { segment: "일반", contributionPct: segmentData.general.revenueContributionPct },
-            ]}
-          />
-        </Card>
       </div>
 
       <PeriodFilterModal

@@ -25,6 +25,8 @@ export interface SegmentDetailPeriodData {
   new: ActiveSegmentDetail;
   general: ActiveSegmentDetail;
   dormant: DormantSegmentDetail;
+  posTotalOrders: number; // 기간 내 POS 전체 주문건수 (멤버십 주문 비중 산출용 분모)
+  regionAvgMemberOrderPct: number; // 주변매장 평균 멤버십 주문 비중(%), 상단 KPI 비교 배지용
 }
 
 // G/I는 세그먼트별 선호 성향으로 기간에 따라 크게 흔들리지 않는 값이라 가정하고 전 기간 공통 사용
@@ -88,6 +90,8 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     new: active("new", { customerCount: 44, orderCount: 46, revenue: 487_600, revenueContributionPct: 2.4 }),
     general: active("general", { customerCount: 80, orderCount: 96, revenue: 1_104_000, revenueContributionPct: 5.4 }),
     dormant: { customerCount: 15, lastPurchaseNote: DORMANT_NOTE },
+    posTotalOrders: 1640,
+    regionAvgMemberOrderPct: 13.2,
   },
   recent30: {
     all: active("all", { customerCount: 582, orderCount: 1276, revenue: 16_098_200, revenueContributionPct: 17.9 }),
@@ -95,6 +99,8 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     new: active("new", { customerCount: 115, orderCount: 132, revenue: 1_425_600, revenueContributionPct: 1.6 }),
     general: active("general", { customerCount: 262, orderCount: 406, revenue: 4_709_600, revenueContributionPct: 5.2 }),
     dormant: { customerCount: 58, lastPurchaseNote: DORMANT_NOTE },
+    posTotalOrders: 7200,
+    regionAvgMemberOrderPct: 15.5,
   },
   "2026-07": {
     all: active("all", { customerCount: 601, orderCount: 1352, revenue: 17_212_400, revenueContributionPct: 18.6 }),
@@ -102,6 +108,8 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     new: active("new", { customerCount: 125, orderCount: 148, revenue: 1_613_200, revenueContributionPct: 1.7 }),
     general: active("general", { customerCount: 258, orderCount: 408, revenue: 4_773_600, revenueContributionPct: 5.2 }),
     dormant: { customerCount: 59, lastPurchaseNote: DORMANT_NOTE },
+    posTotalOrders: 7392,
+    regionAvgMemberOrderPct: 15.9,
   },
   "2026-06": {
     all: active("all", { customerCount: 540, orderCount: 1141, revenue: 14_154_700, revenueContributionPct: 16.0 }),
@@ -109,6 +117,8 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     new: active("new", { customerCount: 102, orderCount: 112, revenue: 1_187_200, revenueContributionPct: 1.3 }),
     general: active("general", { customerCount: 252, orderCount: 378, revenue: 4_309_200, revenueContributionPct: 4.9 }),
     dormant: { customerCount: 60, lastPurchaseNote: DORMANT_NOTE },
+    posTotalOrders: 7096,
+    regionAvgMemberOrderPct: 16.6,
   },
   "2026-05": {
     all: active("all", { customerCount: 564, orderCount: 1226, revenue: 15_405_000, revenueContributionPct: 17.1 }),
@@ -116,5 +126,7 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     new: active("new", { customerCount: 112, orderCount: 128, revenue: 1_376_000, revenueContributionPct: 1.5 }),
     general: active("general", { customerCount: 254, orderCount: 389, revenue: 4_492_950, revenueContributionPct: 5.0 }),
     dormant: { customerCount: 56, lastPurchaseNote: DORMANT_NOTE },
+    posTotalOrders: 7212,
+    regionAvgMemberOrderPct: 15.8,
   },
 };

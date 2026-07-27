@@ -1,14 +1,22 @@
 import SegmentedNav from "./SegmentedNav";
 import type { SegmentDetailPeriodData, SegmentKey } from "../data/segmentDetailDummy";
-import { formatWon } from "../utils/format";
+import { formatCompactWon } from "../utils/format";
 
-const SEGMENT_TABS: { key: SegmentKey; label: string }[] = [
-  { key: "all", label: "전체" },
-  { key: "loyal", label: "단골" },
-  { key: "new", label: "신규" },
-  { key: "general", label: "일반" },
-  { key: "dormant", label: "휴면" },
+const SEGMENT_TABS: { key: SegmentKey; label: string; icon: string }[] = [
+  { key: "all", label: "전체", icon: "👥" },
+  { key: "loyal", label: "단골", icon: "🧡" },
+  { key: "new", label: "신규", icon: "⭐" },
+  { key: "general", label: "일반", icon: "🙂" },
+  { key: "dormant", label: "휴면", icon: "😴" },
 ];
+
+const CATEGORY_ICONS: Record<string, string> = {
+  "커피/음료": "☕",
+  디저트: "🍰",
+  케이크: "🎂",
+  "빙수/아이스크림": "🍧",
+  "샌드위치/샐러드": "🥪",
+};
 
 interface Props {
   data: SegmentDetailPeriodData;
@@ -19,40 +27,89 @@ interface Props {
 }
 
 export default function SegmentStoryCard({ data, segment, onSegmentChange, periodLabel, storeName }: Props) {
-  const segmentLabel = SEGMENT_TABS.find((t) => t.key === segment)?.label ?? "";
+  const tab = SEGMENT_TABS.find((t) => t.key === segment)!;
 
   return (
     <div className="story-card">
-      <SegmentedNav options={SEGMENT_TABS} active={segment} onChange={(k) => onSegmentChange(k as SegmentKey)} size="sm" />
+      <SegmentedNav
+        options={SEGMENT_TABS.map((t) => ({ key: t.key, label: `${t.icon} ${t.label}` }))}
+        active={segment}
+        onChange={(k) => onSegmentChange(k as SegmentKey)}
+        size="sm"
+      />
       {segment === "dormant" ? (
-        <div className="story-card__lines">
-          <p className="story-card__line">
-            {storeName} 휴면 손님은 <b>{data.dormant.customerCount.toLocaleString("ko-KR")}명</b>이예요.
-          </p>
-          <p className="story-card__line">{data.dormant.lastPurchaseNote}</p>
+        <div className="story-card__dormant">
+          <div className="story-card__headline">
+            <span className="story-card__icon">{tab.icon}</span>
+            <div>
+              <div className="story-card__headline-value">{data.dormant.customerCount.toLocaleString("ko-KR")}명</div>
+              <div className="story-card__headline-sub">{storeName} 휴면 손님</div>
+            </div>
+          </div>
+          <p className="story-card__dormant-note">{data.dormant.lastPurchaseNote}</p>
         </div>
       ) : (
         (() => {
           const seg = data[segment];
+          const avgOrders = seg.orderCount / seg.customerCount;
+          const perVisitSpend = Math.round(seg.revenue / seg.customerCount);
           return (
-            <div className="story-card__lines">
-              <p className="story-card__line">
-                {periodLabel} {storeName} {segmentLabel}손님은 <b>{seg.customerCount.toLocaleString("ko-KR")}명</b> 방문했어요
-              </p>
-              <p className="story-card__line">
-                <b>{seg.orderCount.toLocaleString("ko-KR")}회</b> 주문하여 <b>{formatWon(seg.revenue)}</b> 구매했어요, 전체 매출 중{" "}
-                <b>{seg.revenueContributionPct}%</b> 차지해요
-              </p>
-              <p className="story-card__line">
-                {periodLabel} 간 평균 <b>{(seg.orderCount / seg.customerCount).toFixed(1)}회</b> 방문, 1회 구매 시{" "}
-                <b>{formatWon(Math.round(seg.revenue / seg.customerCount))}</b> 어치 구매해요
-              </p>
-              <p className="story-card__line">
-                주로 <b>{seg.topCategories.map((c) => c.name).join(", ")}</b> 카테고리를 구매해요
-              </p>
-              <p className="story-card__line">
-                <b>{seg.demographicTop3.map((d) => d.name).join(", ")}</b> 로 구성되어 있어요
-              </p>
+            <div>
+              <div className="story-card__headline">
+                <span className="story-card__icon">{tab.icon}</span>
+                <div>
+                  <div className="story-card__headline-value">{seg.customerCount.toLocaleString("ko-KR")}명</div>
+                  <div className="story-card__headline-sub">
+                    {periodLabel} {storeName} {tab.label}손님 방문
+                  </div>
+                </div>
+              </div>
+
+              <div className="stat-tile-grid">
+                <div className="stat-tile">
+                  <div className="stat-tile__label">주문수</div>
+                  <div className="stat-tile__value">{seg.orderCount.toLocaleString("ko-KR")}회</div>
+                </div>
+                <div className="stat-tile">
+                  <div className="stat-tile__label">매출</div>
+                  <div className="stat-tile__value">{formatCompactWon(seg.revenue)}</div>
+                </div>
+                <div className="stat-tile stat-tile--accent">
+                  <div className="stat-tile__label">매출기여도</div>
+                  <div className="stat-tile__value">{seg.revenueContributionPct}%</div>
+                </div>
+                <div className="stat-tile">
+                  <div className="stat-tile__label">평균 방문</div>
+                  <div className="stat-tile__value">{avgOrders.toFixed(1)}회</div>
+                </div>
+                <div className="stat-tile">
+                  <div className="stat-tile__label">객단가</div>
+                  <div className="stat-tile__value">{formatCompactWon(perVisitSpend)}</div>
+                </div>
+              </div>
+
+              <div className="story-card__block">
+                <div className="story-card__block-label">인기 카테고리</div>
+                <div className="chip-row">
+                  {seg.topCategories.map((c) => (
+                    <span key={c.name} className="chip chip--category">
+                      {CATEGORY_ICONS[c.name] ?? "🍽"} {c.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="story-card__block">
+                <div className="story-card__block-label">구성</div>
+                <ol className="ranked-list">
+                  {seg.demographicTop3.map((d, i) => (
+                    <li key={d.name} className="ranked-list__item">
+                      <span className="ranked-list__rank">{i + 1}</span>
+                      {d.name}
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
           );
         })()

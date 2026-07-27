@@ -11,6 +11,7 @@ import { segmentDetailIndicators } from "../data/segmentDetailIndicators";
 import { byPeriod as segmentDetailByPeriod, type SegmentDetailPeriodData } from "../data/segmentDetailDummy";
 import { membershipIndicators } from "../data/membershipIndicators";
 import { byPeriod as membershipByPeriod, type MembershipPeriodData } from "../data/membershipDummy";
+import { kpiIndicators } from "../data/kpiIndicators";
 import { posIndicators } from "../data/posIndicators";
 import { posKpiPeriods, posHourly, posOnlineOffline } from "../data/posDummy";
 import type { PosKpiPeriod, HourlyBucket, OnlineOfflineRatio } from "../data/types";
@@ -30,6 +31,7 @@ interface DataShape {
   segmentDetail: { byPeriod: Record<string, SegmentDetailPeriodData> };
   membershipIndicators: typeof membershipIndicators;
   membership: { byPeriod: Record<string, MembershipPeriodData> };
+  kpiIndicators: typeof kpiIndicators;
   posIndicators: typeof posIndicators;
   pos: {
     kpiPeriods: Record<string, PosKpiPeriod[]>;
@@ -54,6 +56,7 @@ const data: DataShape = {
   segmentDetail: { byPeriod: segmentDetailByPeriod },
   membershipIndicators,
   membership: { byPeriod: membershipByPeriod },
+  kpiIndicators,
   posIndicators,
   pos: { kpiPeriods: posKpiPeriods, hourly: posHourly, onlineOffline: posOnlineOffline },
 };

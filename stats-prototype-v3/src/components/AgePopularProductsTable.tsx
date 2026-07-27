@@ -17,6 +17,18 @@ export default function AgePopularProductsTable({ data, gender, onGenderChange }
 
   return (
     <div className="age-product-table">
+      <div className="chip-row age-product-table__filter">
+        {GENDER_TABS.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            className={`chip chip--btn${gender === t.key ? " is-active" : ""}`}
+            onClick={() => onGenderChange(t.key)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
       <table>
         <thead>
           <tr>
@@ -40,18 +52,6 @@ export default function AgePopularProductsTable({ data, gender, onGenderChange }
           ))}
         </tbody>
       </table>
-      <div className="chip-row age-product-table__filter">
-        {GENDER_TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            className={`chip chip--btn${gender === t.key ? " is-active" : ""}`}
-            onClick={() => onGenderChange(t.key)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

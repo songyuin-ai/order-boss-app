@@ -1029,7 +1029,7 @@ body {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  height: 90px;
+  height: 112px;
 }
 
 .trend-chart__col {
@@ -1038,14 +1038,16 @@ body {
   flex-direction: column;
   align-items: center;
   height: 100%;
-  justify-content: flex-end;
 }
 
 .trend-chart__pair {
   display: flex;
   align-items: flex-end;
   gap: 3px;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  justify-content: center;
 }
 
 .trend-chart__bar {
@@ -1094,12 +1096,6 @@ body {
   flex-shrink: 0;
 }
 
-/* Track2 group2 info cards */
-.info-text {
-  font-size: 15px;
-  font-weight: 700;
-}
-
 .big-stat {
   display: flex;
   align-items: baseline;
@@ -1115,89 +1111,6 @@ body {
   font-size: 12.5px;
   color: var(--text-secondary);
   font-weight: 600;
-}
-
-/* H value dark card */
-.h-value {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.h-value__pct {
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.h-value__delta {
-  align-self: flex-end;
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* Segment table */
-.segment-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12.5px;
-}
-
-.segment-table th {
-  text-align: left;
-  color: var(--text-secondary);
-  font-weight: 600;
-  padding-bottom: 8px;
-  font-size: 11.5px;
-}
-
-.segment-table td {
-  padding: 8px 0;
-  border-top: 1px solid var(--border);
-}
-
-.segment-table td:first-child {
-  font-weight: 700;
-}
-
-.segment-table td:not(:first-child) {
-  text-align: right;
-}
-
-/* Comparison card */
-.compare-card {
-  display: flex;
-  align-items: center;
-}
-
-.compare-card__col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.compare-card__col:last-child {
-  align-items: flex-end;
-  text-align: right;
-}
-
-.compare-card__title {
-  font-size: 11.5px;
-  color: var(--text-secondary);
-  font-weight: 700;
-}
-
-.compare-card__metric {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.compare-card__divider {
-  width: 1px;
-  align-self: stretch;
-  background: var(--border);
-  margin: 0 14px;
 }
 
 /* Indicator panel (right-side table) */
@@ -1877,14 +1790,12 @@ body {
   padding: 4px 2px 0;
 }
 
-/* 멤버십 고객 분석: 상단 안내 배너 */
-.chart-note--banner {
-  margin: 0 0 12px;
-  padding: 8px 10px;
-  background: var(--accent-soft);
-  border-radius: 8px;
+/* 멤버십 고객 분석: 상단 안내 문구 (담백한 텍스트 한 줄) */
+.chart-note--plain {
+  margin: 0 0 10px;
   font-size: 11px;
   line-height: 1.5;
+  color: var(--text-secondary);
 }
 
 /* 파이차트 하이라이트 배지 (단골비율/휴면비율 최고 계열) */
@@ -1905,34 +1816,228 @@ body {
   background: var(--danger);
 }
 
-/* 손님 상세분석 스토리텔링 카드 */
-.story-card__lines {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
+/* 상단 KPI 요약존 */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+  margin-bottom: 14px;
 }
 
-.story-card__line {
-  font-size: 13px;
-  line-height: 1.5;
+.kpi-tile.card {
+  padding: 12px 10px;
 }
 
-/* 추이 차트: 주변매장 평균 비교 컬럼 */
-.trend-chart__divider {
-  width: 1px;
-  align-self: stretch;
-  background: var(--border);
-  margin: 0 2px;
+.kpi-tile .id-badge {
+  top: 8px;
+  right: 6px;
+  font-size: 6.5px;
+  padding: 1px 3px;
 }
 
-.trend-chart__col--region .trend-chart__label {
+.kpi-tile__label {
+  font-size: 10.5px;
   font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  padding-right: 46px;
+  min-height: 2.4em;
+  line-height: 1.2;
+  word-break: keep-all;
+}
+
+.kpi-tile__value {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+}
+
+.kpi-tile__sub {
+  margin-top: 4px;
+  font-size: 10px;
   color: var(--text-secondary);
 }
 
+.kpi-tile__sub--muted {
+  opacity: 0.7;
+}
+
+.kpi-tile__badge {
+  margin-top: 5px;
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 2px 6px;
+}
+
+.kpi-tile__badge--up {
+  color: #0a7d3c;
+  background: rgba(10, 125, 60, 0.12);
+}
+
+.kpi-tile__badge--down {
+  color: var(--danger);
+  background: rgba(230, 57, 70, 0.12);
+}
+
+.gauge {
+  margin-top: 6px;
+}
+
+.gauge__track {
+  position: relative;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: visible;
+}
+
+.gauge__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.gauge__marker {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 9px;
+  background: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* 손님 상세분석 스토리텔링 카드 */
+.story-card__headline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.story-card__icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.story-card__headline-value {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.story-card__headline-sub {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.story-card__dormant {
+  opacity: 0.85;
+}
+
+.story-card__dormant-note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.story-card__block {
+  margin-top: 14px;
+}
+
+.story-card__block-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.stat-tile-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.stat-tile {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.stat-tile--accent {
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+
+.stat-tile__label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.stat-tile__value {
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.chip--category {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ranked-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.ranked-list__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ranked-list__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* 추이 차트: 월별 우리매장 vs 주변매장 평균 나란히 비교 */
+.trend-chart__diff {
+  font-size: 10.5px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.trend-chart__diff.is-up {
+  color: #0a7d3c;
+}
+
+.trend-chart__diff.is-down {
+  color: var(--danger);
+}
+
 .trend-chart__bar.is-region {
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 /* 연령대별 인기상품 테이블 */
@@ -1968,5 +2073,5 @@ body {
 }
 
 .age-product-table__filter {
-  margin: 12px 0 0;
+  margin: 0 0 12px;
 }
