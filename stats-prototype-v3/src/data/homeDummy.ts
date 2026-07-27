@@ -41,7 +41,7 @@ export interface HomeKpiPeriod {
   periodLabel: string;
   revenue: number;
   revenueRegionBadge: string;
-  revenueDeltaBadge?: string; // 전일 대비 — 일간 탭에서만 사용
+  revenueDeltaBadge?: string; // 전일/전주/전월 대비 — 마감된 기간에서만 존재(진행 중인 현재 기간은 없음)
   orders: number;
   ordersRegionBadge: string;
   ordersDeltaBadge?: string;
@@ -70,20 +70,20 @@ const WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
 const CHANNEL_ORDER = ["오프라인", "해피오더", "배민", "쿠팡이츠", "요기요", "땡겨요"];
 const HOUR_LABELS = ["06-09", "09-11", "11-13", "13-15", "15-17", "17-19", "19-21"];
 
-// 날짜별 보기는 전일자 마감 데이터까지만 조회 가능 (실시간 개념 없음 — 홈 화면과 분리된 기준)
+// 날짜별 보기는 마감된 과거 기간 + 진행 중인 현재 기간(오늘/이번 주/이번 달)까지 조회 가능.
+// 각 탭의 가장 최근 항목(index 0)은 아직 마감되지 않은 진행 중 기간이라 전일/전주/전월 대비 배지가 없고,
+// 실시간 수치(홈 화면과 동일 기준)를 사용함. 그 이전 항목들은 모두 마감된 기간으로 대비 배지를 표시함
 export const homeDaily: HomeTabData = {
   kpiPeriods: [
     {
-      periodLabel: "07/19",
-      revenue: 3240000,
+      // 진행 중(오늘) — 홈 화면 실시간 수치 재사용, 전일 대비 배지 없음
+      periodLabel: "오늘",
+      revenue: 1862000,
       revenueRegionBadge: "인근매장 평균 대비 +12%",
-      revenueDeltaBadge: "전일 대비 +9.8%",
-      orders: 178,
-      ordersRegionBadge: "인근매장 평균 대비 -4%",
-      ordersDeltaBadge: "전일 대비 +9.9%",
-      aov: 18202,
-      aovRegionBadge: "브랜드 평균 대비 -3%",
-      aovDeltaBadge: "전일 대비 -0.04%",
+      orders: 95,
+      ordersRegionBadge: "인근매장 평균 대비 -6%",
+      aov: 19600,
+      aovRegionBadge: "브랜드 평균 대비 +5%",
     },
     {
       periodLabel: "07/18",
@@ -176,31 +176,38 @@ export const homeDaily: HomeTabData = {
 export const homeWeekly: HomeTabData = {
   kpiPeriods: [
     {
-      periodLabel: "07/13~07/19",
-      revenue: 21920000,
+      // 진행 중(이번 주) — 월~수 경과분 누적(홈 weekTotal과 동일 기준), 전주 대비 배지 없음
+      periodLabel: "이번 주",
+      revenue: 8322000,
       revenueRegionBadge: "인근매장 평균 대비 +9%",
-      orders: 1208,
-      ordersRegionBadge: "인근매장 평균 대비 -3%",
-      aov: 18148,
-      aovRegionBadge: "브랜드 평균 대비 -1%",
+      orders: 454,
+      ordersRegionBadge: "인근매장 평균 대비 -5%",
+      aov: 18331,
+      aovRegionBadge: "브랜드 평균 대비 +4%",
     },
     {
       periodLabel: "07/06~07/12",
       revenue: 20150000,
       revenueRegionBadge: "인근매장 평균 대비 +5%",
+      revenueDeltaBadge: "전주 대비 +1.8%",
       orders: 1120,
       ordersRegionBadge: "인근매장 평균 대비 -5%",
+      ordersDeltaBadge: "전주 대비 +2.3%",
       aov: 17991,
       aovRegionBadge: "브랜드 평균 대비 -2%",
+      aovDeltaBadge: "전주 대비 -0.5%",
     },
     {
       periodLabel: "06/28~07/04",
       revenue: 19800000,
       revenueRegionBadge: "인근매장 평균 대비 +3%",
+      revenueDeltaBadge: "전주 대비 -5.9%",
       orders: 1095,
       ordersRegionBadge: "인근매장 평균 대비 -6%",
+      ordersDeltaBadge: "전주 대비 -4.8%",
       aov: 18082,
       aovRegionBadge: "브랜드 평균 대비 -1%",
+      aovDeltaBadge: "전주 대비 -1.2%",
     },
     {
       periodLabel: "06/21~06/27",
@@ -239,22 +246,26 @@ export const homeWeekly: HomeTabData = {
 export const homeMonthly: HomeTabData = {
   kpiPeriods: [
     {
-      periodLabel: "2026년 7월",
-      revenue: 92400000,
+      // 진행 중(이번 달) — 7/19일까지 경과분 누적(요일별 평균 매출 × 경과일수 추정), 전월 대비 배지 없음
+      periodLabel: "이번 달",
+      revenue: 57300000,
       revenueRegionBadge: "인근매장 평균 대비 +8%",
-      orders: 5120,
+      orders: 3135,
       ordersRegionBadge: "인근매장 평균 대비 -4%",
-      aov: 18047,
+      aov: 18278,
       aovRegionBadge: "브랜드 평균 대비 -2%",
     },
     {
       periodLabel: "2026년 6월",
       revenue: 88700000,
       revenueRegionBadge: "인근매장 평균 대비 +4%",
+      revenueDeltaBadge: "전월 대비 -1.6%",
       orders: 4890,
       ordersRegionBadge: "인근매장 평균 대비 -5%",
+      ordersDeltaBadge: "전월 대비 -1.2%",
       aov: 18139,
       aovRegionBadge: "브랜드 평균 대비 -1%",
+      aovDeltaBadge: "전월 대비 -0.4%",
     },
     {
       periodLabel: "2026년 5월",

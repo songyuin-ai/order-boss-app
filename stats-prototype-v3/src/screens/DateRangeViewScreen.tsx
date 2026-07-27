@@ -38,7 +38,8 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
   const period = periods[periodIndex] ?? periods[0];
   const isDaily = tab === "daily";
 
-  // 날짜별 보기는 전일자 마감 데이터까지만 조회하므로 "실시간" 개념이 없음. 일간만 전일 대비 배지를 추가로 보여줌
+  // 마감된 기간은 전일/전주/전월 대비 배지를 보여주고, 진행 중인 현재 기간(오늘/이번 주/이번 달)은
+  // 지역 평균 대비 배지만 보여줌 — period.xxxDeltaBadge 유무 자체가 마감 여부를 나타냄
   const tabIndicators: Indicator[] = [
     homeIndicators.revenue,
     homeIndicators.orders,
@@ -102,7 +103,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
           <span className="home-headline__label">전체 매출 (POS)</span>
           <span className="home-headline__value">{formatWon(period.revenue)}</span>
           <div className="daily-summary__badges">
-            {isDaily && period.revenueDeltaBadge && <span className="badge badge--primary">{period.revenueDeltaBadge}</span>}
+            {period.revenueDeltaBadge && <span className="badge badge--primary">{period.revenueDeltaBadge}</span>}
             <span className="badge badge--muted">{period.revenueRegionBadge}</span>
           </div>
         </div>
@@ -113,7 +114,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
             <div className="kpi-cell__label">주문건수</div>
             <div className="kpi-cell__value">{period.orders.toLocaleString("ko-KR")}건</div>
             <div className="kpi-cell__badges">
-              {isDaily && period.ordersDeltaBadge && <span className="badge badge--primary">{period.ordersDeltaBadge}</span>}
+              {period.ordersDeltaBadge && <span className="badge badge--primary">{period.ordersDeltaBadge}</span>}
               <span className="badge badge--muted">{period.ordersRegionBadge}</span>
             </div>
           </div>
@@ -122,7 +123,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
             <div className="kpi-cell__label">객단가</div>
             <div className="kpi-cell__value">{formatWon(period.aov)}</div>
             <div className="kpi-cell__badges">
-              {isDaily && period.aovDeltaBadge && <span className="badge badge--primary">{period.aovDeltaBadge}</span>}
+              {period.aovDeltaBadge && <span className="badge badge--primary">{period.aovDeltaBadge}</span>}
               <span className="badge badge--muted">{period.aovRegionBadge}</span>
             </div>
           </div>
