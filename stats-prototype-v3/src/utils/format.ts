@@ -16,3 +16,7 @@ export function formatSignedNumber(value: number, unit: string): string {
   if (value < 0) return `${value}${unit}`;
   return `±0${unit}`;
 }
+
+export function maskPhone(phone: string): string {
+  return `${phone.slice(0, 3)}-****-${phone.slice(-4)}`;
+}

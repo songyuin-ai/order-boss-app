@@ -5,6 +5,7 @@ import AccountSwitchSheet from "./components/AccountSwitchSheet";
 import AddAccountModal from "./components/AddAccountModal";
 import PlaceholderScreen from "./components/PlaceholderScreen";
 import IndicatorPanel from "./components/IndicatorPanel";
+import Toast from "./components/Toast";
 import HomeScreen from "./screens/HomeScreen";
 import DateRangeViewScreen from "./screens/DateRangeViewScreen";
 import MembershipCustomerAnalysisScreen from "./screens/MembershipCustomerAnalysisScreen";
@@ -70,11 +71,21 @@ function findLabel(items: DrawerMenuItem[], key: string): string {
   return DRILLDOWN_LABELS[key] ?? "";
 }
 
-function AppShell({ session, setSession }: { session: Session; setSession: (session: Session) => void }) {
+function AppShell({
+  session,
+  setSession,
+  initialToast,
+}: {
+  session: Session;
+  setSession: (session: Session) => void;
+  initialToast: string | null;
+}) {
   const [menu, setMenu] = useState("home");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [addAccountOpen, setAddAccountOpen] = useState(false);
+  const [dataListOpened, setDataListOpened] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(initialToast);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [panelIndicators, setPanelIndicators] = useState<Indicator[]>([]);
   const [panelLabel, setPanelLabel] = useState("");
@@ -126,69 +137,84 @@ function AppShell({ session, setSession }: { session: Session; setSession: (sess
           </p>
         </div>
         <div className="layout" onClick={clear}>
-          <MobileFrame>
-            <div className="app-bar">
+          <div className="prototype-col">
+            {!dataListOpened && (
               <button
                 type="button"
-                className="hamburger-btn"
-                aria-label="메뉴 열기"
+                className="data-list-toggle"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setDrawerOpen(true);
+                  setDataListOpened(true);
                 }}
               >
-                <span />
-                <span />
-                <span />
+                데이터 목록 열기
               </button>
-              <div className="app-bar__titles">
-                <span className="app-bar__system">{currentStore.name}</span>
-                <span className="app-bar__title">{currentMenuLabel}</span>
+            )}
+            <MobileFrame>
+              <div className="app-bar">
+                <button
+                  type="button"
+                  className="hamburger-btn"
+                  aria-label="메뉴 열기"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDrawerOpen(true);
+                  }}
+                >
+                  <span />
+                  <span />
+                  <span />
+                </button>
+                <div className="app-bar__titles">
+                  <span className="app-bar__system">{currentStore.name}</span>
+                  <span className="app-bar__title">{currentMenuLabel}</span>
+                </div>
+                <button
+                  type="button"
+                  className="iconbtn"
+                  aria-label="계정 전환"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSheetOpen(true);
+                  }}
+                >
+                  👤
+                </button>
               </div>
-              <button
-                type="button"
-                className="iconbtn"
-                aria-label="계정 전환"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSheetOpen(true);
+              <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />
+              {renderScreen()}
+              <DrawerNav
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                items={MENU}
+                activeKey={menu}
+                onNavigate={navigateTo}
+              />
+              <AccountSwitchSheet
+                open={sheetOpen}
+                currentStoreId={session.activeStoreId}
+                accounts={session.accounts}
+                revenueByStoreId={revenueByStoreId}
+                onClose={() => setSheetOpen(false)}
+                onSwitch={(id) => {
+                  setSession({ ...session, activeStoreId: id });
+                  setSheetOpen(false);
                 }}
-              >
-                👤
-              </button>
-            </div>
-            {renderScreen()}
-            <DrawerNav
-              open={drawerOpen}
-              onClose={() => setDrawerOpen(false)}
-              items={MENU}
-              activeKey={menu}
-              onNavigate={navigateTo}
-            />
-            <AccountSwitchSheet
-              open={sheetOpen}
-              currentStoreId={session.activeStoreId}
-              accounts={session.accounts}
-              revenueByStoreId={revenueByStoreId}
-              onClose={() => setSheetOpen(false)}
-              onSwitch={(id) => {
-                setSession({ ...session, activeStoreId: id });
-                setSheetOpen(false);
-              }}
-              onAddAccount={() => {
-                setSheetOpen(false);
-                setAddAccountOpen(true);
-              }}
-            />
-            <AddAccountModal
-              open={addAccountOpen}
-              onClose={() => setAddAccountOpen(false)}
-              onAdded={(store) => {
-                setSession({ ...session, accounts: [...session.accounts, store] });
-              }}
-            />
-          </MobileFrame>
-          <IndicatorPanel indicators={panelIndicators} tabLabel={panelLabel} />
+                onAddAccount={() => {
+                  setSheetOpen(false);
+                  setAddAccountOpen(true);
+                }}
+              />
+              <AddAccountModal
+                open={addAccountOpen}
+                onClose={() => setAddAccountOpen(false)}
+                onAdded={(store) => {
+                  setSession({ ...session, accounts: [...session.accounts, store] });
+                }}
+              />
+            </MobileFrame>
+          </div>
+          {dataListOpened && <IndicatorPanel indicators={panelIndicators} tabLabel={panelLabel} />}
         </div>
       </div>
     </IndicatorContext.Provider>
@@ -197,6 +223,7 @@ function AppShell({ session, setSession }: { session: Session; setSession: (sess
 
 function AppRoot() {
   const [session, setSession] = useState<Session | null>(null);
+  const [loginToast, setLoginToast] = useState<string | null>(null);
 
   if (!session) {
     return (
@@ -207,14 +234,20 @@ function AppRoot() {
         </div>
         <div className="layout">
           <MobileFrame>
-            <LoginScreen onSuccess={(store) => setSession({ accounts: [store], activeStoreId: store.id })} />
+            <LoginScreen
+              onSuccess={({ accounts, activeStoreId }) => {
+                const activeStore = accounts.find((s) => s.id === activeStoreId);
+                setSession({ accounts, activeStoreId });
+                setLoginToast(activeStore ? `${activeStore.name}으로 로그인되었어요.` : null);
+              }}
+            />
           </MobileFrame>
         </div>
       </div>
     );
   }
 
-  return <AppShell session={session} setSession={setSession} />;
+  return <AppShell session={session} setSession={setSession} initialToast={loginToast} />;
 }
 
 export default function App() {

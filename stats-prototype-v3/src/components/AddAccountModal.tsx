@@ -1,6 +1,7 @@
 import { useState } from "react";
 import OwnershipVerificationStep from "./OwnershipVerificationStep";
-import { findIssuedAccount, type IssuedAccount, type StoreAccount } from "../data/accounts";
+import { findIssuedAccount, OTP_CODE_BY_PHONE, type IssuedAccount, type StoreAccount } from "../data/accounts";
+import { maskPhone } from "../utils/format";
 
 interface Props {
   open: boolean;
@@ -8,8 +9,10 @@ interface Props {
   onAdded: (store: StoreAccount) => void;
 }
 
+type Step = "credentials" | "verification" | "success";
+
 export default function AddAccountModal({ open, onClose, onAdded }: Props) {
-  const [step, setStep] = useState<"credentials" | "verification">("credentials");
+  const [step, setStep] = useState<Step>("credentials");
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,11 +46,10 @@ export default function AddAccountModal({ open, onClose, onAdded }: Props) {
 
   const handleVerify = (code: string) => {
     if (!pendingAccount) return false;
-    const ok = code === pendingAccount.verificationCode;
+    const ok = code === OTP_CODE_BY_PHONE[pendingAccount.ownerPhone];
     if (ok) {
       onAdded(pendingAccount.store);
-      reset();
-      onClose();
+      setStep("success");
     }
     return ok;
   };
@@ -56,13 +58,15 @@ export default function AddAccountModal({ open, onClose, onAdded }: Props) {
     <>
       <div className="period-modal-backdrop" onClick={handleClose} />
       <div className="period-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="period-modal__head">
-          <button type="button" className="period-modal__close" onClick={handleClose} aria-label="닫기">
-            ×
-          </button>
-          <span className="period-modal__title">계정 추가</span>
-        </div>
-        {step === "credentials" ? (
+        {step !== "success" && (
+          <div className="period-modal__head">
+            <button type="button" className="period-modal__close" onClick={handleClose} aria-label="닫기">
+              ×
+            </button>
+            <span className="period-modal__title">계정 추가</span>
+          </div>
+        )}
+        {step === "credentials" && (
           <>
             <p className="auth-step__desc">추가할 매장의 아이디/비밀번호를 입력해주세요</p>
             <input
@@ -89,8 +93,22 @@ export default function AddAccountModal({ open, onClose, onAdded }: Props) {
               다음
             </button>
           </>
-        ) : (
-          <OwnershipVerificationStep onSubmit={handleVerify} onBack={() => setStep("credentials")} />
+        )}
+        {step === "verification" && pendingAccount && (
+          <OwnershipVerificationStep
+            maskedPhone={maskPhone(pendingAccount.ownerPhone)}
+            onSubmit={handleVerify}
+            onBack={() => setStep("credentials")}
+          />
+        )}
+        {step === "success" && pendingAccount && (
+          <div className="auth-success">
+            <div className="auth-success__icon">✓</div>
+            <p className="auth-success__text">{pendingAccount.store.name} 계정 추가에 성공하였습니다.</p>
+            <button type="button" className="auth-submit" onClick={handleClose}>
+              확인
+            </button>
+          </div>
         )}
       </div>
     </>

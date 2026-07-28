@@ -1487,6 +1487,159 @@ body {
   color: var(--text);
 }
 
+.auth-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* 약관 동의 체크리스트 (휴대폰 점유인증 화면) */
+.consent-list {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.consent-item {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 12px;
+}
+
+.consent-item:last-child {
+  border-bottom: none;
+}
+
+.consent-item__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.consent-item__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.consent-item__checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.consent-item__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.consent-item__label--info {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.consent-item__toggle {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.consent-item__detail {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+/* 계정 추가 성공 화면 */
+.auth-success {
+  text-align: center;
+  padding: 12px 4px 4px;
+}
+
+.auth-success__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-success__text {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+
+/* 로그인 완료 토스트 */
+.toast {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 65;
+  background: rgba(29, 29, 31, 0.92);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  animation: toast-in 0.25s ease;
+  white-space: nowrap;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* 데이터 목록 열기 토글 (프로토타입 컬럼 우상단) */
+.prototype-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.data-list-toggle {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
 /* 비교 배지 (인근매장/브랜드 평균 대비) */
 .badge {
   display: inline-flex;

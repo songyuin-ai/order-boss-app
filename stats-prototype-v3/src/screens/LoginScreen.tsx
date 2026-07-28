@@ -1,9 +1,21 @@
 import { useState } from "react";
 import OwnershipVerificationStep from "../components/OwnershipVerificationStep";
-import { findIssuedAccount, type IssuedAccount, type StoreAccount } from "../data/accounts";
+import {
+  findIssuedAccount,
+  findAccountsByPhone,
+  OTP_CODE_BY_PHONE,
+  type IssuedAccount,
+  type StoreAccount,
+} from "../data/accounts";
+import { maskPhone } from "../utils/format";
+
+export interface LoginSuccessPayload {
+  accounts: StoreAccount[];
+  activeStoreId: string;
+}
 
 interface Props {
-  onSuccess: (store: StoreAccount) => void;
+  onSuccess: (payload: LoginSuccessPayload) => void;
 }
 
 export default function LoginScreen({ onSuccess }: Props) {
@@ -26,15 +38,20 @@ export default function LoginScreen({ onSuccess }: Props) {
 
   const handleVerify = (code: string) => {
     if (!pendingAccount) return false;
-    const ok = code === pendingAccount.verificationCode;
-    if (ok) onSuccess(pendingAccount.store);
+    const ok = code === OTP_CODE_BY_PHONE[pendingAccount.ownerPhone];
+    if (ok) {
+      onSuccess({
+        accounts: findAccountsByPhone(pendingAccount.ownerPhone),
+        activeStoreId: pendingAccount.store.id,
+      });
+    }
     return ok;
   };
 
   return (
     <div className="login-screen">
       <div className="login-screen__brand">사장님앱</div>
-      {step === "credentials" ? (
+      {step === "credentials" && (
         <>
           <h2 className="auth-step__title">로그인</h2>
           <p className="auth-step__desc">매장 계정은 가입이 아니라 본사에서 발급해드려요</p>
@@ -64,11 +81,18 @@ export default function LoginScreen({ onSuccess }: Props) {
           <p className="login-screen__note">계정을 아직 못 받으셨나요? 담당 매니저에게 문의해주세요</p>
           <div className="login-screen__demo">
             <span>데모 계정</span>
-            <span>gangnam2024 / pass1234 / 인증코드 123456</span>
+            <span>gangnam2024 / pass1234 (OTP 123456, 홍대점과 번호 공유)</span>
+            <span>hongdae2024 / pass1234 (OTP 123456)</span>
+            <span>bundang2024 / pass1234 (OTP 654321, 계정 추가로 테스트)</span>
           </div>
         </>
-      ) : (
-        <OwnershipVerificationStep onSubmit={handleVerify} onBack={() => setStep("credentials")} />
+      )}
+      {step === "verification" && pendingAccount && (
+        <OwnershipVerificationStep
+          maskedPhone={maskPhone(pendingAccount.ownerPhone)}
+          onSubmit={handleVerify}
+          onBack={() => setStep("credentials")}
+        />
       )}
     </div>
   );
