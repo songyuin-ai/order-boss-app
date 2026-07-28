@@ -82,9 +82,9 @@ function active(segment: "all" | "loyal" | "new" | "general", base: Omit<ActiveS
   return { ...base, topCategories: TOP_CATEGORIES[segment], demographicTop3: DEMOGRAPHIC_TOP3[segment] };
 }
 
-// 기간 필터(최근 7일 / 최근 30일 / 월별, 최근 3개월)별 스냅샷
+// 기간 탭(지난 주 / 지난 달, 고정 스냅샷)별 데이터. 배치 잡이 마감된 주/월에 대해 한 번만 계산해두는 값이라 가정
 export const byPeriod: Record<string, SegmentDetailPeriodData> = {
-  recent7: {
+  lastWeek: {
     all: active("all", { customerCount: 195, orderCount: 241, revenue: 2_957_800 }),
     loyal: active("loyal", { customerCount: 71, orderCount: 99, revenue: 1_366_200 }),
     new: active("new", { customerCount: 44, orderCount: 46, revenue: 487_600 }),
@@ -92,36 +92,12 @@ export const byPeriod: Record<string, SegmentDetailPeriodData> = {
     dormant: { customerCount: 15, lastPurchaseNote: DORMANT_NOTE },
     regionAvgMemberOrderCount: 269,
   },
-  recent30: {
-    all: active("all", { customerCount: 582, orderCount: 1276, revenue: 16_098_200 }),
-    loyal: active("loyal", { customerCount: 205, orderCount: 738, revenue: 9_963_000 }),
-    new: active("new", { customerCount: 115, orderCount: 132, revenue: 1_425_600 }),
-    general: active("general", { customerCount: 262, orderCount: 406, revenue: 4_709_600 }),
-    dormant: { customerCount: 58, lastPurchaseNote: DORMANT_NOTE },
-    regionAvgMemberOrderCount: 1411,
-  },
-  "2026-07": {
-    all: active("all", { customerCount: 601, orderCount: 1352, revenue: 17_212_400 }),
-    loyal: active("loyal", { customerCount: 218, orderCount: 796, revenue: 10_825_600 }),
-    new: active("new", { customerCount: 125, orderCount: 148, revenue: 1_613_200 }),
-    general: active("general", { customerCount: 258, orderCount: 408, revenue: 4_773_600 }),
-    dormant: { customerCount: 59, lastPurchaseNote: DORMANT_NOTE },
-    regionAvgMemberOrderCount: 1486,
-  },
-  "2026-06": {
+  lastMonth: {
     all: active("all", { customerCount: 540, orderCount: 1141, revenue: 14_154_700 }),
     loyal: active("loyal", { customerCount: 186, orderCount: 651, revenue: 8_658_300 }),
     new: active("new", { customerCount: 102, orderCount: 112, revenue: 1_187_200 }),
     general: active("general", { customerCount: 252, orderCount: 378, revenue: 4_309_200 }),
     dormant: { customerCount: 60, lastPurchaseNote: DORMANT_NOTE },
     regionAvgMemberOrderCount: 1277,
-  },
-  "2026-05": {
-    all: active("all", { customerCount: 564, orderCount: 1226, revenue: 15_405_000 }),
-    loyal: active("loyal", { customerCount: 198, orderCount: 709, revenue: 9_536_050 }),
-    new: active("new", { customerCount: 112, orderCount: 128, revenue: 1_376_000 }),
-    general: active("general", { customerCount: 254, orderCount: 389, revenue: 4_492_950 }),
-    dormant: { customerCount: 56, lastPurchaseNote: DORMANT_NOTE },
-    regionAvgMemberOrderCount: 1363,
   },
 };

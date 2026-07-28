@@ -20,10 +20,11 @@ export interface HomeWeeklyTotal {
 }
 
 export interface HomeLast30 {
-  // (v4) POS 전체 주문건수를 분모로 쓰지 않는 HPC 단일소스 절대값 — 정합성 문제로 "POS 대비 비율" 산식 폐기
+  // (v4) POS 전체 주문건수를 분모로 쓰지 않는 HPC 단일소스 절대값 — 정합성 문제로 "POS 대비 비율" 산식 폐기.
+  // 고객상세분석이 "지난 주/지난 달" 고정 배치 스냅샷으로 바뀌면서 최근 30일 롤링이 아닌 "지난 달" 고정 기준(필드명은 유지)
   memberOrderCount: number;
   regionAvgMemberOrderCount: number;
-  // 딜리버리 점유율 (매출 기준, 포인트 지표와는 별도 섹션·별도 기준)
+  // 딜리버리 점유율은 최근 30일 롤링 매출 기준 그대로 유지 (이번 변경과 무관한 별도 지표)
   deliveryRevenuePct: number;
 }
 

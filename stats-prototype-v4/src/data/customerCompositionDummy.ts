@@ -19,9 +19,9 @@ export const ageGenderRatios: Record<string, { loyalRatio: number; dormantRatio:
   기타: null,
 };
 
-// 기간 필터(최근 7일 / 최근 30일 / 월별, 최근 3개월)별 스냅샷
+// 기간 탭(지난 주 / 지난 달, 고정 스냅샷)별 데이터. 배치 잡이 마감된 주/월에 대해 한 번만 계산해두는 값이라 가정
 export const byPeriod: Record<string, CustomerCompositionPeriodData> = {
-  recent7: {
+  lastWeek: {
     customerComposition: {
       loyalPct: 34,
       deltaLabel: "전주 대비 +1%p",
@@ -41,47 +41,7 @@ export const byPeriod: Record<string, CustomerCompositionPeriodData> = {
       { label: "기타", pct: 10 },
     ],
   },
-  recent30: {
-    customerComposition: {
-      loyalPct: 32,
-      deltaLabel: "30일 전 대비 +3%p",
-      chips: [
-        { label: "신규", pct: 18 },
-        { label: "단골", pct: 32 },
-        { label: "일반", pct: 41 },
-        { label: "휴면", pct: 9 },
-      ],
-    },
-    demographicDistribution: [
-      { label: "30대 여성", pct: 25 },
-      { label: "20대 여성", pct: 20 },
-      { label: "30대 남성", pct: 16 },
-      { label: "40대 여성", pct: 15 },
-      { label: "20대 남성", pct: 14 },
-      { label: "기타", pct: 10 },
-    ],
-  },
-  "2026-07": {
-    customerComposition: {
-      loyalPct: 33,
-      deltaLabel: "전월 대비 +2%p",
-      chips: [
-        { label: "신규", pct: 19 },
-        { label: "단골", pct: 33 },
-        { label: "일반", pct: 39 },
-        { label: "휴면", pct: 9 },
-      ],
-    },
-    demographicDistribution: [
-      { label: "30대 여성", pct: 24 },
-      { label: "20대 여성", pct: 21 },
-      { label: "30대 남성", pct: 16 },
-      { label: "40대 여성", pct: 15 },
-      { label: "20대 남성", pct: 14 },
-      { label: "기타", pct: 10 },
-    ],
-  },
-  "2026-06": {
+  lastMonth: {
     customerComposition: {
       loyalPct: 31,
       deltaLabel: "전월 대비 -1%p",
@@ -101,29 +61,9 @@ export const byPeriod: Record<string, CustomerCompositionPeriodData> = {
       { label: "기타", pct: 10 },
     ],
   },
-  "2026-05": {
-    customerComposition: {
-      loyalPct: 32,
-      deltaLabel: "전월 대비 +1%p",
-      chips: [
-        { label: "신규", pct: 18 },
-        { label: "단골", pct: 32 },
-        { label: "일반", pct: 41 },
-        { label: "휴면", pct: 9 },
-      ],
-    },
-    demographicDistribution: [
-      { label: "30대 여성", pct: 24 },
-      { label: "20대 여성", pct: 20 },
-      { label: "30대 남성", pct: 16 },
-      { label: "40대 여성", pct: 16 },
-      { label: "20대 남성", pct: 14 },
-      { label: "기타", pct: 10 },
-    ],
-  },
 };
 
-// 기간 필터와 무관하게 항상 최근 3개월 월별 추이로 고정 표시. regionAvg는 주변매장 평균 비교값(더미).
+// 기간 탭과 무관하게 항상 최근 3개월 월별 추이로 고정 표시. regionAvg는 주변매장 평균 비교값(더미).
 export const segmentTrend = [
   { month: "5월", 단골: 121, 신규: 47, regionAvgLoyal: 108, regionAvgNew: 41 },
   { month: "6월", 단골: 129, 신규: 55, regionAvgLoyal: 112, regionAvgNew: 44 },

@@ -106,26 +106,14 @@ function scale(
   return out;
 }
 
-// 기간 필터(최근 7일 / 최근 30일 / 월별, 최근 3개월)별 스냅샷
+// 기간 탭(지난 주 / 지난 달, 고정 스냅샷)별 데이터. 배치 잡이 마감된 주/월에 대해 한 번만 계산해두는 값이라 가정
 export const byPeriod: Record<string, CustomerDetailPeriodData> = {
-  recent7: {
+  lastWeek: {
     agePreferredProductsByGender: scale(AGE_PREFERRED_BASE, 0.24),
     revisitCycle: { value: "8.7일", label: "평균 재방문 간격" },
   },
-  recent30: {
-    agePreferredProductsByGender: scale(AGE_PREFERRED_BASE, 1),
-    revisitCycle: { value: "9.2일", label: "평균 재방문 간격" },
-  },
-  "2026-07": {
-    agePreferredProductsByGender: scale(AGE_PREFERRED_BASE, 1.05),
-    revisitCycle: { value: "9.0일", label: "평균 재방문 간격" },
-  },
-  "2026-06": {
+  lastMonth: {
     agePreferredProductsByGender: scale(AGE_PREFERRED_BASE, 0.98),
     revisitCycle: { value: "9.4일", label: "평균 재방문 간격" },
-  },
-  "2026-05": {
-    agePreferredProductsByGender: scale(AGE_PREFERRED_BASE, 1.02),
-    revisitCycle: { value: "9.3일", label: "평균 재방문 간격" },
   },
 };

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
-import PeriodFilterButton from "../components/PeriodFilterButton";
-import PeriodFilterModal from "../components/PeriodFilterModal";
+import SegmentedNav from "../components/SegmentedNav";
 import SegmentPieChart from "../components/SegmentPieChart";
 import TrendChart from "../components/TrendChart";
 import SegmentStoryCard from "../components/SegmentStoryCard";
 import AgePopularProductsTable from "../components/AgePopularProductsTable";
 import KpiStrip from "../components/KpiStrip";
 import { useAppData } from "../context/DataContext";
-import { DEFAULT_PERIOD, periodKey, periodDefLabel, type PeriodSelection } from "../lib/period";
+import { PERIOD_TABS, DEFAULT_PERIOD_TAB, type PeriodTab } from "../lib/period";
 import { ageGenderRatios } from "../data/customerCompositionDummy";
 import type { SegmentKey } from "../data/segmentDetailDummy";
 import type { GenderFilter } from "../data/customerDetailDummy";
@@ -48,18 +47,18 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
     kpiIndicators,
   } = useAppData();
 
-  const [period, setPeriod] = useState<PeriodSelection>(DEFAULT_PERIOD);
-  const [periodModalOpen, setPeriodModalOpen] = useState(false);
+  const [tab, setTab] = useState<PeriodTab>(DEFAULT_PERIOD_TAB);
   const [segment, setSegment] = useState<SegmentKey>("all");
   const [gender, setGender] = useState<GenderFilter>("all");
 
-  const key = periodKey(period);
-  const periodLabel = periodDefLabel(period);
-  const composition = customerComposition.byPeriod[key] ?? customerComposition.byPeriod.recent30;
-  const segmentData = segmentDetail.byPeriod[key] ?? segmentDetail.byPeriod.recent30;
-  const detail = customerDetail.byPeriod[key] ?? customerDetail.byPeriod.recent30;
-  const membershipData = membership.byPeriod[key] ?? membership.byPeriod.recent30;
-  const showRevisitCycle = period.mode !== "recent7";
+  const periodLabel = PERIOD_TABS.find((t) => t.key === tab)!.label;
+  const composition = customerComposition.byPeriod[tab];
+  const segmentData = segmentDetail.byPeriod[tab];
+  const detail = customerDetail.byPeriod[tab];
+  const membershipData = membership.byPeriod[tab];
+  // 배치 갱신 부하를 줄이기 위해 "지난 주/지난 달" 고정 스냅샷만 제공(롤링 기간·진행 중 기간 없음).
+  // 재방문 주기는 표본이 적은 "지난 주"에는 신뢰도가 낮아 "지난 달"에서만 노출
+  const showRevisitCycle = tab !== "lastWeek";
 
   const loyalHighlight = highlightLabel(composition.demographicDistribution, "loyalRatio");
   const dormantHighlight = highlightLabel(composition.demographicDistribution, "dormantRatio");
@@ -80,7 +79,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
       `멤버십 고객 분석 기준 · ${periodLabel}`
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [period]);
+  }, [tab]);
 
   return (
     <div className="screen">
@@ -89,7 +88,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
         <p className="intro-banner__caption">POS 전체 매출/객단가와는 다른 수치예요</p>
       </div>
       <div className="screen__period-bar">
-        <PeriodFilterButton value={period} onClick={() => setPeriodModalOpen(true)} />
+        <SegmentedNav options={PERIOD_TABS} active={tab} onChange={(k) => setTab(k as PeriodTab)} size="sm" />
       </div>
 
       <KpiStrip
@@ -155,13 +154,6 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, storeN
           </Card>
         )}
       </div>
-
-      <PeriodFilterModal
-        open={periodModalOpen}
-        value={period}
-        onApply={setPeriod}
-        onClose={() => setPeriodModalOpen(false)}
-      />
     </div>
   );
 }

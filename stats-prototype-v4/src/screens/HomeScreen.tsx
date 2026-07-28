@@ -83,18 +83,20 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           </div>
         </div>
 
-        {/* [2순위] 최근 30일 상세분석 리포트 후킹 카드
+        {/* [2순위] 지난 달 상세분석 리포트 후킹 카드
             "리포트 제공"(혜택)과 "포인트 적립·사용 주문 기준"(조건)을 별개 정보로 나열하지 않고
             한 문장으로 묶어 인과관계 자체가 후킹이 되도록 함. 그다음 성장 동기 → 지역 비교가
-            구분선 없이 자연스러운 문단 흐름으로 이어짐 */}
+            구분선 없이 자연스러운 문단 흐름으로 이어짐.
+            (v4) 멤버십 고객 분석 화면이 "지난 주/지난 달" 고정 탭으로 바뀌어 이 카드도 "지난 달" 기준으로 맞춤
+            (필드명 last30/memberOrderCount 등은 내부 식별자라 그대로 유지) */}
         <Card
-          title="최근 30일 상세분석 리포트 보기"
+          title="지난 달 상세분석 리포트 보기"
           indicator={homeRealtimeIndicators.last30}
           className={`hook-card hook-card--${caseTone}`}
         >
           <div className="hook-cta" onClick={() => onNavigate("membership")} role="button" tabIndex={0}>
             <div className="merged-sentence">
-              최근 30일 해피포인트 적립·사용 주문{" "}
+              지난 달 해피포인트 적립·사용 주문{" "}
               <span className="merged-sentence__num" style={{ color: caseToneColor }}>
                 {memberOrderCount.toLocaleString("ko-KR")}건
               </span>{" "}
