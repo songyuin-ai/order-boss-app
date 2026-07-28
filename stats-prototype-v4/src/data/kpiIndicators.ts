@@ -5,6 +5,7 @@ export const kpiIndicators: Record<string, Indicator> = {
   memberCustomers: {
     id: "data_033",
     지표명: "멤버십 손님 수",
+    실시간여부: "N",
     정의: "화면 상단 기간 필터 기준, 해피포인트를 적립·사용하며 방문한 유니크 손님 수(휴면 제외)",
     원천데이터_및_산식: "단골+신규+일반 세그먼트 유니크 고객수 합",
     제공목적: "이 리포트가 몇 명의 데이터를 기반으로 하는지 규모감 전달",
@@ -13,6 +14,7 @@ export const kpiIndicators: Record<string, Indicator> = {
   memberOrderShare: {
     id: "data_044",
     지표명: "멤버십 적립·사용 주문건수",
+    실시간여부: "N",
     정의:
       "화면 상단 기간 필터 기준, 해피포인트를 적립·사용한 주문건수(HPC 단일 소스 절대값). 주변매장의 동일 지표 평균과 비교. " +
       "(v4) POS 전체 주문건수 대비 비율로 표시하던 '멤버십 주문 비중'은 정합성 문제로 폐기",

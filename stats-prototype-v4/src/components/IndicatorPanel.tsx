@@ -26,6 +26,7 @@ export default function IndicatorPanel({ indicators, tabLabel }: Props) {
           <thead>
             <tr>
               <th>ID</th>
+              <th>실시간</th>
               <th>지표명</th>
               <th>정의</th>
               <th>원천데이터 및 산식</th>
@@ -40,6 +41,16 @@ export default function IndicatorPanel({ indicators, tabLabel }: Props) {
               return (
                 <tr key={ind.id} className={`${isActive ? "is-active" : ""}${isDim ? " is-dim" : ""}`}>
                   <td className="row-id">{ind.id}</td>
+                  <td className="col-realtime">
+                    <span className={`rt-badge ${ind.실시간여부 === "Y" ? "rt-badge--y" : "rt-badge--n"}`}>
+                      {ind.실시간여부}
+                    </span>
+                    {ind.실시간참고 && (
+                      <Tooltip content={ind.실시간참고}>
+                        <span className="row-id-note">ⓘ</span>
+                      </Tooltip>
+                    )}
+                  </td>
                   <td className="col-name">{ind.지표명}</td>
                   <td className="col-def">{ind.정의}</td>
                   <td className="col-src">

@@ -5,6 +5,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   agePreferred: {
     id: "data_021",
     지표명: "연령대별 인기상품 Top3",
+    실시간여부: "N",
     정의: "연령대별 주문건수 상위 상품 1~3위, 화면 상단 기간 필터 기준. 하단 전체/남/여 필터로 성별 세분화",
     원천데이터_및_산식:
       "HPC 상품단위 데이터 (⚠있다고 가정, 확인 중) GROUP BY 연령대(+성별), 상품별 주문건수 COUNT 후 상위 3개 정렬",
@@ -14,6 +15,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
   revisitCycle: {
     id: "data_016",
     지표명: "재방문 주기(고착도)",
+    실시간여부: "N",
     정의: "매장 기준 회원별 재방문 간격 평균, 최근 30일/월별 조회 시에만 노출(최근 7일에는 표본 부족으로 미노출)",
     원천데이터_및_산식: "연속 구매일 간격 평균",
     제공목적: "간격 증가 시 이탈 조짐 조기 파악",

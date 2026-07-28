@@ -1,10 +1,15 @@
 import type { Indicator } from "./types";
 
+// 진행 중인 현재 기간(오늘/이번 주/이번 달)에서만 실시간이고, 화살표로 과거 기간을 조회하면 마감된 배치 데이터가 표시됨
+const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 달)만 실시간이며, 화살표로 과거 기간을 조회하면 마감된 배치 데이터예요.";
+
 // 딜리버리 > 딜리버리 통계
 export const deliveryIndicators: Record<string, Indicator> = {
   revenue: {
     id: "data_001",
     지표명: "매출액",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의:
       "선택 기간(일간/주간/월간) 총 주문금액, 최근 3개월 내 화살표로 기간 이동 가능. 각 탭의 진행 중인 현재 기간(오늘/이번 주/이번 달)은 인근매장 평균 대비 배지만, 마감된 과거 기간은 인근매장 평균 대비 + 전일·전주·전월 대비 배지를 함께 표시",
     원천데이터_및_산식: "주문금액 SUM",
@@ -14,6 +19,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   orders: {
     id: "data_002",
     지표명: "주문 건수",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의:
       "집계기간 총 주문 수. 진행 중인 현재 기간은 인근매장 평균 대비 배지만, 마감된 기간은 전일·전주·전월 대비 배지도 함께 표시",
     원천데이터_및_산식: "주문건수 COUNT",
@@ -23,6 +30,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   aov: {
     id: "data_003",
     지표명: "객단가",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의:
       "주문 1건당 평균 금액. 진행 중인 현재 기간은 브랜드 평균 대비 배지만, 마감된 기간은 전일·전주·전월 대비 배지도 함께 표시",
     원천데이터_및_산식: "매출액 ÷ 주문건수",
@@ -32,6 +41,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   cancelRate: {
     id: "data_004",
     지표명: "취소율",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의:
       "전체 주문 중 취소 비중. 진행 중인 현재 기간은 브랜드 평균 대비 배지만, 마감된 기간은 전일·전주·전월 대비 배지도 함께 표시",
     원천데이터_및_산식: "취소건수 ÷ 전체주문건수 × 100",
@@ -41,6 +52,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   hourly: {
     id: "data_005",
     지표명: "시간대별 분포",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "1시간 단위 주문건수",
     원천데이터_및_산식: "주문일시 GROUP BY 시간대",
     제공목적: "피크타임 파악, 인력배치 참고",
@@ -49,6 +62,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   weekdayCumulative: {
     id: "data_006",
     지표명: "요일별 누적",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "주간 탭 기준, 가장 최근 주의 요일별 매출 누적",
     원천데이터_및_산식: "주문일시 요일 추출, 지난 요일만 표시",
     제공목적: "요일 패턴 파악",
@@ -57,6 +72,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   weekdayAverage: {
     id: "data_007",
     지표명: "요일별 평균",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "월간 탭 기준, 가장 최근 달의 요일별 매출 평균",
     원천데이터_및_산식: "요일별 매출합 ÷ 지나간 횟수",
     제공목적: "요일 패턴, 이상치 파악",
@@ -65,6 +82,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   topMenu: {
     id: "data_008",
     지표명: "인기 메뉴 Top N",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "판매량 상위 메뉴",
     원천데이터_및_산식: "메뉴별 주문내역 COUNT",
     제공목적: "메뉴 구성, 추천메뉴 참고",
@@ -73,6 +92,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   deliveryRatio: {
     id: "data_009",
     지표명: "배달/픽업 비중",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "배달유형별 비중",
     원천데이터_및_산식: "배달유형 필드 GROUP BY",
     제공목적: "채널 운영전략",
@@ -81,6 +102,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   channelRevenue: {
     id: "data_010",
     지표명: "채널별 매출",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "배달채널(해피오더/배민/쿠팡이츠/요기요/땡겨요)별 매출",
     원천데이터_및_산식: "채널 구분 필드 GROUP BY (필드 존재 확인됨)",
     제공목적: "채널별 성과 비교",
@@ -89,6 +112,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   dailyAvgRevenue: {
     id: "data_031",
     지표명: "일평균 매출 (딜리버리)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "주간/월간 탭의 일 평균 매출",
     원천데이터_및_산식: "매출액 ÷ 집계일수",
     제공목적: "기간별 매출 추세 참고",
@@ -97,6 +122,8 @@ export const deliveryIndicators: Record<string, Indicator> = {
   dailyAvgOrders: {
     id: "data_032",
     지표명: "일평균 건수 (딜리버리)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "주간/월간 탭의 일 평균 주문건수",
     원천데이터_및_산식: "주문건수 ÷ 집계일수",
     제공목적: "기간별 주문량 추세 참고",

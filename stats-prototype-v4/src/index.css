@@ -1149,7 +1149,7 @@ body {
   border-collapse: collapse;
   table-layout: fixed;
   font-size: 12.5px;
-  min-width: 640px;
+  min-width: 680px;
 }
 
 .panel th:nth-child(1),
@@ -1159,17 +1159,22 @@ body {
 
 .panel th:nth-child(2),
 .panel td:nth-child(2) {
-  width: 100px;
+  width: 52px;
 }
 
 .panel th:nth-child(3),
-.panel td:nth-child(3),
+.panel td:nth-child(3) {
+  width: 100px;
+}
+
 .panel th:nth-child(4),
 .panel td:nth-child(4),
 .panel th:nth-child(5),
 .panel td:nth-child(5),
 .panel th:nth-child(6),
-.panel td:nth-child(6) {
+.panel td:nth-child(6),
+.panel th:nth-child(7),
+.panel td:nth-child(7) {
   width: 25%;
 }
 
@@ -1207,6 +1212,29 @@ body {
   font-weight: 800;
   color: var(--accent);
   white-space: nowrap;
+}
+
+.panel .col-realtime {
+  white-space: nowrap;
+}
+
+.rt-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+
+.rt-badge--y {
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+.rt-badge--n {
+  color: var(--text-secondary);
+  background: var(--track);
 }
 
 .panel .col-name {

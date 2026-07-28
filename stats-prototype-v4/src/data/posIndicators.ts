@@ -1,10 +1,15 @@
 import type { Indicator } from "./types";
 
+// 진행 중인 현재 기간(오늘/이번 주/이번 달)에서만 실시간이고, 화살표로 과거 기간을 조회하면 마감된 배치 데이터가 표시됨
+const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 달)만 실시간이며, 화살표로 과거 기간을 조회하면 마감된 배치 데이터예요.";
+
 // 해피포인트 > 전체 매출 통계 (POS 온/오프라인 통합)
 export const posIndicators: Record<string, Indicator> = {
   totalRevenue: {
     id: "data_023",
     지표명: "전체 매출액 (POS)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "집계기간 POS 온/오프라인 통합 매출",
     원천데이터_및_산식: "POS 매출 SUM (온라인+오프라인)",
     제공목적: "전체 매출 현황 파악",
@@ -13,6 +18,8 @@ export const posIndicators: Record<string, Indicator> = {
   totalOrders: {
     id: "data_024",
     지표명: "전체 주문 건수 (POS)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "집계기간 POS 온/오프라인 통합 주문 수",
     원천데이터_및_산식: "POS 주문건수 COUNT",
     제공목적: "전체 매출 현황 파악",
@@ -21,6 +28,8 @@ export const posIndicators: Record<string, Indicator> = {
   dailyAvgRevenue: {
     id: "data_025",
     지표명: "일평균 매출 (POS)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "집계기간 내 일 평균 매출 (주간/월간 탭에만 노출)",
     원천데이터_및_산식: "전체 매출액 ÷ 집계일수",
     제공목적: "기간별 매출 추세 참고",
@@ -29,6 +38,8 @@ export const posIndicators: Record<string, Indicator> = {
   dailyAvgOrders: {
     id: "data_026",
     지표명: "일평균 건수 (POS)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "집계기간 내 일 평균 주문건수 (주간/월간 탭에만 노출)",
     원천데이터_및_산식: "전체 주문건수 ÷ 집계일수",
     제공목적: "기간별 주문량 추세 참고",
@@ -37,6 +48,8 @@ export const posIndicators: Record<string, Indicator> = {
   onlineOffline: {
     id: "data_027",
     지표명: "오프라인/온라인 점유율",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "POS 매출 중 오프라인 vs 온라인(배달+픽업 합산) 비중",
     원천데이터_및_산식: "POS 채널 구분 필드 GROUP BY",
     제공목적: "채널 믹스 전략 참고",
@@ -45,6 +58,8 @@ export const posIndicators: Record<string, Indicator> = {
   aov: {
     id: "data_028",
     지표명: "객단가 (POS)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "POS 주문 1건당 평균 금액",
     원천데이터_및_산식: "전체 매출액 ÷ 전체 주문건수",
     제공목적: "단가 전략 참고",
@@ -53,6 +68,8 @@ export const posIndicators: Record<string, Indicator> = {
   hourly: {
     id: "data_029",
     지표명: "시간대별 주문현황 (POS)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "1시간 단위 POS 주문건수",
     원천데이터_및_산식: "POS 주문일시 GROUP BY 시간대",
     제공목적: "피크타임 파악, 인력배치 참고",

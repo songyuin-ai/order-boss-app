@@ -1,6 +1,9 @@
 import type { Indicator } from "./types";
 import { posIndicators } from "./posIndicators";
 
+// 진행 중인 현재 기간(오늘/이번 주/이번 달)에서만 실시간이고, 화살표로 과거 기간을 조회하면 마감된 배치 데이터가 표시됨
+const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 달)만 실시간이며, 화살표로 과거 기간을 조회하면 마감된 배치 데이터예요.";
+
 // "날짜별 보기" 드릴다운 화면(일간/주간/월간 탭). 매출/건수/객단가/온오프라인은 POS 지표(data_023/024/027/028)를 그대로 재사용
 export const homeIndicators: Record<string, Indicator> = {
   revenue: posIndicators.totalRevenue,
@@ -10,6 +13,8 @@ export const homeIndicators: Record<string, Indicator> = {
   weekday: {
     id: "data_034",
     지표명: "요일별 매출 (날짜별 보기)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의:
       "주간 탭 = 이번 주 누적(전일자 마감 기준, 아직 지나지 않은 요일은 표시 안 함) / 월간 탭 = 해당 월 중 마감된 요일 발생분의 평균. 일간 탭에는 노출하지 않음",
     원천데이터_및_산식: "주간: 요일별 당일 매출 SUM (경과일까지). 월간: 요일별 매출 평균 (마감된 발생 건만)",
@@ -19,6 +24,8 @@ export const homeIndicators: Record<string, Indicator> = {
   channelRevenue: {
     id: "data_035",
     지표명: "채널별 매출 (홈, POS 기준)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "오프라인 매장 + 배달앱 채널별 매출 breakdown, 선택 탭 기준",
     원천데이터_및_산식: "POS 매출 중 오프라인/온라인 구분 후, 온라인은 채널 필드로 세분화",
     제공목적: "채널별 성과 비교",
@@ -27,6 +34,8 @@ export const homeIndicators: Record<string, Indicator> = {
   hourlyOrders: {
     id: "data_040",
     지표명: "시간대별 주문건수 (날짜별 보기)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "일간 탭 = 해당 일 시간대별 누적 주문건수, 주간·월간 탭 = 경과일 기준 시간대별 일평균 주문건수",
     원천데이터_및_산식: "일간: 당일 주문시각 2시간 단위 COUNT. 주간·월간: 경과일 시간대별 COUNT 합 ÷ 경과일수",
     제공목적: "시간대별 피크 파악 (일간은 실제치, 주간·월간은 평균 패턴)",
@@ -35,6 +44,8 @@ export const homeIndicators: Record<string, Indicator> = {
   topProducts: {
     id: "data_043",
     지표명: "인기상품 TOP3 (날짜별 보기)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
     정의: "선택 탭·기간 기준 주문건수 상위 3개 상품, 각 상품의 전체 매출 대비 비중 표시",
     원천데이터_및_산식: "상품별 주문건수 COUNT DESC TOP3, 상품별 매출 ÷ 기간 전체 매출",
     제공목적: "판매량 기준 인기 상품 파악",
@@ -47,6 +58,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
   revenue: {
     id: "data_036",
     지표명: "일간 매출 누적 (홈 실시간)",
+    실시간여부: "Y",
     정의:
       "당일 자정부터 현재까지 누적 매출, 인근매장 평균 대비 비교. 당일은 마감 전 진행 중인 기간이라 전일 대비 증감은 표시하지 않음(마감 데이터 기준 전일 대비는 날짜별 보기-일간 탭에서 확인)",
     원천데이터_및_산식: "당일 주문 실시간 SUM. 지역평균대비% = (당일-인근매장평균)/인근매장평균",
@@ -56,6 +68,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
   orders: {
     id: "data_037",
     지표명: "일간 주문건수 누적 (홈 실시간)",
+    실시간여부: "Y",
     정의:
       "당일 자정부터 현재까지 누적 주문건수, 인근매장 평균 대비 비교. 당일은 마감 전 진행 중인 기간이라 전일 대비 증감은 표시하지 않음",
     원천데이터_및_산식: "당일 주문 실시간 COUNT. 지역평균대비% = (당일-인근매장평균)/인근매장평균",
@@ -65,6 +78,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
   aov: {
     id: "data_038",
     지표명: "일간 객단가 누적 (홈 실시간)",
+    실시간여부: "Y",
     정의:
       "당일 누적 매출 ÷ 당일 누적 주문건수, 인근매장 평균 대비 비교. 당일은 마감 전 진행 중인 기간이라 전일 대비 증감은 표시하지 않음",
     원천데이터_및_산식: "당일 매출 ÷ 당일 주문건수. 비교식은 매출/건수 지표와 동일",
@@ -74,6 +88,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
   weekCumulative: {
     id: "data_039",
     지표명: "주간 매출 누적 (요일별, 홈 실시간)",
+    실시간여부: "Y",
     정의:
       "이번 주 월요일부터 오늘까지 요일별 누적 매출·객단가 + 주간 누적 총액(지역 평균 대비). 이번 주는 마감 전 진행 중인 기간이라 전주 대비 증감은 표시하지 않음. 아직 도래하지 않은 요일은 표시하지 않음",
     원천데이터_및_산식: "요일별 당일 매출 SUM, 당일 매출÷당일 건수(객단가). 주간 누적 = 경과일 매출 SUM. 미래 요일은 null",
@@ -83,6 +98,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
   last30: {
     id: "data_041",
     지표명: "최근 30일 해피포인트 적립·사용 주문건수",
+    실시간여부: "N",
     정의:
       "최근 30일간 포인트를 적립·사용한 주문건수(HPC 단일 소스 절대값). 인근매장의 동일 지표 평균과 비교. " +
       "(v4) POS 전체 주문건수를 분모로 쓰던 비율 산식은 두 시스템 간 정합성 문제로 폐기하고 HPC 절대값만 사용",
@@ -93,6 +109,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
   deliveryShare: {
     id: "data_042",
     지표명: "딜리버리 점유율 (홈 실시간)",
+    실시간여부: "Y",
     정의: "최근 30일 총 매출 중 딜리버리(배달앱) 채널 매출이 차지하는 비중",
     원천데이터_및_산식: "딜리버리 채널 매출 ÷ 최근 30일 총 매출",
     제공목적: "딜리버리 채널 기여도를 파악하고 딜리버리 고객 분석으로 드릴다운",
