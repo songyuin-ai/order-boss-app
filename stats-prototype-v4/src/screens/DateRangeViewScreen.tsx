@@ -48,7 +48,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
     homeIndicators.revenue,
     homeIndicators.orders,
     homeIndicators.aov,
-    ...(!isDaily ? [weekdayIndicator] : []),
+    ...(!isDaily ? [homeIndicators.dailyAvgRevenue, homeIndicators.dailyAvgOrders, weekdayIndicator] : []),
     homeIndicators.onlineOffline,
     homeIndicators.channelRevenue,
     homeIndicators.topProducts,
@@ -131,6 +131,21 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
               <span className="badge badge--muted">{period.aovRegionBadge}</span>
             </div>
           </div>
+          {/* 일간 탭에는 노출하지 않음 (집계기간이 하루뿐이라 일평균 개념이 없음) */}
+          {!isDaily && period.dailyAvgRevenue !== undefined && (
+            <div className="kpi-cell">
+              <IdBadge id={homeIndicators.dailyAvgRevenue.id} />
+              <div className="kpi-cell__label">일평균 매출</div>
+              <div className="kpi-cell__value">{formatWon(Math.round(period.dailyAvgRevenue))}</div>
+            </div>
+          )}
+          {!isDaily && period.dailyAvgOrders !== undefined && (
+            <div className="kpi-cell">
+              <IdBadge id={homeIndicators.dailyAvgOrders.id} />
+              <div className="kpi-cell__label">일평균 건수</div>
+              <div className="kpi-cell__value">{Math.round(period.dailyAvgOrders).toLocaleString("ko-KR")}건</div>
+            </div>
+          )}
         </div>
 
         {/* 일간 탭에는 요일별 매출을 노출하지 않음 (하루치 조회에는 요일 분포 차트가 맞지 않음) */}

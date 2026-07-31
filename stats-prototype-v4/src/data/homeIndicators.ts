@@ -9,6 +9,9 @@ export const homeIndicators: Record<string, Indicator> = {
   revenue: posIndicators.totalRevenue,
   orders: posIndicators.totalOrders,
   aov: posIndicators.aov,
+  // (v4) 주간/월간 탭에만 노출되는 일평균 지표 — POS 지표(data_025/026)를 그대로 재사용
+  dailyAvgRevenue: posIndicators.dailyAvgRevenue,
+  dailyAvgOrders: posIndicators.dailyAvgOrders,
   onlineOffline: posIndicators.onlineOffline,
   // (v4) 주간=누적, 월간=평균으로 산식 자체가 달라서 딜리버리(data_006/007)와 같은 기준으로 분리.
   // 홈 실시간 카드(구 data_039)와도 같은 데이터라 통합 — 홈에서는 항상 이번 주만, 날짜별 보기 주간 탭에서는

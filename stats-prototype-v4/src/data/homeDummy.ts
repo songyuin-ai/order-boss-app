@@ -49,6 +49,9 @@ export interface HomeKpiPeriod {
   aov: number;
   aovRegionBadge: string;
   aovDeltaBadge?: string;
+  // 주간/월간 탭에서만 노출 (data_025/026) — 집계기간 내 경과일 기준 일 평균
+  dailyAvgRevenue?: number;
+  dailyAvgOrders?: number;
 }
 
 export interface HomeTopProduct {
@@ -185,6 +188,9 @@ export const homeWeekly: HomeTabData = {
       ordersRegionBadge: "인근매장 평균 대비 -5%",
       aov: 18331,
       aovRegionBadge: "브랜드 평균 대비 +4%",
+      // 경과일(월/화/수 3일) 기준
+      dailyAvgRevenue: 2774000,
+      dailyAvgOrders: 151,
     },
     {
       periodLabel: "07/06~07/12",
@@ -197,6 +203,8 @@ export const homeWeekly: HomeTabData = {
       aov: 17991,
       aovRegionBadge: "브랜드 평균 대비 -2%",
       aovDeltaBadge: "전주 대비 -0.5%",
+      dailyAvgRevenue: 2878571,
+      dailyAvgOrders: 160,
     },
     {
       periodLabel: "06/28~07/04",
@@ -209,6 +217,8 @@ export const homeWeekly: HomeTabData = {
       aov: 18082,
       aovRegionBadge: "브랜드 평균 대비 -1%",
       aovDeltaBadge: "전주 대비 -1.2%",
+      dailyAvgRevenue: 2828571,
+      dailyAvgOrders: 156,
     },
     {
       periodLabel: "06/21~06/27",
@@ -218,6 +228,8 @@ export const homeWeekly: HomeTabData = {
       ordersRegionBadge: "인근매장 평균 대비 -4%",
       aov: 18304,
       aovRegionBadge: "브랜드 평균 대비 +1%",
+      dailyAvgRevenue: 3007143,
+      dailyAvgOrders: 164,
     },
   ],
   // 이번 주(가장 최근 주간 기간) 누적, 전일자 마감 기준 — 오늘=수요일 가정으로 월/화/수만 지남 (deliveryDummy.ts와 동일 컨벤션)
@@ -255,6 +267,9 @@ export const homeMonthly: HomeTabData = {
       ordersRegionBadge: "인근매장 평균 대비 -4%",
       aov: 18278,
       aovRegionBadge: "브랜드 평균 대비 -2%",
+      // 경과일(7/19일까지, 19일) 기준
+      dailyAvgRevenue: 3015789,
+      dailyAvgOrders: 165,
     },
     {
       periodLabel: "2026년 6월",
@@ -267,6 +282,8 @@ export const homeMonthly: HomeTabData = {
       aov: 18139,
       aovRegionBadge: "브랜드 평균 대비 -1%",
       aovDeltaBadge: "전월 대비 -0.4%",
+      dailyAvgRevenue: 2956667,
+      dailyAvgOrders: 163,
     },
     {
       periodLabel: "2026년 5월",
@@ -276,6 +293,8 @@ export const homeMonthly: HomeTabData = {
       ordersRegionBadge: "인근매장 평균 대비 -4%",
       aov: 18212,
       aovRegionBadge: "브랜드 평균 대비 +1%",
+      dailyAvgRevenue: 2908065,
+      dailyAvgOrders: 160,
     },
   ],
   // 해당 월 중 마감된(지나간) 요일 발생분의 평균 매출 (deliveryDummy.ts monthly.weekdayAverage와 동일 개념)
