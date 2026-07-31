@@ -39,6 +39,8 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
   const isDaily = tab === "daily";
   // 주간=누적(data_034), 월간=평균(data_045) — 산식이 달라 별도 지표로 분리
   const weekdayIndicator = tab === "monthly" ? homeIndicators.weekdayAverage : homeIndicators.weekdayCumulative;
+  // 일간=실측치(data_040), 주간·월간=일평균(data_046) — 마찬가지로 산식이 달라 분리
+  const hourlyIndicator = isDaily ? homeIndicators.hourlyOrders : homeIndicators.hourlyOrdersAvg;
 
   // 마감된 기간은 전일/전주/전월 대비 배지를 보여주고, 진행 중인 현재 기간(오늘/이번 주/이번 달)은
   // 지역 평균 대비 배지만 보여줌 — period.xxxDeltaBadge 유무 자체가 마감 여부를 나타냄
@@ -50,7 +52,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
     homeIndicators.onlineOffline,
     homeIndicators.channelRevenue,
     homeIndicators.topProducts,
-    homeIndicators.hourlyOrders,
+    hourlyIndicator,
   ];
 
   useEffect(() => {
@@ -183,7 +185,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
 
         <Card
           title={isDaily ? "시간대별 주문건수" : "시간대별 주문건수 (일평균)"}
-          indicator={homeIndicators.hourlyOrders}
+          indicator={hourlyIndicator}
         >
           <BarChart
             data={data.hourlyOrders.map((h) => ({
