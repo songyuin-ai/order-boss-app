@@ -30,7 +30,7 @@ maps.forEach((map) => {
 
 const rows = [...byId.values()].sort((a, b) => a.id.localeCompare(b.id));
 
-const HEADERS = ["id", "지표명", "실시간여부", "실시간참고", "정의", "원천데이터_및_산식", "제공목적", "차트형태", "참고"];
+const HEADERS = ["id", "지표명", "실시간여부", "실시간참고", "정의", "원천데이터", "산식", "제공목적", "차트형태", "참고"];
 
 function csvCell(value: string): string {
   const v = value ?? "";
@@ -49,7 +49,8 @@ rows.forEach((r) => {
       r.실시간여부,
       r.실시간참고 ?? "",
       r.정의,
-      "", // 원천데이터_및_산식 — 요청대로 비움
+      "", // 원천데이터(HPC/오더 거래원장/POS 중 택1) — 요청대로 비움
+      "", // 산식 — 요청대로 비움
       r.제공목적,
       r.차트형태,
       r.id === "data_011" ? r.참고 ?? "" : "", // 참고 — data_011(세그먼트 정의)만 기존 내용 유지, 나머지는 비움

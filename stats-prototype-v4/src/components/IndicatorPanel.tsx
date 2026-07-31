@@ -41,7 +41,8 @@ export default function IndicatorPanel({ indicators, tabLabel, onClose }: Props)
               <th>실시간</th>
               <th>지표명</th>
               <th>정의</th>
-              <th>원천데이터 및 산식</th>
+              <th>원천데이터</th>
+              <th>산식</th>
               <th>제공목적</th>
               <th>차트형태</th>
             </tr>
@@ -69,8 +70,11 @@ export default function IndicatorPanel({ indicators, tabLabel, onClose }: Props)
                   </td>
                   <td className="col-name">{ind.지표명}</td>
                   <td className="col-def">{ind.정의}</td>
-                  <td className="col-src">
-                    {ind.원천데이터_및_산식}
+                  <td className="col-source">
+                    {ind.원천데이터 && <span className="source-badge">{ind.원천데이터}</span>}
+                  </td>
+                  <td className="col-formula">
+                    {ind.산식}
                     {ind.참고 && (
                       <Tooltip content={ind.참고}>
                         <span className="row-id-note">ⓘ</span>
