@@ -8,7 +8,7 @@ export const posIndicators: Record<string, Indicator> = {
   // (v4) 홈 실시간 카드(구 data_036/037/038)와 완전히 같은 데이터라 통합 — 홈에서는 항상 "오늘/이번 주/이번 달"만,
   // 날짜별 보기에서는 탭+화살표로 과거 기간까지 조회하는 두 가지 용도로 하나의 지표를 공용으로 사용
   totalRevenue: {
-    id: "data_023",
+    id: "data_001",
     지표명: "전체 매출액 (POS)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -20,7 +20,7 @@ export const posIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (값 + 지역 평균 대비 배지 1개, 마감된 과거 기간 조회 시 전일·전주·전월 대비 배지 추가)",
   },
   totalOrders: {
-    id: "data_024",
+    id: "data_002",
     지표명: "전체 주문 건수 (POS)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -32,7 +32,7 @@ export const posIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (값 + 지역 평균 대비 배지 1개, 마감된 과거 기간 조회 시 전일·전주·전월 대비 배지 추가)",
   },
   dailyAvgRevenue: {
-    id: "data_025",
+    id: "data_003",
     지표명: "일평균 매출 (POS)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -43,7 +43,7 @@ export const posIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드",
   },
   dailyAvgOrders: {
-    id: "data_026",
+    id: "data_004",
     지표명: "일평균 건수 (POS)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -54,7 +54,7 @@ export const posIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드",
   },
   onlineOffline: {
-    id: "data_027",
+    id: "data_005",
     지표명: "오프라인/온라인 점유율",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -65,7 +65,7 @@ export const posIndicators: Record<string, Indicator> = {
     차트형태: "도넛/파이 차트 (2개 슬라이스)",
   },
   aov: {
-    id: "data_028",
+    id: "data_006",
     지표명: "객단가 (POS)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -75,16 +75,5 @@ export const posIndicators: Record<string, Indicator> = {
     산식: "",
     제공목적: "당일 객단가 변화를 실시간으로 파악하고, 과거 기간별 추이도 함께 확인",
     차트형태: "KPI 카드 (값 + 지역 평균 대비 배지 1개, 마감된 과거 기간 조회 시 전일·전주·전월 대비 배지 추가)",
-  },
-  hourly: {
-    id: "data_029",
-    지표명: "시간대별 주문현황 (POS)",
-    실시간여부: "Y",
-    실시간참고: TAB_REALTIME_NOTE,
-    정의: "1시간 단위 POS 주문건수",
-    원천데이터: "",
-    산식: "",
-    제공목적: "피크타임 파악, 인력배치 참고",
-    차트형태: "세로 막대차트 (7개 시간대)",
   },
 };

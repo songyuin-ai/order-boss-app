@@ -49,7 +49,7 @@ export interface HomeKpiPeriod {
   aov: number;
   aovRegionBadge: string;
   aovDeltaBadge?: string;
-  // 주간/월간 탭에서만 노출 (data_025/026) — 집계기간 내 경과일 기준 일 평균
+  // 주간/월간 탭에서만 노출 (data_003/004) — 집계기간 내 경과일 기준 일 평균
   dailyAvgRevenue?: number;
   dailyAvgOrders?: number;
 }

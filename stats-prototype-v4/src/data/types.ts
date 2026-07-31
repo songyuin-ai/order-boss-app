@@ -14,15 +14,6 @@ export interface Indicator {
   참고?: string;
 }
 
-export interface PosKpiPeriod {
-  periodLabel: string;
-  totalRevenue: number;
-  totalOrders: number;
-  dailyAvgRevenue?: number;
-  dailyAvgOrders?: number;
-  aov: number;
-}
-
 export interface OnlineOfflineRatio {
   online: number;
   offline: number;

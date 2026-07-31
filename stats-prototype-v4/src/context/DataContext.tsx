@@ -13,8 +13,7 @@ import { membershipIndicators as defaultMembershipIndicators } from "../data/mem
 import { byPeriod as membershipByPeriod, type MembershipPeriodData } from "../data/membershipDummy";
 import { kpiIndicators as defaultKpiIndicators } from "../data/kpiIndicators";
 import { posIndicators as defaultPosIndicators } from "../data/posIndicators";
-import { posKpiPeriods, posHourly, posOnlineOffline } from "../data/posDummy";
-import type { Indicator, PosKpiPeriod, HourlyBucket, OnlineOfflineRatio } from "../data/types";
+import type { Indicator } from "../data/types";
 import { loadIndicators } from "../lib/loadIndicators";
 import { SHEET_ID } from "../config";
 
@@ -35,11 +34,6 @@ interface DataShape {
   membership: { byPeriod: Record<string, MembershipPeriodData> };
   kpiIndicators: typeof defaultKpiIndicators;
   posIndicators: typeof defaultPosIndicators;
-  pos: {
-    kpiPeriods: Record<string, PosKpiPeriod[]>;
-    hourly: Record<string, HourlyBucket[]>;
-    onlineOffline: Record<string, OnlineOfflineRatio>;
-  };
 }
 
 // 지표 표(우측 데이터 목록)에 쓰이는 8개 지표 맵만 구글시트로 덮어씀. 차트 더미 수치(home/delivery/pos 등)는 연동 대상 아님
@@ -70,7 +64,6 @@ const defaultShape: DataShape = {
   membership: { byPeriod: membershipByPeriod },
   kpiIndicators: defaultKpiIndicators,
   posIndicators: defaultPosIndicators,
-  pos: { kpiPeriods: posKpiPeriods, hourly: posHourly, onlineOffline: posOnlineOffline },
 };
 
 const DataContext = createContext<DataShape>(defaultShape);

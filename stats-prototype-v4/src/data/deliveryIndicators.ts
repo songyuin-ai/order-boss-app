@@ -6,7 +6,7 @@ const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 
 // 딜리버리 > 딜리버리 통계
 export const deliveryIndicators: Record<string, Indicator> = {
   revenue: {
-    id: "data_001",
+    id: "data_015",
     지표명: "매출액",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -18,7 +18,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 좌상단)",
   },
   orders: {
-    id: "data_002",
+    id: "data_016",
     지표명: "주문 건수",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -30,7 +30,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 우상단)",
   },
   aov: {
-    id: "data_003",
+    id: "data_017",
     지표명: "객단가",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -42,7 +42,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 좌하단)",
   },
   cancelRate: {
-    id: "data_004",
+    id: "data_018",
     지표명: "취소율",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -54,7 +54,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 우하단)",
   },
   hourly: {
-    id: "data_005",
+    id: "data_019",
     지표명: "시간대별 분포",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -65,7 +65,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "가로 세로 막대차트 (7개 시간대, 높이로 건수 표현)",
   },
   weekdayCumulative: {
-    id: "data_006",
+    id: "data_020",
     지표명: "요일별 누적",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -76,7 +76,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "요일별 막대차트 (월~일 7개, 아직 안 지난 요일은 막대 없음, 오늘은 강조색)",
   },
   weekdayAverage: {
-    id: "data_007",
+    id: "data_021",
     지표명: "요일별 평균",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -87,7 +87,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "요일별 막대차트 (월~일 7개 전부 표시, 미래 요일도 지나간 데이터로 평균)",
   },
   topMenu: {
-    id: "data_008",
+    id: "data_022",
     지표명: "인기 메뉴 Top N",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -98,7 +98,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "리스트 카드 (1~3번 메뉴명, 우측에 건수)",
   },
   deliveryRatio: {
-    id: "data_009",
+    id: "data_023",
     지표명: "배달/픽업 비중",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -109,7 +109,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "도넛/파이 차트 (2개 슬라이스, 텍스트 라벨 표시)",
   },
   channelRevenue: {
-    id: "data_010",
+    id: "data_024",
     지표명: "채널별 매출",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -120,7 +120,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "세로 막대차트 (5개 채널, 높이로 매출액 표현, 투명도 단계 적용)",
   },
   dailyAvgRevenue: {
-    id: "data_031",
+    id: "data_025",
     지표명: "일평균 매출 (딜리버리)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -131,7 +131,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (이번주/이번달 KPI 내 추가 항목)",
   },
   dailyAvgOrders: {
-    id: "data_032",
+    id: "data_026",
     지표명: "일평균 건수 (딜리버리)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,

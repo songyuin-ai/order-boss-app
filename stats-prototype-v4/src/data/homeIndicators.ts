@@ -4,20 +4,20 @@ import { posIndicators } from "./posIndicators";
 // 진행 중인 현재 기간(오늘/이번 주/이번 달)에서만 실시간이고, 화살표로 과거 기간을 조회하면 마감된 배치 데이터가 표시됨
 const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 달)만 실시간이며, 화살표로 과거 기간을 조회하면 마감된 배치 데이터예요.";
 
-// "날짜별 보기" 드릴다운 화면(일간/주간/월간 탭). 매출/건수/객단가/온오프라인은 POS 지표(data_023/024/027/028)를 그대로 재사용
+// "날짜별 보기" 드릴다운 화면(일간/주간/월간 탭). 매출/건수/객단가/온오프라인은 POS 지표(data_001/002/005/006)를 그대로 재사용
 export const homeIndicators: Record<string, Indicator> = {
   revenue: posIndicators.totalRevenue,
   orders: posIndicators.totalOrders,
   aov: posIndicators.aov,
-  // (v4) 주간/월간 탭에만 노출되는 일평균 지표 — POS 지표(data_025/026)를 그대로 재사용
+  // (v4) 주간/월간 탭에만 노출되는 일평균 지표 — POS 지표(data_003/004)를 그대로 재사용
   dailyAvgRevenue: posIndicators.dailyAvgRevenue,
   dailyAvgOrders: posIndicators.dailyAvgOrders,
   onlineOffline: posIndicators.onlineOffline,
-  // (v4) 주간=누적, 월간=평균으로 산식 자체가 달라서 딜리버리(data_006/007)와 같은 기준으로 분리.
+  // (v4) 주간=누적, 월간=평균으로 산식 자체가 달라서 딜리버리(data_020/021)와 같은 기준으로 분리.
   // 홈 실시간 카드(구 data_039)와도 같은 데이터라 통합 — 홈에서는 항상 이번 주만, 날짜별 보기 주간 탭에서는
   // 화살표로 과거 주까지 조회 가능. 홈 화면 UI에만 있는 요일별 객단가 스트립·주간누적총액 배지도 이 지표 정의에 포함
   weekdayCumulative: {
-    id: "data_034",
+    id: "data_007",
     지표명: "요일별 매출 누적 + 주간 총액 (날짜별 보기 주간 / 홈 실시간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -33,7 +33,7 @@ export const homeIndicators: Record<string, Indicator> = {
       "(날짜별 보기 주간 탭에서는 막대차트만 노출)",
   },
   weekdayAverage: {
-    id: "data_045",
+    id: "data_008",
     지표명: "요일별 매출 평균 (날짜별 보기, 월간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -44,7 +44,7 @@ export const homeIndicators: Record<string, Indicator> = {
     차트형태: "요일별 막대차트 (월~일 7개)",
   },
   channelRevenue: {
-    id: "data_035",
+    id: "data_009",
     지표명: "채널별 매출 (홈, POS 기준)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -56,7 +56,7 @@ export const homeIndicators: Record<string, Indicator> = {
   },
   // (v4) 일간=실측치, 주간·월간=일평균으로 산식이 달라서 분리 (요일별 매출과 같은 이유). 주간·월간은 계산식이 같아 하나로 공유
   hourlyOrders: {
-    id: "data_040",
+    id: "data_010",
     지표명: "시간대별 주문건수 (날짜별 보기, 일간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -67,7 +67,7 @@ export const homeIndicators: Record<string, Indicator> = {
     차트형태: "세로 막대차트 (2시간 단위 7구간)",
   },
   hourlyOrdersAvg: {
-    id: "data_046",
+    id: "data_011",
     지표명: "시간대별 주문건수 일평균 (날짜별 보기, 주간·월간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -78,7 +78,7 @@ export const homeIndicators: Record<string, Indicator> = {
     차트형태: "세로 막대차트 (2시간 단위 7구간)",
   },
   topProducts: {
-    id: "data_043",
+    id: "data_012",
     지표명: "인기상품 TOP3 (날짜별 보기)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -94,7 +94,7 @@ export const homeIndicators: Record<string, Indicator> = {
 // (v4) 매출/주문건수/객단가/주간누적은 posIndicators·homeIndicators와 통합되어 이 맵에서 제거됨(구 data_036/037/038/039)
 export const homeRealtimeIndicators: Record<string, Indicator> = {
   last30: {
-    id: "data_041",
+    id: "data_013",
     지표명: "지난 달 해피포인트 적립·사용 주문건수",
     실시간여부: "N",
     정의:
@@ -107,7 +107,7 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
     차트형태: "적립·사용 주문건수 + 지역 평균 건수 병기, 카드 전체가 멤버십 고객 분석으로 이어지는 클릭형 CTA",
   },
   deliveryShare: {
-    id: "data_042",
+    id: "data_014",
     지표명: "딜리버리 점유율 (홈 실시간)",
     실시간여부: "Y",
     정의: "최근 30일 총 매출 중 딜리버리(배달앱) 채널 매출이 차지하는 비중",
