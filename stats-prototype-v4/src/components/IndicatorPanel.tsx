@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import type { Indicator } from "../data/types";
 import { IndicatorContext } from "../context/IndicatorContext";
 import Tooltip from "./Tooltip";
@@ -11,6 +11,12 @@ interface Props {
 
 export default function IndicatorPanel({ indicators, tabLabel, onClose }: Props) {
   const { activeId } = useContext(IndicatorContext);
+  const activeRowRef = useRef<HTMLTableRowElement | null>(null);
+
+  // 차트의 지표 아이디를 클릭해 activeId가 바뀌면, 표 안에서 해당 행이 보이는 위치로 스크롤 이동
+  useEffect(() => {
+    activeRowRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [activeId]);
 
   return (
     <div className="panel">
@@ -45,7 +51,11 @@ export default function IndicatorPanel({ indicators, tabLabel, onClose }: Props)
               const isActive = ind.id === activeId;
               const isDim = activeId !== null && !isActive;
               return (
-                <tr key={ind.id} className={`${isActive ? "is-active" : ""}${isDim ? " is-dim" : ""}`}>
+                <tr
+                  key={ind.id}
+                  ref={isActive ? activeRowRef : undefined}
+                  className={`${isActive ? "is-active" : ""}${isDim ? " is-dim" : ""}`}
+                >
                   <td className="row-id">{ind.id}</td>
                   <td className="col-realtime">
                     <span className={`rt-badge ${ind.실시간여부 === "Y" ? "rt-badge--y" : "rt-badge--n"}`}>
