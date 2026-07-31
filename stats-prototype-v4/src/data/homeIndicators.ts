@@ -10,13 +10,24 @@ export const homeIndicators: Record<string, Indicator> = {
   orders: posIndicators.totalOrders,
   aov: posIndicators.aov,
   onlineOffline: posIndicators.onlineOffline,
-  weekday: {
+  // (v4) 주간=누적, 월간=평균으로 산식 자체가 달라서 딜리버리(data_006/007)와 같은 기준으로 분리
+  weekdayCumulative: {
     id: "data_034",
-    지표명: "요일별 매출 (날짜별 보기)",
+    지표명: "요일별 매출 누적 (날짜별 보기, 주간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
-    정의:
-      "주간 탭 = 이번 주 누적(전일자 마감 기준, 아직 지나지 않은 요일은 표시 안 함) / 월간 탭 = 해당 월 중 마감된 요일 발생분의 평균. 일간 탭에는 노출하지 않음",
+    정의: "주간 탭 기준, 이번 주 누적(전일자 마감 기준, 아직 지나지 않은 요일은 표시 안 함)",
+    원천데이터: "",
+    산식: "",
+    제공목적: "요일 패턴 파악",
+    차트형태: "요일별 막대차트 (월~일 7개)",
+  },
+  weekdayAverage: {
+    id: "data_045",
+    지표명: "요일별 매출 평균 (날짜별 보기, 월간)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
+    정의: "월간 탭 기준, 해당 월 중 마감된 요일 발생분의 평균",
     원천데이터: "",
     산식: "",
     제공목적: "요일 패턴 파악",

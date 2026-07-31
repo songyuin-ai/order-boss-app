@@ -37,6 +37,8 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
   const periods = data.kpiPeriods;
   const period = periods[periodIndex] ?? periods[0];
   const isDaily = tab === "daily";
+  // 주간=누적(data_034), 월간=평균(data_045) — 산식이 달라 별도 지표로 분리
+  const weekdayIndicator = tab === "monthly" ? homeIndicators.weekdayAverage : homeIndicators.weekdayCumulative;
 
   // 마감된 기간은 전일/전주/전월 대비 배지를 보여주고, 진행 중인 현재 기간(오늘/이번 주/이번 달)은
   // 지역 평균 대비 배지만 보여줌 — period.xxxDeltaBadge 유무 자체가 마감 여부를 나타냄
@@ -44,7 +46,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
     homeIndicators.revenue,
     homeIndicators.orders,
     homeIndicators.aov,
-    ...(!isDaily ? [homeIndicators.weekday] : []),
+    ...(!isDaily ? [weekdayIndicator] : []),
     homeIndicators.onlineOffline,
     homeIndicators.channelRevenue,
     homeIndicators.topProducts,
@@ -131,7 +133,7 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
 
         {/* 일간 탭에는 요일별 매출을 노출하지 않음 (하루치 조회에는 요일 분포 차트가 맞지 않음) */}
         {!isDaily && (
-          <Card title="요일별 매출" indicator={homeIndicators.weekday}>
+          <Card title="요일별 매출" indicator={weekdayIndicator}>
             <BarChart
               data={data.weekday.map((w) => ({
                 label: w.label,
