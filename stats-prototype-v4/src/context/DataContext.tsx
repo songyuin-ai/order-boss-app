@@ -1,38 +1,40 @@
-import { createContext, useContext, type ReactNode } from "react";
-import { homeIndicators, homeRealtimeIndicators } from "../data/homeIndicators";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { homeIndicators as defaultHomeIndicators, homeRealtimeIndicators as defaultHomeRealtimeIndicators } from "../data/homeIndicators";
 import { homeDaily, homeWeekly, homeMonthly, homeRealtime, type HomeTabData, type HomeRealtimeData } from "../data/homeDummy";
-import { deliveryIndicators } from "../data/deliveryIndicators";
+import { deliveryIndicators as defaultDeliveryIndicators } from "../data/deliveryIndicators";
 import { daily as deliveryDaily, weekly as deliveryWeekly, monthly as deliveryMonthly, type DeliveryPeriodSetData } from "../data/deliveryDummy";
-import { customerCompositionIndicators } from "../data/customerCompositionIndicators";
+import { customerCompositionIndicators as defaultCustomerCompositionIndicators } from "../data/customerCompositionIndicators";
 import { byPeriod as customerCompositionByPeriod, segmentTrend, type CustomerCompositionPeriodData } from "../data/customerCompositionDummy";
-import { customerDetailIndicators } from "../data/customerDetailIndicators";
+import { customerDetailIndicators as defaultCustomerDetailIndicators } from "../data/customerDetailIndicators";
 import { byPeriod as customerDetailByPeriod, type CustomerDetailPeriodData } from "../data/customerDetailDummy";
-import { segmentDetailIndicators } from "../data/segmentDetailIndicators";
+import { segmentDetailIndicators as defaultSegmentDetailIndicators } from "../data/segmentDetailIndicators";
 import { byPeriod as segmentDetailByPeriod, type SegmentDetailPeriodData } from "../data/segmentDetailDummy";
-import { membershipIndicators } from "../data/membershipIndicators";
+import { membershipIndicators as defaultMembershipIndicators } from "../data/membershipIndicators";
 import { byPeriod as membershipByPeriod, type MembershipPeriodData } from "../data/membershipDummy";
-import { kpiIndicators } from "../data/kpiIndicators";
-import { posIndicators } from "../data/posIndicators";
+import { kpiIndicators as defaultKpiIndicators } from "../data/kpiIndicators";
+import { posIndicators as defaultPosIndicators } from "../data/posIndicators";
 import { posKpiPeriods, posHourly, posOnlineOffline } from "../data/posDummy";
-import type { PosKpiPeriod, HourlyBucket, OnlineOfflineRatio } from "../data/types";
+import type { Indicator, PosKpiPeriod, HourlyBucket, OnlineOfflineRatio } from "../data/types";
+import { loadIndicators } from "../lib/loadIndicators";
+import { SHEET_ID } from "../config";
 
 interface DataShape {
-  homeIndicators: typeof homeIndicators;
-  homeRealtimeIndicators: typeof homeRealtimeIndicators;
+  homeIndicators: typeof defaultHomeIndicators;
+  homeRealtimeIndicators: typeof defaultHomeRealtimeIndicators;
   home: { daily: HomeTabData; weekly: HomeTabData; monthly: HomeTabData };
   homeRealtime: HomeRealtimeData;
-  deliveryIndicators: typeof deliveryIndicators;
+  deliveryIndicators: typeof defaultDeliveryIndicators;
   delivery: { daily: DeliveryPeriodSetData; weekly: DeliveryPeriodSetData; monthly: DeliveryPeriodSetData };
-  customerCompositionIndicators: typeof customerCompositionIndicators;
+  customerCompositionIndicators: typeof defaultCustomerCompositionIndicators;
   customerComposition: { byPeriod: Record<string, CustomerCompositionPeriodData>; segmentTrend: typeof segmentTrend };
-  customerDetailIndicators: typeof customerDetailIndicators;
+  customerDetailIndicators: typeof defaultCustomerDetailIndicators;
   customerDetail: { byPeriod: Record<string, CustomerDetailPeriodData> };
-  segmentDetailIndicators: typeof segmentDetailIndicators;
+  segmentDetailIndicators: typeof defaultSegmentDetailIndicators;
   segmentDetail: { byPeriod: Record<string, SegmentDetailPeriodData> };
-  membershipIndicators: typeof membershipIndicators;
+  membershipIndicators: typeof defaultMembershipIndicators;
   membership: { byPeriod: Record<string, MembershipPeriodData> };
-  kpiIndicators: typeof kpiIndicators;
-  posIndicators: typeof posIndicators;
+  kpiIndicators: typeof defaultKpiIndicators;
+  posIndicators: typeof defaultPosIndicators;
   pos: {
     kpiPeriods: Record<string, PosKpiPeriod[]>;
     hourly: Record<string, HourlyBucket[]>;
@@ -40,33 +42,75 @@ interface DataShape {
   };
 }
 
-// v3는 구글시트 연동 없이 더미데이터만 사용 (화면 구조가 먼저 정리된 뒤 별도 요청 시 연동 예정)
-const data: DataShape = {
-  homeIndicators,
-  homeRealtimeIndicators,
+// 지표 표(우측 데이터 목록)에 쓰이는 8개 지표 맵만 구글시트로 덮어씀. 차트 더미 수치(home/delivery/pos 등)는 연동 대상 아님
+function mergeIndicators<T extends Record<string, Indicator>>(defaults: T, byId: Record<string, Indicator>): T {
+  const merged = {} as T;
+  (Object.keys(defaults) as (keyof T)[]).forEach((key) => {
+    const def = defaults[key];
+    const fetched = byId[def.id];
+    merged[key] = (fetched ? { ...fetched } : def) as T[keyof T];
+  });
+  return merged;
+}
+
+const defaultShape: DataShape = {
+  homeIndicators: defaultHomeIndicators,
+  homeRealtimeIndicators: defaultHomeRealtimeIndicators,
   home: { daily: homeDaily, weekly: homeWeekly, monthly: homeMonthly },
   homeRealtime,
-  deliveryIndicators,
+  deliveryIndicators: defaultDeliveryIndicators,
   delivery: { daily: deliveryDaily, weekly: deliveryWeekly, monthly: deliveryMonthly },
-  customerCompositionIndicators,
+  customerCompositionIndicators: defaultCustomerCompositionIndicators,
   customerComposition: { byPeriod: customerCompositionByPeriod, segmentTrend },
-  customerDetailIndicators,
+  customerDetailIndicators: defaultCustomerDetailIndicators,
   customerDetail: { byPeriod: customerDetailByPeriod },
-  segmentDetailIndicators,
+  segmentDetailIndicators: defaultSegmentDetailIndicators,
   segmentDetail: { byPeriod: segmentDetailByPeriod },
-  membershipIndicators,
+  membershipIndicators: defaultMembershipIndicators,
   membership: { byPeriod: membershipByPeriod },
-  kpiIndicators,
-  posIndicators,
+  kpiIndicators: defaultKpiIndicators,
+  posIndicators: defaultPosIndicators,
   pos: { kpiPeriods: posKpiPeriods, hourly: posHourly, onlineOffline: posOnlineOffline },
 };
 
-const DataContext = createContext<DataShape>(data);
+const DataContext = createContext<DataShape>(defaultShape);
 
 export function useAppData() {
   return useContext(DataContext);
 }
 
 export function DataProvider({ children }: { children: ReactNode }) {
+  const [data, setData] = useState<DataShape>(defaultShape);
+
+  // 앱 로드 시 1회만 구글시트를 읽어 지표 표 내용을 덮어씀 (실패하거나 SHEET_ID 미설정 시 내장 더미데이터 그대로 유지)
+  useEffect(() => {
+    if (!SHEET_ID) return;
+
+    let cancelled = false;
+    loadIndicators()
+      .then((byId) => {
+        if (cancelled) return;
+        setData((prev) => ({
+          ...prev,
+          homeIndicators: mergeIndicators(defaultHomeIndicators, byId),
+          homeRealtimeIndicators: mergeIndicators(defaultHomeRealtimeIndicators, byId),
+          deliveryIndicators: mergeIndicators(defaultDeliveryIndicators, byId),
+          customerCompositionIndicators: mergeIndicators(defaultCustomerCompositionIndicators, byId),
+          customerDetailIndicators: mergeIndicators(defaultCustomerDetailIndicators, byId),
+          segmentDetailIndicators: mergeIndicators(defaultSegmentDetailIndicators, byId),
+          membershipIndicators: mergeIndicators(defaultMembershipIndicators, byId),
+          kpiIndicators: mergeIndicators(defaultKpiIndicators, byId),
+          posIndicators: mergeIndicators(defaultPosIndicators, byId),
+        }));
+      })
+      .catch(() => {
+        // 실패 시 조용히 폴백(내장 더미데이터) 유지
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return <DataContext.Provider value={data}>{children}</DataContext.Provider>;
 }
