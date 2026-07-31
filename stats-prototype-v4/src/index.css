@@ -1118,9 +1118,29 @@ body {
 
 .panel__head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 4px;
+}
+
+.panel__head-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.panel__close {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.panel__close:hover {
+  color: var(--text);
 }
 
 .panel__title {
@@ -1517,6 +1537,24 @@ body {
 .login-screen__demo span:first-child {
   font-weight: 700;
   color: var(--text);
+}
+
+.skip-login-link {
+  margin-top: 16px;
+  align-self: center;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  opacity: 0.7;
+}
+
+.skip-login-link:hover {
+  opacity: 1;
+  color: var(--accent);
 }
 
 .auth-submit:disabled {

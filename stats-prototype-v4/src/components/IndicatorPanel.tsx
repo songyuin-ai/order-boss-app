@@ -6,16 +6,22 @@ import Tooltip from "./Tooltip";
 interface Props {
   indicators: Indicator[];
   tabLabel: string;
+  onClose: () => void;
 }
 
-export default function IndicatorPanel({ indicators, tabLabel }: Props) {
+export default function IndicatorPanel({ indicators, tabLabel, onClose }: Props) {
   const { activeId } = useContext(IndicatorContext);
 
   return (
     <div className="panel">
       <div className="panel__head">
-        <span className="panel__title">지표 표</span>
-        <span className="panel__tab-label">{tabLabel}</span>
+        <div className="panel__head-titles">
+          <span className="panel__title">지표 표</span>
+          <span className="panel__tab-label">{tabLabel}</span>
+        </div>
+        <button type="button" className="panel__close" aria-label="지표 표 닫기" onClick={onClose}>
+          ×
+        </button>
       </div>
       <div className="panel__hint">
         차트의 식별자(예: <b>data_001</b>)를 클릭하면 아래 표에서 해당 행이 강조되고 나머지는

@@ -91,7 +91,11 @@ function AppShell({
   const [panelLabel, setPanelLabel] = useState("");
   const revenueByStoreId = useRealtimeRevenue();
 
-  const toggle = (id: string) => setActiveId((prev) => (prev === id ? null : id));
+  const toggle = (id: string) => {
+    // 차트 우상단 지표 아이디를 클릭하면, 지표 표가 닫혀있어도 함께 열어줌
+    setDataListOpened(true);
+    setActiveId((prev) => (prev === id ? null : id));
+  };
   const clear = () => setActiveId(null);
 
   const handlePanelChange = (indicators: Indicator[], label: string) => {
@@ -214,7 +218,13 @@ function AppShell({
               />
             </MobileFrame>
           </div>
-          {dataListOpened && <IndicatorPanel indicators={panelIndicators} tabLabel={panelLabel} />}
+          {dataListOpened && (
+            <IndicatorPanel
+              indicators={panelIndicators}
+              tabLabel={panelLabel}
+              onClose={() => setDataListOpened(false)}
+            />
+          )}
         </div>
       </div>
     </IndicatorContext.Provider>
