@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
-  const { homeRealtimeIndicators, homeRealtime } = useAppData();
+  const { homeRealtimeIndicators, homeIndicators, posIndicators, homeRealtime } = useAppData();
   const { revenue, orders, aov, weekCumulative, weekTotal, last30, updatedAtLabel } = homeRealtime;
 
   // 프로토타입 데모용 — 주변매장 평균 대비 적음/많음 두 시나리오를 케이스 전환 버튼으로 바로 보여줌
@@ -29,19 +29,20 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const caseToneColor = isBelowRegionAvg ? "var(--warning)" : "var(--success)";
 
   // 1순위(일간 요약) → 2순위(30일 후킹) → 3순위(주간 보충) 순서로, 지표표에도 동일한 우선순위로 노출
+  // (v4) 매출/주문건수/객단가/주간누적은 POS·날짜별보기와 공용 지표(data_023/024/028/034)를 그대로 사용
   const indicators: Indicator[] = [
-    homeRealtimeIndicators.revenue,
-    homeRealtimeIndicators.orders,
-    homeRealtimeIndicators.aov,
+    posIndicators.totalRevenue,
+    posIndicators.totalOrders,
+    posIndicators.aov,
     homeRealtimeIndicators.last30,
     homeRealtimeIndicators.deliveryShare,
-    homeRealtimeIndicators.weekCumulative,
+    homeIndicators.weekdayCumulative,
   ];
 
   useEffect(() => {
     onPanelChange(indicators, "홈 · 실시간 대시보드");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [homeRealtimeIndicators]);
+  }, [homeRealtimeIndicators, homeIndicators, posIndicators]);
 
   return (
     <div className="screen">
@@ -59,7 +60,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             "오늘"은 아직 마감되지 않은 진행 중인 기간이라 전일 대비는 표시하지 않음 (지역 평균 대비만 상시 표시) */}
         <div className="daily-summary">
           <div className="daily-summary__headline">
-            <IdBadge id={homeRealtimeIndicators.revenue.id} />
+            <IdBadge id={posIndicators.totalRevenue.id} />
             <span className="daily-summary__label">오늘 매출</span>
             <span className="daily-summary__value">{formatWon(revenue.value)}</span>
             <div className="daily-summary__badges">
@@ -69,13 +70,13 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
 
           <div className="daily-summary__grid">
             <div className="daily-summary__stat">
-              <IdBadge id={homeRealtimeIndicators.orders.id} />
+              <IdBadge id={posIndicators.totalOrders.id} />
               <span className="daily-summary__stat-label">주문건수</span>
               <span className="daily-summary__stat-value">{orders.value.toLocaleString("ko-KR")}건</span>
               <span className="daily-summary__stat-delta">지역 {formatSignedNumber(orders.vsRegionPct, "%")}</span>
             </div>
             <div className="daily-summary__stat">
-              <IdBadge id={homeRealtimeIndicators.aov.id} />
+              <IdBadge id={posIndicators.aov.id} />
               <span className="daily-summary__stat-label">객단가</span>
               <span className="daily-summary__stat-value">{formatWon(aov.value)}</span>
               <span className="daily-summary__stat-delta">지역 {formatSignedNumber(aov.vsRegionPct, "%")}</span>
@@ -147,7 +148,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         {/* [3순위] 주간 상세 — 관심 있는 점주만 스크롤해서 보는 보충 자료 */}
         <div className="section-label">주간 상세</div>
 
-        <Card title="주간 매출 누적 (이번 주)" indicator={homeRealtimeIndicators.weekCumulative}>
+        <Card title="주간 매출 누적 (이번 주)" indicator={homeIndicators.weekdayCumulative}>
           <div className="week-total">
             <span className="week-total__value">{formatWon(weekTotal.value)}</span>
             <div className="week-total__badges">
