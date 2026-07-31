@@ -3,7 +3,7 @@ import type { Indicator } from "./types";
 // 해피포인트 > 상단 KPI 요약존 (멤버십 손님 규모 · 침투율)
 export const kpiIndicators: Record<string, Indicator> = {
   memberCustomers: {
-    id: "data_034",
+    id: "data_033",
     지표명: "멤버십 손님 수",
     실시간여부: "N",
     정의: "화면 상단 '지난 주/지난 달' 고정 탭 기준, 해피포인트를 적립·사용하며 방문한 유니크 손님 수(휴면 제외)",
@@ -13,7 +13,7 @@ export const kpiIndicators: Record<string, Indicator> = {
     차트형태: "상단 KPI 카드 (인원수 크게 표시, 멤버십 적립·사용 주문건수와 한 카드로 묶어 연결된 서술로 제공)",
   },
   memberOrderShare: {
-    id: "data_035",
+    id: "data_034",
     지표명: "멤버십 적립·사용 주문건수",
     실시간여부: "N",
     정의:

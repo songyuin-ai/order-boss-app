@@ -3,7 +3,7 @@ import type { Indicator } from "./types";
 // 해피포인트 > 고객 구성
 export const customerCompositionIndicators: Record<string, Indicator> = {
   composition: {
-    id: "data_027",
+    id: "data_026",
     지표명: "우리 매장 고객 구성",
     실시간여부: "N",
     정의: "세그먼트(단골/신규/일반/휴면)별 고객수 비중, 매장 기준. 화면 상단 '지난 주/지난 달' 고정 탭으로 조회 시점 선택(배치 스냅샷, 진행 중인 이번 주·이번 달은 미제공)",
@@ -20,7 +20,7 @@ export const customerCompositionIndicators: Record<string, Indicator> = {
       "※ 네 세그먼트는 서로 배타적 · 신규 판정에는 최대 1년치 구매이력 필요",
   },
   demographic: {
-    id: "data_028",
+    id: "data_027",
     지표명: "연령/성별 방문 손님 분포",
     실시간여부: "N",
     정의: "연령대+성별 조합 계열별 고객 구성비(상위 5개+기타), 화면 상단 '지난 주/지난 달' 고정 탭 기준",
@@ -31,7 +31,7 @@ export const customerCompositionIndicators: Record<string, Indicator> = {
       "파이 차트 (상위 5개 계열 + 기타, 범례에 계열명·구성비 표시). 단골비율 최고 계열과 휴면비율 최고 계열을 각각 배지로 구분 표시",
   },
   trend: {
-    id: "data_029",
+    id: "data_028",
     지표명: "단골·신규 추이 (최근 3개월) + 주변매장 평균 비교",
     실시간여부: "N",
     정의: "월별 세그먼트 인원수 변화, 화면 상단 기간 탭과 무관하게 항상 최근 3개월 고정 표시. 단골/신규 탭 전환 시 월별로 우리 매장과 주변매장 평균을 나란히 비교",

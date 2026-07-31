@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
-  const { homeRealtimeIndicators, homeIndicators, posIndicators, homeRealtime } = useAppData();
+  const { homeRealtimeIndicators, homeIndicators, posIndicators, homeRealtime, home } = useAppData();
   const { revenue, orders, aov, weekCumulative, weekTotal, last30, updatedAtLabel } = homeRealtime;
 
   // 프로토타입 데모용 — 주변매장 평균 대비 적음/많음 두 시나리오를 케이스 전환 버튼으로 바로 보여줌
@@ -29,13 +29,13 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const caseToneColor = isBelowRegionAvg ? "var(--warning)" : "var(--success)";
 
   // 1순위(일간 요약) → 2순위(30일 후킹) → 3순위(주간 보충) 순서로, 지표표에도 동일한 우선순위로 노출
-  // (v4) 매출/주문건수/객단가/주간누적은 POS·날짜별보기와 공용 지표(data_023/024/028/034)를 그대로 사용
+  // (v4) 매출/주문건수/객단가/온오프라인점유율/주간누적은 POS·날짜별보기와 공용 지표를 그대로 사용
   const indicators: Indicator[] = [
     posIndicators.totalRevenue,
     posIndicators.totalOrders,
     posIndicators.aov,
     homeRealtimeIndicators.last30,
-    homeRealtimeIndicators.deliveryShare,
+    posIndicators.onlineOffline,
     homeIndicators.weekdayCumulative,
   ];
 
@@ -127,21 +127,22 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           </div>
         </Card>
 
-        {/* 딜리버리 점유율 — 포인트 리포트와 기준(주문건수 절대값 vs 매출 비중)이 달라 별도 섹션으로 분리 */}
-        <Card title="딜리버리 점유율 (최근 30일)" indicator={homeRealtimeIndicators.deliveryShare}>
+        {/* 온라인/오프라인 매출 점유율 — 포인트 리포트와 기준(주문건수 절대값 vs 매출 비중)이 달라 별도 섹션으로 분리
+            (v4) "딜리버리 점유율"(배달앱만)과 "온라인 점유율"(배달+픽업)이 용어만 다르고 헷갈린다는 피드백으로 온라인 점유율로 통일 */}
+        <Card title="온라인 매출 점유율 (오늘)" indicator={posIndicators.onlineOffline}>
           <div className="delivery-share" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
             <DonutChart
-              primaryValue={last30.deliveryRevenuePct}
-              secondaryValue={Math.round((100 - last30.deliveryRevenuePct) * 10) / 10}
-              primaryLabel="딜리버리"
-              secondaryLabel="그 외"
+              primaryValue={home.daily.onlineOffline.online}
+              secondaryValue={home.daily.onlineOffline.offline}
+              primaryLabel="온라인"
+              secondaryLabel="오프라인"
             />
             <div className="delivery-share__body">
-              <span className="meter-row__cta">딜리버리 고객 분석 상세보기 ›</span>
+              <span className="meter-row__cta">딜리버리 통계 자세히 보기 ›</span>
             </div>
           </div>
           <p className="chart-note">
-            ※ 위 리포트는 적립·사용 주문 건수(절대값) 기준, 딜리버리 점유율은 매출 비중(%) 기준으로 서로 다른 지표예요.
+            ※ 위 리포트는 적립·사용 주문 건수(절대값) 기준, 온라인 점유율은 매출 비중(%) 기준으로 서로 다른 지표예요.
           </p>
         </Card>
 

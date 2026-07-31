@@ -3,7 +3,7 @@ import type { Indicator } from "./types";
 // 해피포인트 > 손님 상세분석 (세그먼트 탭: 전체/단골/신규/일반/휴면)
 export const segmentDetailIndicators: Record<string, Indicator> = {
   segmentStory: {
-    id: "data_032",
+    id: "data_031",
     지표명: "손님 상세분석 (세그먼트별)",
     실시간여부: "N",
     정의:

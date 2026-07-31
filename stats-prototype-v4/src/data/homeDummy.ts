@@ -24,8 +24,6 @@ export interface HomeLast30 {
   // 고객상세분석이 "지난 주/지난 달" 고정 배치 스냅샷으로 바뀌면서 최근 30일 롤링이 아닌 "지난 달" 고정 기준(필드명은 유지)
   memberOrderCount: number;
   regionAvgMemberOrderCount: number;
-  // 딜리버리 점유율은 최근 30일 롤링 매출 기준 그대로 유지 (이번 변경과 무관한 별도 지표)
-  deliveryRevenuePct: number;
 }
 
 export interface HomeRealtimeData {
@@ -346,6 +344,5 @@ export const homeRealtime: HomeRealtimeData = {
   last30: {
     memberOrderCount: MEMBER_ORDER_COUNT_BY_CASE.low,
     regionAvgMemberOrderCount: 294,
-    deliveryRevenuePct: 29.4,
   },
 };

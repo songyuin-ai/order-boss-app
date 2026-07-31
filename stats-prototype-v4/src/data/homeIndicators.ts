@@ -13,7 +13,7 @@ export const homeIndicators: Record<string, Indicator> = {
   dailyAvgRevenue: posIndicators.dailyAvgRevenue,
   dailyAvgOrders: posIndicators.dailyAvgOrders,
   onlineOffline: posIndicators.onlineOffline,
-  // (v4) 주간=누적, 월간=평균으로 산식 자체가 달라서 딜리버리(data_020/021)와 같은 기준으로 분리.
+  // (v4) 주간=누적, 월간=평균으로 산식 자체가 달라서 딜리버리(data_019/020)와 같은 기준으로 분리.
   // 홈 실시간 카드(구 data_039)와도 같은 데이터라 통합 — 홈에서는 항상 이번 주만, 날짜별 보기 주간 탭에서는
   // 화살표로 과거 주까지 조회 가능. 홈 화면 UI에만 있는 요일별 객단가 스트립·주간누적총액 배지도 이 지표 정의에 포함
   weekdayCumulative: {
@@ -91,7 +91,8 @@ export const homeIndicators: Record<string, Indicator> = {
 };
 
 // 홈(사장님앱 통합 메인화면) = 당일 기준 실시간 대시보드. 탭 없이 항상 "오늘" 고정
-// (v4) 매출/주문건수/객단가/주간누적은 posIndicators·homeIndicators와 통합되어 이 맵에서 제거됨(구 data_036/037/038/039)
+// (v4) 매출/주문건수/객단가/주간누적/온오프라인점유율은 posIndicators·homeIndicators와 통합되어 이 맵에서 제거됨
+// (구 data_036/037/038/039, 구 딜리버리 점유율 data_014는 온라인/오프라인 점유율(data_005)로 통합)
 export const homeRealtimeIndicators: Record<string, Indicator> = {
   last30: {
     id: "data_013",
@@ -105,15 +106,5 @@ export const homeRealtimeIndicators: Record<string, Indicator> = {
     산식: "",
     제공목적: "상세분석 리포트가 근거로 삼는 데이터 볼륨을 절대값으로 안내하고, 지역 평균과의 격차로 포인트 적립·사용 유도. ※ 이 지표만 고객상세분석 데이터 배치 갱신 주기를 따름(그 외 홈 지표는 실시간)",
     차트형태: "적립·사용 주문건수 + 지역 평균 건수 병기, 카드 전체가 멤버십 고객 분석으로 이어지는 클릭형 CTA",
-  },
-  deliveryShare: {
-    id: "data_014",
-    지표명: "딜리버리 점유율 (홈 실시간)",
-    실시간여부: "Y",
-    정의: "최근 30일 총 매출 중 딜리버리(배달앱) 채널 매출이 차지하는 비중",
-    원천데이터: "",
-    산식: "",
-    제공목적: "딜리버리 채널 기여도를 파악하고 딜리버리 고객 분석으로 드릴다운",
-    차트형태: "도넛차트(딜리버리 vs 그 외) + 상세분석 진입 링크",
   },
 };
