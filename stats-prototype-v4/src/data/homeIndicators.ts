@@ -5,6 +5,8 @@ import { posIndicators } from "./posIndicators";
 const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 달)만 실시간이며, 화살표로 과거 기간을 조회하면 마감된 배치 데이터예요.";
 
 // "날짜별 보기" 드릴다운 화면(일간/주간/월간 탭). 매출/건수/객단가/온오프라인은 POS 지표(data_001/002/005/006)를 그대로 재사용
+// (v4) "채널별 매출(오프라인+배달앱별 breakdown)"은 개별 배달채널 매출이 POS가 아닌 오더 거래원장 소스라
+// POS 기준 화면에 노출하는 게 데이터 정합성에 맞지 않아 제거 (딜리버리 탭의 채널별 매출로만 확인)
 export const homeIndicators: Record<string, Indicator> = {
   revenue: posIndicators.totalRevenue,
   orders: posIndicators.totalOrders,
@@ -43,20 +45,9 @@ export const homeIndicators: Record<string, Indicator> = {
     제공목적: "요일 패턴 파악",
     차트형태: "요일별 막대차트 (월~일 7개)",
   },
-  channelRevenue: {
-    id: "data_009",
-    지표명: "채널별 매출 (홈, POS 기준)",
-    실시간여부: "Y",
-    실시간참고: TAB_REALTIME_NOTE,
-    정의: "오프라인 매장 + 배달앱 채널별 매출 breakdown, 선택 탭 기준",
-    원천데이터: "",
-    산식: "",
-    제공목적: "채널별 성과 비교",
-    차트형태: "세로 막대차트 (오프라인 포함 6개 채널, 투명도 단계 적용)",
-  },
   // (v4) 일간=실측치, 주간·월간=일평균으로 산식이 달라서 분리 (요일별 매출과 같은 이유). 주간·월간은 계산식이 같아 하나로 공유
   hourlyOrders: {
-    id: "data_010",
+    id: "data_009",
     지표명: "시간대별 주문건수 (날짜별 보기, 일간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -67,7 +58,7 @@ export const homeIndicators: Record<string, Indicator> = {
     차트형태: "세로 막대차트 (2시간 단위 7구간)",
   },
   hourlyOrdersAvg: {
-    id: "data_011",
+    id: "data_010",
     지표명: "시간대별 주문건수 일평균 (날짜별 보기, 주간·월간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -78,7 +69,7 @@ export const homeIndicators: Record<string, Indicator> = {
     차트형태: "세로 막대차트 (2시간 단위 7구간)",
   },
   topProducts: {
-    id: "data_012",
+    id: "data_011",
     지표명: "인기상품 TOP3 (날짜별 보기)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -92,10 +83,10 @@ export const homeIndicators: Record<string, Indicator> = {
 
 // 홈(사장님앱 통합 메인화면) = 당일 기준 실시간 대시보드. 탭 없이 항상 "오늘" 고정
 // (v4) 매출/주문건수/객단가/주간누적/온오프라인점유율은 posIndicators·homeIndicators와 통합되어 이 맵에서 제거됨
-// (구 data_036/037/038/039, 구 딜리버리 점유율 data_014는 온라인/오프라인 점유율(data_005)로 통합)
+// (구 data_036/037/038/039, 구 "딜리버리 점유율"(홈 실시간 전용, 삭제됨)은 온라인/오프라인 점유율(data_005)로 통합)
 export const homeRealtimeIndicators: Record<string, Indicator> = {
   last30: {
-    id: "data_013",
+    id: "data_012",
     지표명: "지난 달 해피포인트 적립·사용 주문건수",
     실시간여부: "N",
     정의:

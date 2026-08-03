@@ -6,7 +6,7 @@ const TAB_REALTIME_NOTE = "진행 중인 현재 기간(오늘/이번 주/이번 
 // 딜리버리 > 딜리버리 통계
 export const deliveryIndicators: Record<string, Indicator> = {
   revenue: {
-    id: "data_014",
+    id: "data_013",
     지표명: "매출액",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -18,7 +18,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 좌상단)",
   },
   orders: {
-    id: "data_015",
+    id: "data_014",
     지표명: "주문 건수",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -30,7 +30,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 우상단)",
   },
   aov: {
-    id: "data_016",
+    id: "data_015",
     지표명: "객단가",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -42,7 +42,7 @@ export const deliveryIndicators: Record<string, Indicator> = {
     차트형태: "KPI 카드 (2x2 그리드 내, 좌하단)",
   },
   cancelRate: {
-    id: "data_017",
+    id: "data_016",
     지표명: "취소율",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
@@ -53,15 +53,27 @@ export const deliveryIndicators: Record<string, Indicator> = {
     제공목적: "운영 이슈 조기 파악",
     차트형태: "KPI 카드 (2x2 그리드 내, 우하단)",
   },
-  hourly: {
-    id: "data_018",
-    지표명: "시간대별 분포",
+  // (v4) 일간=실측치, 주간·월간=일평균으로 산식이 달라서 분리 (POS/홈의 시간대별 주문건수와 같은 이유). 주간·월간은 계산식이 같아 하나로 공유
+  hourlyOrders: {
+    id: "data_017",
+    지표명: "시간대별 주문건수 (일간)",
     실시간여부: "Y",
     실시간참고: TAB_REALTIME_NOTE,
-    정의: "1시간 단위 주문건수",
+    정의: "일간 탭 기준, 해당 일 시간대별 누적 주문건수(실측치)",
     원천데이터: "",
     산식: "",
     제공목적: "피크타임 파악, 인력배치 참고",
+    차트형태: "가로 세로 막대차트 (7개 시간대, 높이로 건수 표현)",
+  },
+  hourlyOrdersAvg: {
+    id: "data_018",
+    지표명: "시간대별 주문건수 일평균 (주간·월간)",
+    실시간여부: "Y",
+    실시간참고: TAB_REALTIME_NOTE,
+    정의: "주간·월간 탭 기준, 경과일 기준 시간대별 일평균 주문건수",
+    원천데이터: "",
+    산식: "",
+    제공목적: "피크타임 파악, 인력배치 참고 (평균 패턴)",
     차트형태: "가로 세로 막대차트 (7개 시간대, 높이로 건수 표현)",
   },
   weekdayCumulative: {

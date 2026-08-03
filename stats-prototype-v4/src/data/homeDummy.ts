@@ -1,4 +1,4 @@
-import type { WeekdayBar, ChannelRevenue, HourlyBucket, OnlineOfflineRatio } from "./types";
+import type { WeekdayBar, HourlyBucket, OnlineOfflineRatio } from "./types";
 
 export interface HomeRealtimeMetric {
   value: number;
@@ -63,13 +63,11 @@ export interface HomeTabData {
   kpiPeriods: HomeKpiPeriod[];
   weekday: WeekdayBar[];
   onlineOffline: OnlineOfflineRatio;
-  channelRevenue: ChannelRevenue[];
   topProducts: HomeTopProduct[];
   hourlyOrders: HourlyBucket[];
 }
 
 const WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"];
-const CHANNEL_ORDER = ["오프라인", "해피오더", "배민", "쿠팡이츠", "요기요", "땡겨요"];
 const HOUR_LABELS = ["06-09", "09-11", "11-13", "13-15", "15-17", "17-19", "19-21"];
 
 // 날짜별 보기는 마감된 과거 기간 + 진행 중인 현재 기간(오늘/이번 주/이번 달)까지 조회 가능.
@@ -163,10 +161,6 @@ export const homeDaily: HomeTabData = {
     isToday: i === 6,
   })),
   onlineOffline: { online: 42, offline: 58 },
-  channelRevenue: [1880000, 620000, 420000, 210000, 90000, 20000].map((v, i) => ({
-    channel: CHANNEL_ORDER[i],
-    value: v,
-  })),
   topProducts: [
     { rank: 1, name: "후라이드치킨", orderCount: 42, revenueSharePct: 18.5 },
     { rank: 2, name: "양념치킨", orderCount: 35, revenueSharePct: 15.2 },
@@ -241,10 +235,6 @@ export const homeWeekly: HomeTabData = {
     };
   }),
   onlineOffline: { online: 40, offline: 60 },
-  channelRevenue: [12700000, 4600000, 2600000, 1300000, 550000, 170000].map((v, i) => ({
-    channel: CHANNEL_ORDER[i],
-    value: v,
-  })),
   topProducts: [
     { rank: 1, name: "후라이드치킨", orderCount: 268, revenueSharePct: 17.9 },
     { rank: 2, name: "양념치킨", orderCount: 231, revenueSharePct: 15.6 },
@@ -301,10 +291,6 @@ export const homeMonthly: HomeTabData = {
     value: v,
   })),
   onlineOffline: { online: 39, offline: 61 },
-  channelRevenue: [54000000, 19800000, 11200000, 5600000, 2400000, 700000].map((v, i) => ({
-    channel: CHANNEL_ORDER[i],
-    value: v,
-  })),
   topProducts: [
     { rank: 1, name: "후라이드치킨", orderCount: 1120, revenueSharePct: 17.2 },
     { rank: 2, name: "양념치킨", orderCount: 968, revenueSharePct: 14.8 },

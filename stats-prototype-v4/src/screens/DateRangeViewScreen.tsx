@@ -50,7 +50,6 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
     homeIndicators.aov,
     ...(!isDaily ? [homeIndicators.dailyAvgRevenue, homeIndicators.dailyAvgOrders, weekdayIndicator] : []),
     homeIndicators.onlineOffline,
-    homeIndicators.channelRevenue,
     homeIndicators.topProducts,
     hourlyIndicator,
   ];
@@ -169,18 +168,6 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
             secondaryValue={data.onlineOffline.online}
             primaryLabel="오프라인"
             secondaryLabel="온라인"
-          />
-        </Card>
-
-        <Card title="채널별 매출" indicator={homeIndicators.channelRevenue}>
-          <BarChart
-            data={data.channelRevenue.map((c, i) => ({
-              label: c.channel,
-              value: c.value,
-              valueLabel: formatCompactWon(c.value),
-              opacity: 1 - i * 0.13,
-            }))}
-            showValueLabels
           />
         </Card>
 

@@ -34,7 +34,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.orders,
       indicators.aov,
       indicators.cancelRate,
-      indicators.hourly,
+      indicators.hourlyOrders,
       indicators.topMenu,
       indicators.deliveryRatio,
       indicators.channelRevenue,
@@ -47,7 +47,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.cancelRate,
       indicators.dailyAvgRevenue,
       indicators.dailyAvgOrders,
-      indicators.hourly,
+      indicators.hourlyOrdersAvg,
       indicators.topMenu,
       indicators.deliveryRatio,
       indicators.channelRevenue,
@@ -59,7 +59,7 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
       indicators.cancelRate,
       indicators.dailyAvgRevenue,
       indicators.dailyAvgOrders,
-      indicators.hourly,
+      indicators.hourlyOrdersAvg,
       indicators.weekdayAverage,
       indicators.topMenu,
       indicators.deliveryRatio,
@@ -68,9 +68,11 @@ function buildTabIndicators(indicators: IndicatorMap): Record<string, Indicator[
   };
 }
 
-function HourlyCard({ data, indicators }: { data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
+function HourlyCard({ tab, data, indicators }: { tab: string; data: DeliveryPeriodSetData; indicators: IndicatorMap }) {
+  const isDaily = tab === "daily";
+  const hourlyIndicator = isDaily ? indicators.hourlyOrders : indicators.hourlyOrdersAvg;
   return (
-    <Card title="시간대별 분포" indicator={indicators.hourly}>
+    <Card title={isDaily ? "시간대별 주문건수" : "시간대별 주문건수 (일평균)"} indicator={hourlyIndicator}>
       <BarChart
         data={data.hourly.map((h) => ({ label: h.label, value: h.value, valueLabel: `${h.value}건` }))}
         showValueLabels
@@ -219,7 +221,7 @@ export default function DeliveryScreen({ onPanelChange }: Props) {
                 cancelRate: deliveryIndicators.cancelRate,
               }}
             />
-            <HourlyCard data={data} indicators={deliveryIndicators} />
+            <HourlyCard tab={tab} data={data} indicators={deliveryIndicators} />
             <TopMenuCard data={data} indicators={deliveryIndicators} />
             <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
             <ChannelCard data={data} indicators={deliveryIndicators} />
@@ -238,7 +240,7 @@ export default function DeliveryScreen({ onPanelChange }: Props) {
               }}
               dailyAvgIndicators={{ revenue: deliveryIndicators.dailyAvgRevenue, orders: deliveryIndicators.dailyAvgOrders }}
             />
-            <HourlyCard data={data} indicators={deliveryIndicators} />
+            <HourlyCard tab={tab} data={data} indicators={deliveryIndicators} />
             <TopMenuCard data={data} indicators={deliveryIndicators} />
             <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
             <ChannelCard data={data} indicators={deliveryIndicators} />
@@ -256,7 +258,7 @@ export default function DeliveryScreen({ onPanelChange }: Props) {
               }}
               dailyAvgIndicators={{ revenue: deliveryIndicators.dailyAvgRevenue, orders: deliveryIndicators.dailyAvgOrders }}
             />
-            <HourlyCard data={data} indicators={deliveryIndicators} />
+            <HourlyCard tab={tab} data={data} indicators={deliveryIndicators} />
             <WeekdayAverageCard data={data} indicators={deliveryIndicators} />
             <TopMenuCard data={data} indicators={deliveryIndicators} />
             <DeliveryRatioCard data={data} indicators={deliveryIndicators} />
