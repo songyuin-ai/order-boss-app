@@ -1,4 +1,5 @@
 import type { SegmentKey } from "../data/segmentDetailDummy";
+import { SEGMENT_COLORS } from "../data/segmentMeta";
 
 export interface SegmentRatioSlice {
   key: SegmentKey;
@@ -12,14 +13,6 @@ interface Props {
   active: SegmentKey;
   onSelect: (key: SegmentKey) => void;
 }
-
-// 사장님앱 카테고리컬 팔레트에서 세그먼트 4종에 고정 배정 (찐단골/떠나려는 단골/단골 후보 손님/가끔 오시는 손님)
-const COLORS: Record<SegmentKey, string> = {
-  realRegular: "#2a78d6",
-  leavingRegular: "#eda100",
-  candidate: "#1baf7a",
-  occasional: "#8a94a6",
-};
 
 const SIZE = 96;
 const CENTER = SIZE / 2;
@@ -72,7 +65,7 @@ export default function SegmentRatioChart({ segments, active, onSelect }: Props)
           <path
             key={s.key}
             d={donutSlicePath(s.start, s.end)}
-            fill={COLORS[s.key]}
+            fill={SEGMENT_COLORS[s.key]}
             opacity={active === s.key ? 1 : 0.4}
             onClick={() => onSelect(s.key)}
             style={{ cursor: "pointer" }}
@@ -87,7 +80,7 @@ export default function SegmentRatioChart({ segments, active, onSelect }: Props)
             className={`segment-ratio__legend-item${active === s.key ? " is-active" : ""}`}
             onClick={() => onSelect(s.key)}
           >
-            <span className="dot" style={{ background: COLORS[s.key] }} />
+            <span className="dot" style={{ background: SEGMENT_COLORS[s.key] }} />
             <span className="segment-ratio__legend-label">{s.label}</span>
             <span className="segment-ratio__legend-pct">{s.pct}%</span>
             <span className="segment-ratio__legend-count">{s.customerCount.toLocaleString("ko-KR")}명</span>

@@ -576,6 +576,15 @@ body {
   padding: 7px 4px;
 }
 
+.segmented--xs {
+  padding: 8px 16px;
+}
+
+.segmented--xs .segmented__btn {
+  font-size: 10.5px;
+  padding: 6px 3px;
+}
+
 .segmented__btn.is-active {
   background: var(--accent);
   color: #fff;
@@ -1006,6 +1015,24 @@ body {
   color: var(--text-secondary);
 }
 
+/* 세그먼트 비율 → 상세분석으로 자연스럽게 이어지는 구간의 소제목.
+   카드 경계를 새로 긋지 않고, 위쪽에 옅은 구분선만 둬서 하나의 흐름처럼 보이게 함 */
+.segment-combined__subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.segment-combined__subheader-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
 /* 객단가(avgOrd) 필터 토글 */
 .avgord-toggle {
   display: flex;
@@ -1057,6 +1084,13 @@ body {
 }
 
 /* 세그먼트별 상세분석 */
+.segment-detail__group-header {
+  margin-top: 14px;
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+
 .segment-detail__copy {
   margin: 10px 0 0;
   font-size: 12.5px;
