@@ -1015,7 +1015,7 @@ body {
   color: var(--text-secondary);
 }
 
-/* 세그먼트 비율 → 상세분석으로 자연스럽게 이어지는 구간의 소제목.
+/* 세그먼트 비율 → 상세분석으로 자연스럽게 이어지는 구간.
    카드 경계를 새로 긋지 않고, 위쪽에 옅은 구분선만 둬서 하나의 흐름처럼 보이게 함 */
 .segment-combined__subheader {
   display: flex;
@@ -1025,12 +1025,6 @@ body {
   margin-top: 18px;
   padding-top: 14px;
   border-top: 1px solid var(--border);
-}
-
-.segment-combined__subheader-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-secondary);
 }
 
 /* 객단가(avgOrd) 필터 토글 */
@@ -1600,8 +1594,7 @@ body {
 
 /* 세그먼트 구분 기준 안내 링크 (우리가게 손님 구성 카드 내) */
 .segment-info-link {
-  display: block;
-  margin-top: 6px;
+  display: inline-block;
   background: none;
   border: none;
   padding: 0;
