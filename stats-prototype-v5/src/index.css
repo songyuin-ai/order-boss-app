@@ -1558,6 +1558,82 @@ body {
   font-size: 14px;
 }
 
+/* 손님 그룹 구분 기준 안내 바텀시트 */
+.segment-info__intro {
+  margin: 0 0 14px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.segment-info__criteria {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+.segment-info__criteria-q {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.segment-info__criteria-a {
+  margin-top: 2px;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.segment-info__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.segment-info__group {
+  display: flex;
+  gap: 10px;
+}
+
+.segment-info__group-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.segment-info__group-name {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.segment-info__group-desc {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* 세그먼트 구분 기준 안내 링크 (우리가게 손님 구성 카드 내) */
+.segment-info-link {
+  display: block;
+  margin-top: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+  text-align: left;
+}
+
 /* 로그인/점유인증/계정추가 공용 폼 스타일 */
 .auth-input {
   width: 100%;

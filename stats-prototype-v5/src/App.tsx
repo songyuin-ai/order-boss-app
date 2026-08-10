@@ -3,6 +3,7 @@ import MobileFrame from "./components/MobileFrame";
 import DrawerNav, { type DrawerMenuItem } from "./components/DrawerNav";
 import AccountSwitchSheet from "./components/AccountSwitchSheet";
 import AddAccountModal from "./components/AddAccountModal";
+import SegmentInfoSheet from "./components/SegmentInfoSheet";
 import PlaceholderScreen from "./components/PlaceholderScreen";
 import IndicatorPanel from "./components/IndicatorPanel";
 import Toast from "./components/Toast";
@@ -84,6 +85,7 @@ function AppShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [addAccountOpen, setAddAccountOpen] = useState(false);
+  const [segmentInfoOpen, setSegmentInfoOpen] = useState(false);
   const [dataListOpened, setDataListOpened] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(initialToast);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -121,7 +123,12 @@ function AppShell({
       case "dateRangeView":
         return <DateRangeViewScreen onPanelChange={handlePanelChange} onNavigate={navigateTo} />;
       case "membership":
-        return <MembershipCustomerAnalysisScreen onPanelChange={handlePanelChange} />;
+        return (
+          <MembershipCustomerAnalysisScreen
+            onPanelChange={handlePanelChange}
+            onOpenSegmentInfo={() => setSegmentInfoOpen(true)}
+          />
+        );
       case "deliveryCustomer":
         return <DeliveryScreen onPanelChange={handlePanelChange} />;
       default:
@@ -216,6 +223,7 @@ function AppShell({
                   setSession({ ...session, accounts: [...session.accounts, store] });
                 }}
               />
+              <SegmentInfoSheet open={segmentInfoOpen} onClose={() => setSegmentInfoOpen(false)} />
             </MobileFrame>
           </div>
           {dataListOpened && (
