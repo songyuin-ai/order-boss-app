@@ -100,6 +100,11 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
           canPrev={periodIndex < periods.length - 1}
           canNext={periodIndex > 0}
         />
+        {/* (v5) 주간/월간 탭의 진행 중인 현재 기간(이번 주/이번 달)도 POS 데이터 특성상
+            전일자 마감 데이터까지만 반영된 값이라 캡션으로 안내 */}
+        {!isDaily && !period.revenueDeltaBadge && (
+          <p className="chart-note">※ 전일자 마감 데이터 기준이에요.</p>
+        )}
 
         <div className="home-headline">
           <IdBadge id={homeIndicators.revenue.id} />
