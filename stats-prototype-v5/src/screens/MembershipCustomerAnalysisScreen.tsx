@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Card from "../components/Card";
+import IdBadge from "../components/IdBadge";
 import SegmentRatioChart from "../components/SegmentRatioChart";
 import SegmentDetailPanel from "../components/SegmentDetailPanel";
 import SegmentTrendChart from "../components/SegmentTrendChart";
@@ -110,7 +111,8 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange }: Prop
       />
 
       <div className="screen__cards">
-        <Card title="손님 세그먼트 비율" indicator={customerCompositionIndicators.segmentRatio}>
+        {/* 세그먼트 비율과 상세분석을 한 카드로 이어 붙여, 비율 → 상세 스토리로 자연스럽게 읽히게 함 */}
+        <Card title="우리가게 손님 구성" indicator={customerCompositionIndicators.segmentRatio}>
           <div className="avgord-toggle">
             <span className="avgord-toggle__label" title="1회 소비액이 상위 20%에 해당하는 손님입니다">
               객단가 높은 손님만 보기
@@ -123,9 +125,11 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange }: Prop
             />
           </div>
           <SegmentRatioChart segments={ratioSlices} active={segment} onSelect={setSegment} />
-        </Card>
 
-        <Card title="세그먼트별 상세분석" indicator={segmentDetailIndicators.segmentDetail}>
+          <div className="segment-combined__subheader">
+            <span className="segment-combined__subheader-label">세그먼트별 상세분석</span>
+            <IdBadge id={segmentDetailIndicators.segmentDetail.id} />
+          </div>
           <SegmentDetailPanel
             data={activeSnapshot}
             segment={segment}

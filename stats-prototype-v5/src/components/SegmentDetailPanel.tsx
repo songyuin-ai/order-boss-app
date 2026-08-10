@@ -6,7 +6,14 @@ import type {
   SegmentOccasionalDetail,
   SegmentKey,
 } from "../data/segmentDetailDummy";
-import { SEGMENT_TABS, getSegmentCopy, SEGMENT_CTA, SEGMENT_CTA_FILTERED, SEGMENT_CTA_PRIORITY } from "../data/segmentMeta";
+import {
+  SEGMENT_TABS,
+  SEGMENT_COLORS,
+  getSegmentCopy,
+  SEGMENT_CTA,
+  SEGMENT_CTA_FILTERED,
+  SEGMENT_CTA_PRIORITY,
+} from "../data/segmentMeta";
 import { formatCompactWon } from "../utils/format";
 
 interface Props {
@@ -121,11 +128,15 @@ export default function SegmentDetailPanel({ data, segment, onSegmentChange, avg
 
   return (
     <div className="story-card">
-      <SegmentedNav options={SEGMENT_TABS} active={segment} onChange={(k) => onSegmentChange(k as SegmentKey)} size="sm" />
+      <SegmentedNav options={SEGMENT_TABS} active={segment} onChange={(k) => onSegmentChange(k as SegmentKey)} size="xs" />
+
+      <div className="segment-detail__group-header" style={{ color: SEGMENT_COLORS[segment] }}>
+        {activeMeta.label}
+      </div>
 
       <div className="story-card__headline">
         <div className="story-card__headline-value">{seg.customerCount.toLocaleString("ko-KR")}명</div>
-        <div className="story-card__headline-sub">{activeMeta.label}</div>
+        <div className="story-card__headline-sub">최근 30일 방문</div>
       </div>
 
       <p className="segment-detail__copy">{getSegmentCopy(segment, data)}</p>

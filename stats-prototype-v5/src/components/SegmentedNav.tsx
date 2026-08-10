@@ -7,7 +7,7 @@ interface Props {
   options: Option[];
   active: string;
   onChange: (key: string) => void;
-  size?: "md" | "sm";
+  size?: "md" | "sm" | "xs";
 }
 
 export default function SegmentedNav({ options, active, onChange, size = "md" }: Props) {
