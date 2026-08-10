@@ -15,20 +15,7 @@ export default function SegmentInfoSheet({ open, onClose }: Props) {
         <div className="sheet__handle" />
         <div className="sheet__title">손님 그룹은 이렇게 나눠요</div>
 
-        <p className="segment-info__intro">
-          최근 90일 동안 손님이 우리 가게에 오신 패턴을 보고, 두 가지 질문으로 4개 그룹을 나눠요.
-        </p>
-
-        <div className="segment-info__criteria">
-          <div className="segment-info__criteria-item">
-            <div className="segment-info__criteria-q">Q. 최근에 오셨나요?</div>
-            <div className="segment-info__criteria-a">최근 21일(3주) 이내에 한 번이라도 오셨으면 "최근에 온 손님"이에요.</div>
-          </div>
-          <div className="segment-info__criteria-item">
-            <div className="segment-info__criteria-q">Q. 자주 오시나요?</div>
-            <div className="segment-info__criteria-a">최근 90일 동안 4번 이상 오셨으면 "자주 오는 손님"이에요.</div>
-          </div>
-        </div>
+        <p className="segment-info__intro">최근 90일 동안 오신 패턴을 보고 4개 그룹으로 나눠요.</p>
 
         <div className="segment-info__groups">
           {SEGMENT_TABS.map((t) => (
