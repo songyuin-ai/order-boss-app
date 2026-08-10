@@ -131,12 +131,11 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
           <SegmentRatioChart segments={ratioSlices} active={segment} onSelect={setSegment} />
 
           <div className="segment-combined__subheader">
-            <span className="segment-combined__subheader-label">세그먼트별 상세분석</span>
+            <button type="button" className="segment-info-link" onClick={onOpenSegmentInfo}>
+              손님 그룹은 어떤 기준으로 구분하나요? ⓘ
+            </button>
             <IdBadge id={segmentDetailIndicators.segmentDetail.id} />
           </div>
-          <button type="button" className="segment-info-link" onClick={onOpenSegmentInfo}>
-            손님 그룹은 어떤 기준으로 구분하나요? ⓘ
-          </button>
           <SegmentDetailPanel
             data={activeSnapshot}
             segment={segment}
