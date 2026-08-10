@@ -51,10 +51,11 @@ export const SEGMENT_CTA_FILTERED: Partial<Record<SegmentKey, string>> = {
   occasional: "가끔 오시지만 올 때마다 크게 써주시는 손님들이에요. 놓치면 아까워요.",
 };
 
-// "손님 그룹은 어떤 기준으로 구분하나요?" 안내 바텀시트용 — recGrd/ordFre 같은 내부 코드 대신 사장님이 바로 이해할 수 있는 말로 설명
+// "손님 그룹은 어떤 기준으로 구분하나요?" 안내 바텀시트용 — recGrd/ordFre 같은 내부 코드 대신
+// 사장님이 바로 이해할 수 있게 그룹명 + 실제 기준(횟수·일수)을 한 문장에 바로 풀어 씀
 export const SEGMENT_EXPLAIN: Record<SegmentKey, string> = {
-  realRegular: "최근에도 왔고, 자주도 오는 손님이에요. 우리 가게를 가장 아껴주는 든든한 단골이에요.",
-  candidate: "최근엔 왔지만, 아직 자주는 아닌 손님이에요. 조금만 더 챙기면 단골이 될 수 있어요.",
-  leavingRegular: "예전엔 자주 왔는데, 최근 3주 넘게 발길이 뜸해진 손님이에요. 가장 먼저 챙겨야 해요.",
-  occasional: "최근에도, 예전에도 자주 오지 않은 손님이에요. 아직은 지켜봐도 괜찮아요.",
+  realRegular: "최근 90일 동안 4번 이상 오시고, 21일 이내에도 오신 손님이에요.",
+  candidate: "최근 90일 동안 4번 미만 오셨지만, 21일 이내에는 오신 손님이에요.",
+  leavingRegular: "최근 90일 동안 4번 이상 오셨지만, 최근 21일 동안은 안 오신 손님이에요.",
+  occasional: "최근 90일 동안 4번 미만 오시고, 최근 21일 동안도 안 오신 손님이에요.",
 };

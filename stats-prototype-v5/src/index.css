@@ -1567,28 +1567,6 @@ body {
   line-height: 1.6;
 }
 
-.segment-info__criteria {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding: 12px;
-  background: var(--bg);
-  border-radius: 12px;
-}
-
-.segment-info__criteria-q {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--accent);
-}
-
-.segment-info__criteria-a {
-  margin-top: 2px;
-  font-size: 12.5px;
-  line-height: 1.55;
-}
-
 .segment-info__groups {
   display: flex;
   flex-direction: column;
