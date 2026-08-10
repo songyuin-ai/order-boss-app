@@ -1,4 +1,5 @@
 import type { SegmentDetailSnapshot, SegmentKey } from "./segmentDetailDummy";
+import { formatCompactWon } from "../utils/format";
 
 // 세그먼트_기준_변경안.md 4-2절 기준. 화면 노출 순서: 고마운 단골 → 단골 후보 손님 → 떠나려는 단골 → 가끔 오시는 손님
 export const SEGMENT_TABS: { key: SegmentKey; label: string }[] = [
@@ -16,12 +17,14 @@ export const SEGMENT_COLORS: Record<SegmentKey, string> = {
   occasional: "#8a94a6",
 };
 
-// 세그먼트_기준_변경안.md 4-2절 "유도할 액션 (문구)" 표를 그대로 따름.
-// 고마운 단골/떠나려는 단골은 문구 안에 실제 수치(매출 비중·경과일)가 들어가야 해서 데이터 기반으로 생성
+// 세그먼트_기준_변경안.md 4-2절 "유도할 액션 (문구)" 표를 그대로 따름 (2차 개정: 매출 비중% → 방문횟수·총소비액 절대값).
+// 고마운 단골/떠나려는 단골은 문구 안에 실제 수치(방문횟수·총소비액·경과일)가 들어가야 해서 데이터 기반으로 생성
 export function getSegmentCopy(segment: SegmentKey, data: SegmentDetailSnapshot): string {
   switch (segment) {
     case "realRegular":
-      return `우리 가게 매출의 ${data.realRegular.salesSharePct}%를 만들어주는 든든한 손님들이에요. 감사 쿠폰으로 마음 전해보세요.`;
+      return `최근 90일간 ${data.realRegular.visitCount}번이나 찾아주시고, 총 ${formatCompactWon(
+        data.realRegular.totalSpend
+      )}을 써주신 든든한 손님들이에요. 감사 쿠폰으로 마음 전해보세요.`;
     case "leavingRegular":
       return `예전엔 자주 오셨는데, 최근 ${data.leavingRegular.lastVisitDaysAgo}일째 안 오고 계세요. 지금 쿠폰 하나 보내면 다시 붙잡을 수 있어요.`;
     case "candidate":
@@ -46,4 +49,12 @@ export const SEGMENT_CTA_PRIORITY: Partial<Record<SegmentKey, boolean>> = {
 // 객단가(avgOrd) 필터 ON일 때만 대체되는 CTA 문구
 export const SEGMENT_CTA_FILTERED: Partial<Record<SegmentKey, string>> = {
   occasional: "가끔 오시지만 올 때마다 크게 써주시는 손님들이에요. 놓치면 아까워요.",
+};
+
+// "손님 그룹은 어떤 기준으로 구분하나요?" 안내 바텀시트용 — recGrd/ordFre 같은 내부 코드 대신 사장님이 바로 이해할 수 있는 말로 설명
+export const SEGMENT_EXPLAIN: Record<SegmentKey, string> = {
+  realRegular: "최근에도 왔고, 자주도 오는 손님이에요. 우리 가게를 가장 아껴주는 든든한 단골이에요.",
+  candidate: "최근엔 왔지만, 아직 자주는 아닌 손님이에요. 조금만 더 챙기면 단골이 될 수 있어요.",
+  leavingRegular: "예전엔 자주 왔는데, 최근 3주 넘게 발길이 뜸해진 손님이에요. 가장 먼저 챙겨야 해요.",
+  occasional: "최근에도, 예전에도 자주 오지 않은 손님이에요. 아직은 지켜봐도 괜찮아요.",
 };

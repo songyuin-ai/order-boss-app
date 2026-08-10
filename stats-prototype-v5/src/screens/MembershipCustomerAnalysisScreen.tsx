@@ -17,6 +17,7 @@ import type { Indicator } from "../data/types";
 
 interface Props {
   onPanelChange: (indicators: Indicator[], label: string) => void;
+  onOpenSegmentInfo: () => void;
 }
 
 // "최근 30일" 고정 기준 — 3장(조회기간 체계 변경) 참고. 실시간 롤링이 아니라 1일 1회 배치가 갱신하는 스냅샷
@@ -38,7 +39,7 @@ function highlightLabel(
   return best;
 }
 
-export default function MembershipCustomerAnalysisScreen({ onPanelChange }: Props) {
+export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpenSegmentInfo }: Props) {
   const {
     customerCompositionIndicators,
     customerComposition,
@@ -113,6 +114,9 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange }: Prop
       <div className="screen__cards">
         {/* 세그먼트 비율과 상세분석을 한 카드로 이어 붙여, 비율 → 상세 스토리로 자연스럽게 읽히게 함 */}
         <Card title="우리가게 손님 구성" indicator={customerCompositionIndicators.segmentRatio}>
+          {/* 세그먼트 판정·방문횟수/총소비액의 관측 기간은 화면 상단 "최근 30일"과 별개로 "최근 90일" 고정 */}
+          <p className="chart-note">※ 세그먼트 분류는 최근 90일 기준이에요</p>
+
           <div className="avgord-toggle">
             <span className="avgord-toggle__label" title="1회 소비액이 상위 20%에 해당하는 손님입니다">
               객단가 높은 손님만 보기
@@ -130,6 +134,9 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange }: Prop
             <span className="segment-combined__subheader-label">세그먼트별 상세분석</span>
             <IdBadge id={segmentDetailIndicators.segmentDetail.id} />
           </div>
+          <button type="button" className="segment-info-link" onClick={onOpenSegmentInfo}>
+            손님 그룹은 어떤 기준으로 구분하나요? ⓘ
+          </button>
           <SegmentDetailPanel
             data={activeSnapshot}
             segment={segment}

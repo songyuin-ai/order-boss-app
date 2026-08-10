@@ -28,12 +28,12 @@ function FullStats({ d }: { d: SegmentFullDetail }) {
     <>
       <div className="stat-tile-grid">
         <div className="stat-tile stat-tile--accent">
-          <div className="stat-tile__label">매출 비중</div>
-          <div className="stat-tile__value">{d.salesSharePct}%</div>
+          <div className="stat-tile__label">방문 횟수 (90일)</div>
+          <div className="stat-tile__value">{d.visitCount}회</div>
         </div>
         <div className="stat-tile">
-          <div className="stat-tile__label">주문건수 비중</div>
-          <div className="stat-tile__value">{d.orderSharePct}%</div>
+          <div className="stat-tile__label">총 소비액 (90일)</div>
+          <div className="stat-tile__value">{formatCompactWon(d.totalSpend)}</div>
         </div>
         <div className="stat-tile">
           <div className="stat-tile__label">객단가</div>
@@ -67,12 +67,12 @@ function LeavingStats({ d }: { d: SegmentLeavingDetail }) {
     <>
       <div className="stat-tile-grid">
         <div className="stat-tile stat-tile--accent">
-          <div className="stat-tile__label">매출 비중</div>
-          <div className="stat-tile__value">{d.salesSharePct}%</div>
+          <div className="stat-tile__label">방문 횟수 (90일)</div>
+          <div className="stat-tile__value">{d.visitCount}회</div>
         </div>
         <div className="stat-tile">
-          <div className="stat-tile__label">주문건수 비중</div>
-          <div className="stat-tile__value">{d.orderSharePct}%</div>
+          <div className="stat-tile__label">총 소비액 (90일)</div>
+          <div className="stat-tile__value">{formatCompactWon(d.totalSpend)}</div>
         </div>
         <div className="stat-tile">
           <div className="stat-tile__label">객단가</div>
@@ -110,12 +110,12 @@ function OccasionalStats({ d }: { d: SegmentOccasionalDetail }) {
   return (
     <div className="stat-tile-grid">
       <div className="stat-tile stat-tile--accent">
-        <div className="stat-tile__label">매출 비중</div>
-        <div className="stat-tile__value">{d.salesSharePct}%</div>
+        <div className="stat-tile__label">방문 횟수 (90일)</div>
+        <div className="stat-tile__value">{d.visitCount}회</div>
       </div>
       <div className="stat-tile">
-        <div className="stat-tile__label">주문건수 비중</div>
-        <div className="stat-tile__value">{d.orderSharePct}%</div>
+        <div className="stat-tile__label">총 소비액 (90일)</div>
+        <div className="stat-tile__value">{formatCompactWon(d.totalSpend)}</div>
       </div>
     </div>
   );
@@ -136,7 +136,7 @@ export default function SegmentDetailPanel({ data, segment, onSegmentChange, avg
 
       <div className="story-card__headline">
         <div className="story-card__headline-value">{seg.customerCount.toLocaleString("ko-KR")}명</div>
-        <div className="story-card__headline-sub">최근 30일 방문</div>
+        <div className="story-card__headline-sub">최근 90일 기준</div>
       </div>
 
       <p className="segment-detail__copy">{getSegmentCopy(segment, data)}</p>

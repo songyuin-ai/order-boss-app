@@ -8,8 +8,8 @@ export interface SegmentTopEntry {
 interface SegmentCommon {
   customerCount: number;
   customerSharePct: number; // 세그먼트 비율 파이차트에 쓰이는 인원 비중(%)
-  salesSharePct: number; // 매출 비중(%)
-  orderSharePct: number; // 주문건수 비중(%)
+  visitCount: number; // 방문 횟수 (최근 90일, 절대값)
+  totalSpend: number; // 총 소비액 (최근 90일, 절대값, 원)
 }
 
 export interface SegmentFullDetail extends SegmentCommon {
@@ -74,15 +74,17 @@ const PEAK_HOUR: Record<"realRegular" | "candidate" | "leavingRegular", string> 
   leavingRegular: "오전 11~1시",
 };
 
-// (v5) 조회기간 탭(지난 주/지난 달) 폐기, "최근 30일" 고정 배치 스냅샷 하나만 사용
+// (v5, 2차 개정) 세그먼트 판정 기준(recGrd=최근 21일, ordFre=최근 90일 내 4회)이 고정 절대값으로
+// 바뀌면서 방문횟수/총소비액도 비중(%)이 아닌 절대값으로 노출. 관측 기간은 화면 전체의 "최근 30일"과
+// 별개로 "최근 90일" 고정 (작업계획서_v5 4-2절)
 export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: SegmentDetailSnapshot } = {
   default: {
     totals: { customerCount: 460, orderCount: 964, regionAvgMemberOrderCount: 1080 },
     realRegular: {
       customerCount: 101,
       customerSharePct: 22,
-      salesSharePct: 48,
-      orderSharePct: 50,
+      visitCount: 7,
+      totalSpend: 147000,
       aov: 21000,
       topProducts: TOP_PRODUCTS.realRegular,
       peakHour: PEAK_HOUR.realRegular,
@@ -91,8 +93,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
     leavingRegular: {
       customerCount: 41,
       customerSharePct: 9,
-      salesSharePct: 15,
-      orderSharePct: 13,
+      visitCount: 5,
+      totalSpend: 127500,
       aov: 25500,
       cancelRatePct: 4.8,
       lastVisitDaysAgo: 46,
@@ -102,8 +104,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
     candidate: {
       customerCount: 69,
       customerSharePct: 15,
-      salesSharePct: 14,
-      orderSharePct: 15,
+      visitCount: 2,
+      totalSpend: 35600,
       aov: 17800,
       topProducts: TOP_PRODUCTS.candidate,
       peakHour: PEAK_HOUR.candidate,
@@ -112,8 +114,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
     occasional: {
       customerCount: 249,
       customerSharePct: 54,
-      salesSharePct: 23,
-      orderSharePct: 22,
+      visitCount: 1,
+      totalSpend: 19200,
     },
   },
   // "객단가 높은 손님만 보기" ON — 1회 소비액 상위 20%(avgOrd) 고객만으로 재계산된 값
@@ -122,8 +124,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
     realRegular: {
       customerCount: 50,
       customerSharePct: 56,
-      salesSharePct: 54,
-      orderSharePct: 55,
+      visitCount: 7,
+      totalSpend: 217000,
       aov: 31000,
       topProducts: TOP_PRODUCTS.realRegular,
       peakHour: PEAK_HOUR.realRegular,
@@ -132,8 +134,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
     leavingRegular: {
       customerCount: 13,
       customerSharePct: 15,
-      salesSharePct: 16,
-      orderSharePct: 14,
+      visitCount: 5,
+      totalSpend: 165000,
       aov: 33000,
       cancelRatePct: 4.2,
       lastVisitDaysAgo: 44,
@@ -143,8 +145,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
     candidate: {
       customerCount: 16,
       customerSharePct: 18,
-      salesSharePct: 15,
-      orderSharePct: 16,
+      visitCount: 2,
+      totalSpend: 57000,
       aov: 28500,
       topProducts: TOP_PRODUCTS.candidate,
       peakHour: PEAK_HOUR.candidate,
@@ -154,8 +156,8 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
       // 자주 오지 않지만 올 때마다 많이 쓰는 손님 — 0명이 되지 않게 최소 표본을 남겨 고가치 저빈도 고객 존재를 알림
       customerCount: 10,
       customerSharePct: 11,
-      salesSharePct: 15,
-      orderSharePct: 15,
+      visitCount: 1,
+      totalSpend: 29500,
     },
   },
 };
