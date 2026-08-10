@@ -1089,6 +1089,17 @@ body {
   border-radius: 10px;
 }
 
+/* "떠나려는 단골" 최우선 CTA — 다른 세그먼트보다 시각적으로 강조 */
+.segment-detail__cta--priority {
+  background: var(--danger);
+  box-shadow: 0 4px 12px rgba(224, 42, 42, 0.28);
+}
+
+.segment-detail__cta--priority::before {
+  content: "최우선 · ";
+  font-weight: 900;
+}
+
 /* Trend chart */
 .trend-chart__legend {
   display: flex;
