@@ -6,7 +6,7 @@ import type {
   SegmentOccasionalDetail,
   SegmentKey,
 } from "../data/segmentDetailDummy";
-import { SEGMENT_TABS, SEGMENT_COPY, SEGMENT_CTA, SEGMENT_CTA_FILTERED } from "../data/segmentMeta";
+import { SEGMENT_TABS, getSegmentCopy, SEGMENT_CTA, SEGMENT_CTA_FILTERED, SEGMENT_CTA_PRIORITY } from "../data/segmentMeta";
 import { formatCompactWon } from "../utils/format";
 
 interface Props {
@@ -128,13 +128,17 @@ export default function SegmentDetailPanel({ data, segment, onSegmentChange, avg
         <div className="story-card__headline-sub">{activeMeta.label}</div>
       </div>
 
-      <p className="segment-detail__copy">{SEGMENT_COPY[segment]}</p>
+      <p className="segment-detail__copy">{getSegmentCopy(segment, data)}</p>
 
       {segment === "occasional" && <OccasionalStats d={data.occasional} />}
       {segment === "leavingRegular" && <LeavingStats d={data.leavingRegular} />}
       {(segment === "realRegular" || segment === "candidate") && <FullStats d={data[segment]} />}
 
-      {cta && <div className="segment-detail__cta">{cta}</div>}
+      {cta && (
+        <div className={`segment-detail__cta${SEGMENT_CTA_PRIORITY[segment] ? " segment-detail__cta--priority" : ""}`}>
+          {cta}
+        </div>
+      )}
     </div>
   );
 }
