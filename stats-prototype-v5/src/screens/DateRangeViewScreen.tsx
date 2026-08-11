@@ -37,9 +37,9 @@ export default function DateRangeViewScreen({ onPanelChange, onNavigate }: Props
   const periods = data.kpiPeriods;
   const period = periods[periodIndex] ?? periods[0];
   const isDaily = tab === "daily";
-  // 주간=누적(data_034), 월간=평균(data_045) — 산식이 달라 별도 지표로 분리
+  // 주간=누적(data_007), 월간=평균(data_008) — 산식이 달라 별도 지표로 분리
   const weekdayIndicator = tab === "monthly" ? homeIndicators.weekdayAverage : homeIndicators.weekdayCumulative;
-  // 일간=실측치(data_040), 주간·월간=일평균(data_046) — 마찬가지로 산식이 달라 분리
+  // 일간=실측치(data_009), 주간·월간=일평균(data_010) — 마찬가지로 산식이 달라 분리
   const hourlyIndicator = isDaily ? homeIndicators.hourlyOrders : homeIndicators.hourlyOrdersAvg;
 
   // 마감된 기간은 전일/전주/전월 대비 배지를 보여주고, 진행 중인 현재 기간(오늘/이번 주/이번 달)은
