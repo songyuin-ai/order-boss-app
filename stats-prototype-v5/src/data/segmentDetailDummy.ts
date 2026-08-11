@@ -22,7 +22,6 @@ export interface SegmentFullDetail extends SegmentCommon {
 export interface SegmentLeavingDetail extends SegmentCommon {
   aov: number;
   cancelRatePct: number;
-  lastVisitDaysAgo: number;
   topProducts: SegmentTopEntry[]; // 과거(활동 시기) 기준
   peakHour: string; // 과거(활동 시기) 기준
 }
@@ -89,7 +88,6 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
       totalSpend: 127500,
       aov: 25500,
       cancelRatePct: 4.8,
-      lastVisitDaysAgo: 46,
       topProducts: TOP_PRODUCTS.leavingRegular,
       peakHour: PEAK_HOUR.leavingRegular,
     },
@@ -129,7 +127,6 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
       totalSpend: 165000,
       aov: 33000,
       cancelRatePct: 4.2,
-      lastVisitDaysAgo: 44,
       topProducts: TOP_PRODUCTS.leavingRegular,
       peakHour: PEAK_HOUR.leavingRegular,
     },

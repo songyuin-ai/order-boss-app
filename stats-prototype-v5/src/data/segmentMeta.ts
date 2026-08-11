@@ -1,5 +1,4 @@
-import type { SegmentDetailSnapshot, SegmentKey } from "./segmentDetailDummy";
-import { formatCompactWon } from "../utils/format";
+import type { SegmentKey } from "./segmentDetailDummy";
 
 // 세그먼트_기준_변경안.md 4-2절 기준. 화면 노출 순서: 고마운 단골 → 단골 후보 손님 → 떠나려는 단골 → 가끔 오시는 손님
 export const SEGMENT_TABS: { key: SegmentKey; label: string }[] = [
@@ -17,22 +16,16 @@ export const SEGMENT_COLORS: Record<SegmentKey, string> = {
   occasional: "#8a94a6",
 };
 
-// 세그먼트_기준_변경안.md 4-2절 "유도할 액션 (문구)" 표를 그대로 따름 (2차 개정: 매출 비중% → 방문횟수·총소비액 절대값).
-// 고마운 단골/떠나려는 단골은 문구 안에 실제 수치(방문횟수·총소비액·경과일)가 들어가야 해서 데이터 기반으로 생성
-export function getSegmentCopy(segment: SegmentKey, data: SegmentDetailSnapshot): string {
-  switch (segment) {
-    case "realRegular":
-      return `최근 90일간 ${data.realRegular.visitCount}번이나 찾아주시고, 총 ${formatCompactWon(
-        data.realRegular.totalSpend
-      )}을 써주신 든든한 손님들이에요. 감사 쿠폰으로 마음 전해보세요.`;
-    case "leavingRegular":
-      return `예전엔 자주 오셨는데, 최근 ${data.leavingRegular.lastVisitDaysAgo}일째 안 오고 계세요. 지금 쿠폰 하나 보내면 다시 붙잡을 수 있어요.`;
-    case "candidate":
-      return "최근 들어 자주 오기 시작한 손님들이에요. 한 번 더 오시면 고마운 단골이 될 가능성이 높아요.";
-    case "occasional":
-      return "가끔 들르는 손님들이에요. 큰 액션보다는 지켜봐도 괜찮아요.";
-  }
-}
+// 세그먼트_기준_변경안.md 4-2절 "유도할 액션 (문구)" 표 기반이나, 원문의 "OO번/OO만원/OO일째" 같은 실제 수치
+// 삽입은 쓰지 않는다 — 이 수치는 세그먼트 소속 손님들의 평균값인데, 문장에 끼워 넣으면 마치 특정 손님 한 명의
+// 개인 프로필처럼 읽혀 착각을 유발한다. 그래서 무조건 고정 문구로 두고, "OO 기준으로 분류된 손님 집단"이라는
+// 점이 드러나도록 "묶은 그룹" 표현을 공통으로 사용한다 (작업계획서_v5 4-5절 "세그먼트 문구 작성 원칙" 참고)
+export const SEGMENT_COPY: Record<SegmentKey, string> = {
+  realRegular: "최근 90일 동안 자주, 많이 찾아주시는 손님들을 묶은 그룹이에요. 감사 쿠폰으로 마음을 전해보세요.",
+  candidate: "최근 들어 방문이 잦아지기 시작한 손님들을 묶은 그룹이에요. 한 번 더 오시면 고마운 단골이 될 가능성이 높아요.",
+  leavingRegular: "예전엔 자주 오셨지만, 최근 발걸음이 뜸해진 손님들을 묶은 그룹이에요. 지금 쿠폰 하나 보내면 다시 붙잡을 수 있어요.",
+  occasional: "가끔 들르는 손님들을 묶은 그룹이에요. 큰 액션보다는 지켜봐도 괜찮아요.",
+};
 
 // 세그먼트별 고정 CTA 문구 (기본). "가끔 오시는 손님"은 기본 CTA 없음
 export const SEGMENT_CTA: Partial<Record<SegmentKey, string>> = {
