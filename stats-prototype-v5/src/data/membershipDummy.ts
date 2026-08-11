@@ -1,8 +1,8 @@
 export interface MembershipActivity {
-  customerCount: number; // 최근 30일간 적립·사용하며 방문한 유니크 회원 수 (보조 지표, data_034)
+  customerCount: number; // 최근 30일간 적립·사용하며 방문한 유니크 회원 수 (지표 ID 없는 참고용 서술 텍스트 — "멤버십 손님 수" 지표는 폐기)
   earnOrderCount: number; // 최근 30일 적립 주문건수
   useOrderCount: number; // 최근 30일 사용 주문건수
-  orderCount: number; // 최근 30일 적립·사용 주문건수 합계(= earnOrderCount + useOrderCount), KPI 카드 헤드라인(data_033)
+  orderCount: number; // 최근 30일 적립·사용 주문건수 합계(= earnOrderCount + useOrderCount), KPI 카드 헤드라인(data_027)
   regionAvgOrderCount: number; // 주변매장 평균 적립·사용 주문건수(동일 30일 기준)
 }
 

@@ -78,9 +78,8 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
   useEffect(() => {
     onPanelChange(
       [
-        kpiIndicators.memberOrderCount,
-        kpiIndicators.memberCustomerCount,
         membershipIndicators.hValue,
+        kpiIndicators.memberOrderCount,
         customerCompositionIndicators.segmentRatio,
         segmentDetailIndicators.segmentDetail,
         customerCompositionIndicators.trend,
