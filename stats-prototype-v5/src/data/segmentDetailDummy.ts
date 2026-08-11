@@ -29,14 +29,7 @@ export interface SegmentLeavingDetail extends SegmentCommon {
 
 export type SegmentOccasionalDetail = SegmentCommon;
 
-export interface SegmentTotals {
-  customerCount: number;
-  orderCount: number;
-  regionAvgMemberOrderCount: number;
-}
-
 export interface SegmentDetailSnapshot {
-  totals: SegmentTotals;
   realRegular: SegmentFullDetail;
   leavingRegular: SegmentLeavingDetail;
   candidate: SegmentFullDetail;
@@ -79,7 +72,6 @@ const PEAK_HOUR: Record<"realRegular" | "candidate" | "leavingRegular", string> 
 // 별개로 "최근 90일" 고정 (작업계획서_v5 4-2절)
 export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: SegmentDetailSnapshot } = {
   default: {
-    totals: { customerCount: 460, orderCount: 964, regionAvgMemberOrderCount: 1080 },
     realRegular: {
       customerCount: 101,
       customerSharePct: 22,
@@ -120,7 +112,6 @@ export const segmentDetail: { default: SegmentDetailSnapshot; avgOrdFiltered: Se
   },
   // "객단가 높은 손님만 보기" ON — 1회 소비액 상위 20%(avgOrd) 고객만으로 재계산된 값
   avgOrdFiltered: {
-    totals: { customerCount: 89, orderCount: 964, regionAvgMemberOrderCount: 1080 },
     realRegular: {
       customerCount: 50,
       customerSharePct: 56,
