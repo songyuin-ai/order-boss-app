@@ -1,4 +1,4 @@
-import type { SegmentTrendPoint } from "../data/customerCompositionDummy";
+import type { SegmentTrendPoint } from "../data/customerSegmentsDummy";
 
 export default function SegmentTrendChart({ data }: { data: SegmentTrendPoint[] }) {
   const max = Math.max(...data.flatMap((r) => [r.storeCount, r.regionAvgCount]), 1);

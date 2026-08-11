@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import IdBadge from "../components/IdBadge";
-import SegmentRatioChart from "../components/SegmentRatioChart";
-import SegmentDetailPanel from "../components/SegmentDetailPanel";
+import CustomerSegmentCards from "../components/CustomerSegmentCards";
 import SegmentTrendChart from "../components/SegmentTrendChart";
 import SegmentPieChart from "../components/SegmentPieChart";
 import AgePopularProductsTable from "../components/AgePopularProductsTable";
@@ -10,8 +9,7 @@ import RepurchaseRankList from "../components/RepurchaseRankList";
 import KpiStrip from "../components/KpiStrip";
 import { useAppData } from "../context/DataContext";
 import { ageGenderRatios } from "../data/customerCompositionDummy";
-import { SEGMENT_TABS } from "../data/segmentMeta";
-import type { SegmentKey } from "../data/segmentDetailDummy";
+import type { SegmentKey } from "../data/customerSegmentsDummy";
 import type { GenderFilter } from "../data/customerDetailDummy";
 import type { Indicator } from "../data/types";
 
@@ -45,7 +43,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
     customerComposition,
     segmentTrend,
     segmentDetailIndicators,
-    segmentDetail,
+    customerSegments,
     customerDetailIndicators,
     agePreferredProductsByGender,
     repurchaseTop5,
@@ -54,26 +52,15 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
     kpiIndicators,
   } = useAppData();
 
-  const [segment, setSegment] = useState<SegmentKey>("realRegular");
+  const [openSegment, setOpenSegment] = useState<SegmentKey | null>(customerSegments[0]?.key ?? null);
   const [gender, setGender] = useState<GenderFilter>("all");
-  const [avgOrdFilterOn, setAvgOrdFilterOn] = useState(false);
-
-  // 4-7절 — 객단가(avgOrd) 필터는 세그먼트 비율·상세분석에만 적용, 상단 KPI 스트립은 항상 필터 미적용 기준
-  const activeSnapshot = avgOrdFilterOn ? segmentDetail.avgOrdFiltered : segmentDetail.default;
-
-  const ratioSlices = useMemo(
-    () =>
-      SEGMENT_TABS.map((t) => ({
-        key: t.key,
-        label: t.label,
-        pct: activeSnapshot[t.key].customerSharePct,
-        customerCount: activeSnapshot[t.key].customerCount,
-      })),
-    [activeSnapshot]
-  );
 
   const loyalHighlight = highlightLabel(customerComposition.demographicDistribution, "loyalRatio");
   const dormantHighlight = highlightLabel(customerComposition.demographicDistribution, "dormantRatio");
+
+  // 추이 차트는 카드 리스트에서 펼쳐놓은(선택한) 그룹과 항상 같은 그룹을 보여줌
+  const trendSegment = openSegment ?? customerSegments[0]?.key;
+  const trendSegmentLabel = customerSegments.find((s) => s.key === trendSegment)?.label ?? "";
 
   useEffect(() => {
     onPanelChange(
@@ -113,23 +100,8 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
       />
 
       <div className="screen__cards">
-        {/* 세그먼트 비율과 상세분석을 한 카드로 이어 붙여, 비율 → 상세 스토리로 자연스럽게 읽히게 함 */}
-        <Card title="우리가게 손님 구성" indicator={customerCompositionIndicators.segmentRatio}>
-          {/* 세그먼트 판정·방문횟수/총소비액의 관측 기간은 화면 상단 "최근 30일"과 별개로 "최근 90일" 고정 */}
-          <p className="chart-note">※ 세그먼트 분류는 최근 90일 기준이에요</p>
-
-          <div className="avgord-toggle">
-            <span className="avgord-toggle__label" title="1회 소비액이 상위 20%에 해당하는 손님입니다">
-              객단가 높은 손님만 보기
-            </span>
-            <button
-              type="button"
-              className={`avgord-toggle__switch${avgOrdFilterOn ? " is-on" : ""}`}
-              aria-pressed={avgOrdFilterOn}
-              onClick={() => setAvgOrdFilterOn((v) => !v)}
-            />
-          </div>
-          <SegmentRatioChart segments={ratioSlices} active={segment} onSelect={setSegment} />
+        <Card title="우리가게 손님 그룹" indicator={customerCompositionIndicators.segmentRatio}>
+          <p className="chart-note">※ 최근 30일 기준이에요 (그룹은 서로 겹칠 수 있어요)</p>
 
           <div className="segment-combined__subheader">
             <button type="button" className="segment-info-link" onClick={onOpenSegmentInfo}>
@@ -137,20 +109,20 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
             </button>
             <IdBadge id={segmentDetailIndicators.segmentDetail.id} />
           </div>
-          <SegmentDetailPanel
-            data={activeSnapshot}
-            segment={segment}
-            onSegmentChange={setSegment}
-            avgOrdFilterOn={avgOrdFilterOn}
+
+          <CustomerSegmentCards
+            segments={customerSegments}
+            openKey={openSegment}
+            onToggle={(key) => setOpenSegment((prev) => (prev === key ? null : key))}
           />
         </Card>
 
-        <Card title={`세그먼트 추이 (최근 3개월) · ${SEGMENT_TABS.find((t) => t.key === segment)!.label}`} indicator={customerCompositionIndicators.trend}>
-          <SegmentTrendChart data={segmentTrend[segment]} />
+        <Card title={`그룹 추이 (최근 3개월) · ${trendSegmentLabel}`} indicator={customerCompositionIndicators.trend}>
+          <SegmentTrendChart data={segmentTrend[trendSegment as SegmentKey]} />
         </Card>
 
         <Card title="연령/성별 구성" indicator={customerCompositionIndicators.demographic}>
-          <p className="chart-note">※ 최근 30일 방문객 기준이에요 (위 손님 구성은 최근 90일 기준이라 표본이 달라요)</p>
+          <p className="chart-note">※ 최근 30일 방문객 기준이에요</p>
           <SegmentPieChart
             segments={customerComposition.demographicDistribution}
             highlightLoyalLabel={loyalHighlight}

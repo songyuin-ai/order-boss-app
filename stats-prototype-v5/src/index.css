@@ -576,15 +576,6 @@ body {
   padding: 7px 4px;
 }
 
-.segmented--xs {
-  padding: 8px 16px;
-}
-
-.segmented--xs .segmented__btn {
-  font-size: 10.5px;
-  padding: 6px 3px;
-}
-
 .segmented__btn.is-active {
   background: var(--accent);
   color: #fff;
@@ -963,141 +954,16 @@ body {
   gap: 6px;
 }
 
-/* Segment ratio chart (클릭 가능한 도넛 + 범례, 세그먼트별 상세분석 탭·추이차트와 선택 상태 동기화) */
-.segment-ratio {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.segment-ratio__chart {
-  flex-shrink: 0;
-}
-
-.segment-ratio__legend {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-
-.segment-ratio__legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  padding: 4px 6px;
-  cursor: pointer;
-  text-align: left;
-  color: var(--text);
-}
-
-.segment-ratio__legend-item.is-active {
-  background: var(--accent-soft);
-  font-weight: 700;
-}
-
-.segment-ratio__legend-label {
-  flex: 1;
-  min-width: 0;
-}
-
-.segment-ratio__legend-pct {
-  font-weight: 700;
-}
-
-.segment-ratio__legend-count {
-  font-size: 10.5px;
-  color: var(--text-secondary);
-}
-
-/* 세그먼트 비율 → 상세분석으로 자연스럽게 이어지는 구간.
-   카드 경계를 새로 긋지 않고, 위쪽에 옅은 구분선만 둬서 하나의 흐름처럼 보이게 함 */
+/* 손님 그룹 카드(위쪽 안내 링크·배지) → 카드 리스트로 자연스럽게 이어지는 구간.
+   카드 경계를 새로 긋지 않고, 아래쪽에 옅은 구분선만 둬서 하나의 흐름처럼 보이게 함 */
 .segment-combined__subheader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-
-/* 객단가(avgOrd) 필터 토글 */
-.avgord-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
-}
-
-.avgord-toggle__label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12.5px;
-  font-weight: 700;
-}
-
-.avgord-toggle__switch {
-  position: relative;
-  width: 38px;
-  height: 22px;
-  border-radius: 999px;
-  border: none;
-  background: var(--track);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.avgord-toggle__switch::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  transition: left 0.15s;
-}
-
-.avgord-toggle__switch.is-on {
-  background: var(--accent);
-}
-
-.avgord-toggle__switch.is-on::after {
-  left: 18px;
-}
-
-/* 세그먼트별 상세분석 */
-.segment-detail__group-header {
-  margin-top: 14px;
-  font-size: 19px;
-  font-weight: 900;
-  letter-spacing: -0.3px;
-}
-
-.segment-detail__copy {
-  margin: 10px 0 0;
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  line-height: 1.6;
-}
-
-.segment-detail__historical-badge {
-  margin: 10px 0 0;
-  font-size: 10.5px;
-  font-weight: 700;
-  color: var(--warning);
 }
 
 .segment-detail__demographic {
@@ -1117,15 +983,94 @@ body {
   border-radius: 10px;
 }
 
-/* "떠나려는 단골" 최우선 CTA — 다른 세그먼트보다 시각적으로 강조 */
-.segment-detail__cta--priority {
-  background: var(--danger);
-  box-shadow: 0 4px 12px rgba(224, 42, 42, 0.28);
+/* 손님 그룹 카드 리스트 — 그룹끼리 서로 겹칠 수 있는 독립 그룹이라 도넛/비율 대신 인원수 카드 나열 (시안) */
+.segment-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.segment-detail__cta--priority::before {
-  content: "최우선 · ";
-  font-weight: 900;
+.segment-card {
+  background: var(--bg);
+  border-radius: var(--radius-inner);
+  overflow: hidden;
+}
+
+.segment-card.is-open {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+.segment-card__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.segment-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.segment-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.segment-card__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.segment-card__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.segment-card__count {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.segment-card__desc {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.segment-card__chevron {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.segment-card__detail {
+  padding: 4px 14px 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.segment-card__period-note {
+  margin: 0 0 10px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
 }
 
 /* Trend chart */

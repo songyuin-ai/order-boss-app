@@ -4,11 +4,11 @@ import { homeDaily, homeWeekly, homeMonthly, homeRealtime, type HomeTabData, typ
 import { deliveryIndicators as defaultDeliveryIndicators } from "../data/deliveryIndicators";
 import { daily as deliveryDaily, weekly as deliveryWeekly, monthly as deliveryMonthly, type DeliveryPeriodSetData } from "../data/deliveryDummy";
 import { customerCompositionIndicators as defaultCustomerCompositionIndicators } from "../data/customerCompositionIndicators";
-import { customerComposition, segmentTrend } from "../data/customerCompositionDummy";
+import { customerComposition } from "../data/customerCompositionDummy";
 import { customerDetailIndicators as defaultCustomerDetailIndicators } from "../data/customerDetailIndicators";
 import { agePreferredProductsByGender, repurchaseTop5 } from "../data/customerDetailDummy";
 import { segmentDetailIndicators as defaultSegmentDetailIndicators } from "../data/segmentDetailIndicators";
-import { segmentDetail } from "../data/segmentDetailDummy";
+import { CUSTOMER_SEGMENTS, segmentTrend } from "../data/customerSegmentsDummy";
 import { membershipIndicators as defaultMembershipIndicators } from "../data/membershipIndicators";
 import { membership } from "../data/membershipDummy";
 import { kpiIndicators as defaultKpiIndicators } from "../data/kpiIndicators";
@@ -30,7 +30,7 @@ interface DataShape {
   agePreferredProductsByGender: typeof agePreferredProductsByGender;
   repurchaseTop5: typeof repurchaseTop5;
   segmentDetailIndicators: typeof defaultSegmentDetailIndicators;
-  segmentDetail: typeof segmentDetail;
+  customerSegments: typeof CUSTOMER_SEGMENTS;
   membershipIndicators: typeof defaultMembershipIndicators;
   membership: typeof membership;
   kpiIndicators: typeof defaultKpiIndicators;
@@ -65,7 +65,7 @@ const defaultShape: DataShape = {
   agePreferredProductsByGender,
   repurchaseTop5,
   segmentDetailIndicators: defaultSegmentDetailIndicators,
-  segmentDetail,
+  customerSegments: CUSTOMER_SEGMENTS,
   membershipIndicators: defaultMembershipIndicators,
   membership,
   kpiIndicators: defaultKpiIndicators,
