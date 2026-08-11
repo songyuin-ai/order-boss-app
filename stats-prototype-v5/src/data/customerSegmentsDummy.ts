@@ -6,8 +6,8 @@ export type SegmentKey =
   | "recentFrequent"
   | "newCustomer"
   | "bigSpender"
-  | "churned"
-  | "deliveryFrequent";
+  | "deliveryFrequent"
+  | "churned";
 
 export interface TopProduct {
   name: string;
@@ -22,7 +22,7 @@ export interface CustomerSegmentInfo {
   desc: string; // 고정 문구 — 특정 손님 개인이 아니라 분류된 집단이라는 점을 "묶은 그룹" 표현으로 명시
   periodNote: string; // 상세 지표(매출 기여도 등)의 관측 기간 프레이밍. "발길 끊긴 손님"은 반드시 명확한 기간(31~60일)으로 표기
   revenueSharePct: number;
-  topProducts: TopProduct[];
+  topProducts: TopProduct[]; // "많이 주문한 메뉴" TOP3 (구 "인기 메뉴" — 발길 끊긴 손님 등 비활성 그룹에도 어울리는 워딩으로 통일)
   peakHour: string;
   demographicTop: string;
   cta: string;
@@ -34,10 +34,11 @@ export const SEGMENT_EXPLAIN: Record<SegmentKey, string> = {
   recentFrequent: "최근 30일 동안 3번 이상 주문한 손님이에요.",
   newCustomer: "최근 30일 안에 처음 주문했고, 그 이전 30일(31~60일 전)엔 주문 이력이 없는 손님이에요.",
   bigSpender: "최근 30일 객단가가 5만원 이상인 손님이에요. (매장 상위 20% 수준으로 브랜드별 보정)",
-  churned: "최근 30일엔 주문이 없지만, 그 이전 30일(31~60일 전)엔 주문한 적 있는 손님이에요.",
   deliveryFrequent: "최근 30일과 그 이전 30일(31~60일 전) 모두 배달로 3번 이상 주문한 손님이에요.",
+  churned: "최근 30일엔 주문이 없지만, 그 이전 30일(31~60일 전)엔 주문한 적 있는 손님이에요.",
 };
 
+// 노출 순서는 반드시 이 배열 순서를 따름(작업계획서 4-B-4) — 꾸준히→최근들어→신규→많이쓰는→배달자주→발길끊긴
 export const CUSTOMER_SEGMENTS: CustomerSegmentInfo[] = [
   {
     key: "steady",
@@ -108,6 +109,23 @@ export const CUSTOMER_SEGMENTS: CustomerSegmentInfo[] = [
     cta: "VIP 혜택 안내",
   },
   {
+    key: "deliveryFrequent",
+    label: "배달 자주 쓰시는 손님",
+    color: "#0ea5e9",
+    count: 73,
+    desc: "배달로 꾸준히 자주 주문하시는 손님들을 묶은 그룹이에요.",
+    periodNote: "최근 30일 기준 · 배달 채널 한정",
+    revenueSharePct: 17,
+    topProducts: [
+      { name: "초코케이크", pct: 26 },
+      { name: "아메리카노", pct: 22 },
+      { name: "마카롱 세트", pct: 18 },
+    ],
+    peakHour: "저녁 6~9시",
+    demographicTop: "30대 여성",
+    cta: "배달 전용 쿠폰 발송",
+  },
+  {
     key: "churned",
     label: "발길 끊긴 손님",
     color: "#e63946",
@@ -125,61 +143,4 @@ export const CUSTOMER_SEGMENTS: CustomerSegmentInfo[] = [
     demographicTop: "30대 여성",
     cta: "컴백 쿠폰 발송",
   },
-  {
-    key: "deliveryFrequent",
-    label: "배달 자주 쓰시는 손님",
-    color: "#0ea5e9",
-    count: 73,
-    desc: "배달로 꾸준히 자주 주문하시는 손님들을 묶은 그룹이에요.",
-    periodNote: "최근 30일 기준 · 배달 채널 한정",
-    revenueSharePct: 17,
-    topProducts: [
-      { name: "초코케이크", pct: 26 },
-      { name: "아메리카노", pct: 22 },
-      { name: "마카롱 세트", pct: 18 },
-    ],
-    peakHour: "저녁 6~9시",
-    demographicTop: "30대 여성",
-    cta: "배달 전용 쿠폰 발송",
-  },
 ];
-
-export interface SegmentTrendPoint {
-  month: string; // 항상 최근 3개월 고정, 조회기간과 무관
-  storeCount: number; // 선택된 그룹의 우리 매장 인원수
-  regionAvgCount: number; // 선택된 그룹의 주변매장 평균 인원수
-}
-
-// 그룹 추이 (최근 3개월) — 선택된 그룹 1개만 그리며, 월별 마감(월말) 배치 기준
-export const segmentTrend: Record<SegmentKey, SegmentTrendPoint[]> = {
-  steady: [
-    { month: "5월", storeCount: 108, regionAvgCount: 99 },
-    { month: "6월", storeCount: 116, regionAvgCount: 104 },
-    { month: "7월", storeCount: 128, regionAvgCount: 112 },
-  ],
-  recentFrequent: [
-    { month: "5월", storeCount: 41, regionAvgCount: 38 },
-    { month: "6월", storeCount: 47, regionAvgCount: 41 },
-    { month: "7월", storeCount: 54, regionAvgCount: 45 },
-  ],
-  newCustomer: [
-    { month: "5월", storeCount: 33, regionAvgCount: 35 },
-    { month: "6월", storeCount: 35, regionAvgCount: 34 },
-    { month: "7월", storeCount: 37, regionAvgCount: 36 },
-  ],
-  bigSpender: [
-    { month: "5월", storeCount: 35, regionAvgCount: 33 },
-    { month: "6월", storeCount: 38, regionAvgCount: 34 },
-    { month: "7월", storeCount: 41, regionAvgCount: 37 },
-  ],
-  churned: [
-    { month: "5월", storeCount: 50, regionAvgCount: 47 },
-    { month: "6월", storeCount: 56, regionAvgCount: 51 },
-    { month: "7월", storeCount: 62, regionAvgCount: 55 },
-  ],
-  deliveryFrequent: [
-    { month: "5월", storeCount: 60, regionAvgCount: 58 },
-    { month: "6월", storeCount: 67, regionAvgCount: 62 },
-    { month: "7월", storeCount: 73, regionAvgCount: 68 },
-  ],
-};

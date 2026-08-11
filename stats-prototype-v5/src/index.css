@@ -620,6 +620,13 @@ body {
   color: #fff;
 }
 
+.id-badge--inline {
+  position: static;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 .id-badge.is-active {
   background: var(--accent);
   color: #fff;

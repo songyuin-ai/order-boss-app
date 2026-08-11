@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
-import IdBadge from "../components/IdBadge";
 import CustomerSegmentCards from "../components/CustomerSegmentCards";
-import SegmentTrendChart from "../components/SegmentTrendChart";
 import SegmentPieChart from "../components/SegmentPieChart";
 import AgePopularProductsTable from "../components/AgePopularProductsTable";
 import RepurchaseRankList from "../components/RepurchaseRankList";
@@ -41,7 +39,6 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
   const {
     customerCompositionIndicators,
     customerComposition,
-    segmentTrend,
     segmentDetailIndicators,
     customerSegments,
     customerDetailIndicators,
@@ -58,18 +55,16 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
   const loyalHighlight = highlightLabel(customerComposition.demographicDistribution, "loyalRatio");
   const dormantHighlight = highlightLabel(customerComposition.demographicDistribution, "dormantRatio");
 
-  // 추이 차트는 카드 리스트에서 펼쳐놓은(선택한) 그룹과 항상 같은 그룹을 보여줌
-  const trendSegment = openSegment ?? customerSegments[0]?.key;
-  const trendSegmentLabel = customerSegments.find((s) => s.key === trendSegment)?.label ?? "";
-
   useEffect(() => {
     onPanelChange(
       [
         membershipIndicators.hValue,
         kpiIndicators.memberOrderCount,
-        customerCompositionIndicators.segmentRatio,
-        segmentDetailIndicators.segmentDetail,
-        customerCompositionIndicators.trend,
+        segmentDetailIndicators.customerCount,
+        segmentDetailIndicators.revenueShare,
+        segmentDetailIndicators.peakHour,
+        segmentDetailIndicators.topMenu,
+        segmentDetailIndicators.demographic,
         customerCompositionIndicators.demographic,
         customerDetailIndicators.agePreferred,
         customerDetailIndicators.repurchaseTop5,
@@ -100,25 +95,21 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
       />
 
       <div className="screen__cards">
-        <Card title="우리가게 손님 그룹" indicator={customerCompositionIndicators.segmentRatio}>
+        <Card title="우리가게 손님 그룹" indicator={segmentDetailIndicators.customerCount}>
           <p className="chart-note">※ 최근 30일 기준이에요 (그룹은 서로 겹칠 수 있어요)</p>
 
           <div className="segment-combined__subheader">
             <button type="button" className="segment-info-link" onClick={onOpenSegmentInfo}>
               손님 그룹은 어떤 기준으로 구분하나요? ⓘ
             </button>
-            <IdBadge id={segmentDetailIndicators.segmentDetail.id} />
           </div>
 
           <CustomerSegmentCards
             segments={customerSegments}
             openKey={openSegment}
             onToggle={(key) => setOpenSegment((prev) => (prev === key ? null : key))}
+            fieldIndicators={segmentDetailIndicators}
           />
-        </Card>
-
-        <Card title={`그룹 추이 (최근 3개월) · ${trendSegmentLabel}`} indicator={customerCompositionIndicators.trend}>
-          <SegmentTrendChart data={segmentTrend[trendSegment as SegmentKey]} />
         </Card>
 
         <Card title="연령/성별 구성" indicator={customerCompositionIndicators.demographic}>

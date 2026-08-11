@@ -1,12 +1,11 @@
 import type { Indicator } from "./types";
 
 // 해피포인트 > 고객 상세분석
-// (v5) 재방문 주기(고착도, 구 data_030)는 폐기하고 재구매율 TOP5로 교체. 지표 ID는 사용자 제공 지표관리
-// 시트(ver_5) 기준으로 재부여 (연령대별 인기상품: 구 data_029 → 현재 data_032 / 재구매율 TOP5: 신규 → 현재
-// data_033, 구현 초기 잠정 ID였던 data_040·data_035는 폐기) — 지표 ID 재부여 내역 전체는 작업계획서 7-1절 참고
+// (v5, 3차 개정) 재방문 주기(고착도)는 폐기하고 재구매율 TOP5로 교체. 손님 그룹 지표가 필드별 5개(data_028~032)로
+// 세분화되며 뒤로 밀려, 연령대별 인기상품 data_032 → data_034, 재구매율 TOP5 data_033 → data_035로 이동
 export const customerDetailIndicators: Record<string, Indicator> = {
   agePreferred: {
-    id: "data_032",
+    id: "data_034",
     지표명: "연령대별 인기상품 Top3",
     실시간여부: "N",
     정의: "연령대별 주문건수 상위 상품 1~3위, '최근 30일' 고정 기준. 하단 전체/남/여 필터로 성별 세분화. 순위만 노출하고 건수는 표시하지 않음",
@@ -16,7 +15,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
     차트형태: "테이블 (행: 연령대, 열: Top3 상품명, 건수 미표시) + 하단 전체/남/여 필터 탭",
   },
   repurchaseTop5: {
-    id: "data_033",
+    id: "data_035",
     지표명: "재구매율 높은 상품 TOP5",
     실시간여부: "N",
     정의: "상품별 재구매율 상위 5개 랭킹, '최근 30일' 고정 기준",
