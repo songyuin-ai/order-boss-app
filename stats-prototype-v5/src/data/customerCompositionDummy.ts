@@ -1,5 +1,3 @@
-import type { SegmentKey } from "./segmentDetailDummy";
-
 export interface DemographicSlice {
   label: string;
   pct: number;
@@ -32,32 +30,3 @@ export const customerComposition: CustomerCompositionSnapshot = {
   ],
 };
 
-export interface SegmentTrendPoint {
-  month: string; // 항상 최근 3개월 고정, 조회기간과 무관
-  storeCount: number; // 선택된 세그먼트의 우리 매장 인원수
-  regionAvgCount: number; // 선택된 세그먼트의 주변매장 평균 인원수
-}
-
-// 세그먼트 추이 (최근 3개월) — 4-6절. 선택된 세그먼트 1개만 그리며, 월별 마감(월말) 배치 기준
-export const segmentTrend: Record<SegmentKey, SegmentTrendPoint[]> = {
-  realRegular: [
-    { month: "5월", storeCount: 92, regionAvgCount: 85 },
-    { month: "6월", storeCount: 97, regionAvgCount: 89 },
-    { month: "7월", storeCount: 101, regionAvgCount: 93 },
-  ],
-  leavingRegular: [
-    { month: "5월", storeCount: 35, regionAvgCount: 30 },
-    { month: "6월", storeCount: 38, regionAvgCount: 33 },
-    { month: "7월", storeCount: 41, regionAvgCount: 36 },
-  ],
-  candidate: [
-    { month: "5월", storeCount: 61, regionAvgCount: 58 },
-    { month: "6월", storeCount: 65, regionAvgCount: 60 },
-    { month: "7월", storeCount: 69, regionAvgCount: 64 },
-  ],
-  occasional: [
-    { month: "5월", storeCount: 231, regionAvgCount: 210 },
-    { month: "6월", storeCount: 240, regionAvgCount: 220 },
-    { month: "7월", storeCount: 249, regionAvgCount: 230 },
-  ],
-};
