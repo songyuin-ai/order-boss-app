@@ -1,11 +1,11 @@
 import type { Indicator } from "./types";
 
 // 해피포인트 > 고객 구성
-// (v5) ID는 기존 개념을 그대로 대체하는 지표라 잠정적으로 유지 (data_026/data_028). 원천데이터/산식/실시간여부를
-// 포함한 정식 데이터 목록(ID 재부여 포함)은 화면 확정 후 별도 요청 시 정리 (작업계획서_v5 7장 참고)
+// (v5) 지표 ID는 사용자 제공 지표관리 시트(ver_5) 기준으로 재부여 (구 data_026→현재 028, 구 027→031, 구 028→030).
+// 원천데이터/산식/실시간여부를 포함한 정식 데이터 목록은 화면 확정 후 별도 요청 시 정리 (작업계획서_v5 7-1절 참고)
 export const customerCompositionIndicators: Record<string, Indicator> = {
   segmentRatio: {
-    id: "data_026",
+    id: "data_028",
     지표명: "손님 세그먼트 비율",
     실시간여부: "N",
     정의:
@@ -25,7 +25,7 @@ export const customerCompositionIndicators: Record<string, Indicator> = {
       "※ 네 세그먼트는 recGrd×ordFre로 상호 배타적 파티션 (중복·누락 없음). 값은 디저트/커피숍 카테고리 고정값(percentile 아님), 재검증은 분기 단위",
   },
   demographic: {
-    id: "data_027",
+    id: "data_031",
     지표명: "연령/성별 방문 손님 분포",
     실시간여부: "N",
     정의: "연령대+성별 조합 계열별 고객 구성비(상위 5개+기타), '최근 30일' 고정 기준",
@@ -36,7 +36,7 @@ export const customerCompositionIndicators: Record<string, Indicator> = {
       "파이 차트 (상위 5개 계열 + 기타, 범례에 계열명·구성비 표시). 단골비율 최고 계열과 휴면비율 최고 계열을 각각 배지로 구분 표시",
   },
   trend: {
-    id: "data_028",
+    id: "data_030",
     지표명: "세그먼트 추이 (최근 3개월)",
     실시간여부: "N",
     정의:

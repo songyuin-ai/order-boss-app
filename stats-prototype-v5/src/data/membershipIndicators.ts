@@ -1,9 +1,10 @@
 import type { Indicator } from "./types";
 
 // 해피포인트 > 포인트 활용 지표 (상단 KPI 요약존에 배치)
+// (v5) 지표 ID는 사용자 제공 지표관리 시트(ver_5) 기준으로 재부여 (구 data_032 → 현재 data_026). 작업계획서 7-1절 참고
 export const membershipIndicators: Record<string, Indicator> = {
   hValue: {
-    id: "data_032",
+    id: "data_026",
     지표명: "포인트 활용 지표(H값)",
     실시간여부: "N",
     정의: "적립부담금 대비 사용매출 비율, '최근 30일' 고정 기준. 전기 대비가 아닌 주변매장 평균과 비교",
