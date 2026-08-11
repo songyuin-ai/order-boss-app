@@ -10,7 +10,9 @@ export interface Indicator {
   산식: string; // 계산식 — 시트에서 직접 채움
   제공목적: string;
   차트형태: string;
-  노출?: string;
+  노출?: string; // 시트 컬럼 "노출화면"
+  집계주기?: string; // 시트 컬럼 "집계 주기" (예: 일배치/주배치/실시간)
+  조회기간?: string; // 시트 컬럼 "조회 기간"
   참고?: string;
 }
 
