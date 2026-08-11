@@ -102,9 +102,9 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
 
       <KpiStrip
         periodLabel={PERIOD_LABEL}
-        memberCustomerCount={segmentDetail.default.totals.customerCount}
-        memberOrderCount={segmentDetail.default.totals.orderCount}
-        regionAvgMemberOrderCount={segmentDetail.default.totals.regionAvgMemberOrderCount}
+        memberCustomerCount={membership.activity.customerCount}
+        memberOrderCount={membership.activity.orderCount}
+        regionAvgMemberOrderCount={membership.activity.regionAvgOrderCount}
         hValuePct={membership.hValue.pct}
         regionAvgHValuePct={membership.hValue.regionAvgPct}
         memberCustomersIndicator={kpiIndicators.memberCustomers}
@@ -149,6 +149,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
         </Card>
 
         <Card title="연령/성별 구성" indicator={customerCompositionIndicators.demographic}>
+          <p className="chart-note">※ 최근 30일 방문객 기준이에요 (위 손님 구성은 최근 90일 기준이라 표본이 달라요)</p>
           <SegmentPieChart
             segments={customerComposition.demographicDistribution}
             highlightLoyalLabel={loyalHighlight}
@@ -157,6 +158,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
         </Card>
 
         <Card title="연령대별 인기상품" indicator={customerDetailIndicators.agePreferred}>
+          <p className="chart-note">※ 최근 30일 구매실적 기준이에요</p>
           <AgePopularProductsTable
             data={agePreferredProductsByGender[gender]}
             gender={gender}
@@ -165,6 +167,7 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
         </Card>
 
         <Card title="재구매율 높은 상품 TOP5" indicator={customerDetailIndicators.repurchaseTop5}>
+          <p className="chart-note">※ 최근 30일 구매실적 기준이에요</p>
           <RepurchaseRankList items={repurchaseTop5} />
         </Card>
       </div>

@@ -45,7 +45,7 @@ function FullStats({ d }: { d: SegmentFullDetail }) {
         </div>
       </div>
       <div className="story-card__block">
-        <div className="story-card__block-label">인기상품 TOP3 (비율 기준)</div>
+        <div className="story-card__block-label">인기상품 TOP3 (비율 기준 · 최근 90일)</div>
         <div className="chip-row">
           {d.topProducts.map((p) => (
             <span key={p.name} className="chip chip--category">
@@ -55,7 +55,7 @@ function FullStats({ d }: { d: SegmentFullDetail }) {
         </div>
       </div>
       <div className="story-card__block">
-        <div className="story-card__block-label">주 고객층</div>
+        <div className="story-card__block-label">주 고객층 (최근 90일)</div>
         <p className="segment-detail__demographic">{d.demographicTop}</p>
       </div>
     </>
@@ -89,7 +89,7 @@ function LeavingStats({ d }: { d: SegmentLeavingDetail }) {
       </div>
       <p className="segment-detail__historical-badge">과거 활동 기준</p>
       <div className="story-card__block">
-        <div className="story-card__block-label">인기상품 TOP3</div>
+        <div className="story-card__block-label">인기상품 TOP3 (과거 기준)</div>
         <div className="chip-row">
           {d.topProducts.map((p) => (
             <span key={p.name} className="chip chip--category">
