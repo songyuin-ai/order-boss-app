@@ -1,6 +1,8 @@
 export interface MembershipActivity {
-  customerCount: number; // 최근 30일간 적립·사용하며 방문한 유니크 회원 수
-  orderCount: number; // 최근 30일 적립·사용 주문건수
+  customerCount: number; // 최근 30일간 적립·사용하며 방문한 유니크 회원 수 (보조 지표, data_034)
+  earnOrderCount: number; // 최근 30일 적립 주문건수
+  useOrderCount: number; // 최근 30일 사용 주문건수
+  orderCount: number; // 최근 30일 적립·사용 주문건수 합계(= earnOrderCount + useOrderCount), KPI 카드 헤드라인(data_033)
   regionAvgOrderCount: number; // 주변매장 평균 적립·사용 주문건수(동일 30일 기준)
 }
 
@@ -18,6 +20,8 @@ export const membership: MembershipSnapshot = {
   hValue: { pct: 126, regionAvgPct: 129 },
   activity: {
     customerCount: 205,
+    earnOrderCount: 250,
+    useOrderCount: 80,
     orderCount: 330,
     regionAvgOrderCount: 370,
   },
