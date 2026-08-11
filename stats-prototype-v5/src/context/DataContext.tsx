@@ -37,13 +37,17 @@ interface DataShape {
   posIndicators: typeof defaultPosIndicators;
 }
 
-// 지표 표(우측 데이터 목록)에 쓰이는 8개 지표 맵만 구글시트로 덮어씀. 차트 더미 수치(home/delivery/pos 등)는 연동 대상 아님
-function mergeIndicators<T extends Record<string, Indicator>>(defaults: T, byId: Record<string, Indicator>): T {
+// 지표 표(우측 데이터 목록)에 쓰이는 8개 지표 맵만 구글시트로 덮어씀. 차트 더미 수치(home/delivery/pos 등)는 연동 대상 아님.
+// 필드 단위 병합 — 시트가 값을 제공하는 필드만 덮어쓰고, 시트에 없는 필드(예: 실시간여부)는 내장 기본값 유지
+function mergeIndicators<T extends Record<string, Indicator>>(
+  defaults: T,
+  byId: Record<string, Partial<Indicator> & { id: string }>
+): T {
   const merged = {} as T;
   (Object.keys(defaults) as (keyof T)[]).forEach((key) => {
     const def = defaults[key];
     const fetched = byId[def.id];
-    merged[key] = (fetched ? { ...fetched } : def) as T[keyof T];
+    merged[key] = (fetched ? { ...def, ...fetched } : def) as T[keyof T];
   });
   return merged;
 }
