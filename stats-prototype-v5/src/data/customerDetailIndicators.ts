@@ -1,8 +1,8 @@
 import type { Indicator } from "./types";
 
 // 해피포인트 > 고객 상세분석
-// (v5) 재방문 주기(고착도, 구 data_030)는 폐기하고 재구매율 TOP5로 교체 (신규 ID data_040, 잠정).
-// 원천데이터/산식/실시간여부를 포함한 정식 데이터 목록(ID 재부여 포함)은 화면 확정 후 별도 요청 시 정리
+// (v5) 재방문 주기(고착도, 구 data_030)는 폐기하고 재구매율 TOP5로 교체. ID는 data_034 다음으로 비어있던
+// 번호대를 당겨써 data_035로 재부여(구 잠정 ID data_040) — 지표 ID 재부여 내역 전체는 작업계획서 참고
 export const customerDetailIndicators: Record<string, Indicator> = {
   agePreferred: {
     id: "data_029",
@@ -15,7 +15,7 @@ export const customerDetailIndicators: Record<string, Indicator> = {
     차트형태: "테이블 (행: 연령대, 열: Top3 상품명, 건수 미표시) + 하단 전체/남/여 필터 탭",
   },
   repurchaseTop5: {
-    id: "data_040",
+    id: "data_035",
     지표명: "재구매율 높은 상품 TOP5",
     실시간여부: "N",
     정의: "상품별 재구매율 상위 5개 랭킹, '최근 30일' 고정 기준",
