@@ -9,7 +9,7 @@ import type {
 import {
   SEGMENT_TABS,
   SEGMENT_COLORS,
-  getSegmentCopy,
+  SEGMENT_COPY,
   SEGMENT_CTA,
   SEGMENT_CTA_FILTERED,
   SEGMENT_CTA_PRIORITY,
@@ -82,10 +82,6 @@ function LeavingStats({ d }: { d: SegmentLeavingDetail }) {
           <div className="stat-tile__label">취소율</div>
           <div className="stat-tile__value">{d.cancelRatePct}%</div>
         </div>
-        <div className="stat-tile">
-          <div className="stat-tile__label">마지막 방문 경과</div>
-          <div className="stat-tile__value">{d.lastVisitDaysAgo}일</div>
-        </div>
       </div>
       <p className="segment-detail__historical-badge">과거 활동 기준</p>
       <div className="story-card__block">
@@ -139,7 +135,7 @@ export default function SegmentDetailPanel({ data, segment, onSegmentChange, avg
         <div className="story-card__headline-sub">최근 90일 기준</div>
       </div>
 
-      <p className="segment-detail__copy">{getSegmentCopy(segment, data)}</p>
+      <p className="segment-detail__copy">{SEGMENT_COPY[segment]}</p>
 
       {segment === "occasional" && <OccasionalStats d={data.occasional} />}
       {segment === "leavingRegular" && <LeavingStats d={data.leavingRegular} />}
