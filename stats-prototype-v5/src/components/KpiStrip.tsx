@@ -5,10 +5,12 @@ interface Props {
   periodLabel: string;
   memberCustomerCount: number;
   memberOrderCount: number;
+  memberEarnOrderCount: number;
+  memberUseOrderCount: number;
   regionAvgMemberOrderCount: number;
   hValuePct: number;
   regionAvgHValuePct: number;
-  memberCustomersIndicator: Indicator;
+  memberOrderIndicator: Indicator;
   hValueIndicator: Indicator;
 }
 
@@ -28,10 +30,12 @@ export default function KpiStrip({
   periodLabel,
   memberCustomerCount,
   memberOrderCount,
+  memberEarnOrderCount,
+  memberUseOrderCount,
   regionAvgMemberOrderCount,
   hValuePct,
   regionAvgHValuePct,
-  memberCustomersIndicator,
+  memberOrderIndicator,
   hValueIndicator,
 }: Props) {
   // (v4) POS 전체 주문건수 분모 없이, HPC 적립·사용 주문건수(절대값)끼리만 비교
@@ -41,11 +45,12 @@ export default function KpiStrip({
 
   return (
     <div className="kpi-strip">
-      <Card className="kpi-tile" indicator={memberCustomersIndicator}>
-        <div className="kpi-tile__label">멤버십 손님</div>
-        <div className="kpi-tile__value">{memberCustomerCount.toLocaleString("ko-KR")}명</div>
+      <Card className="kpi-tile" indicator={memberOrderIndicator}>
+        <div className="kpi-tile__label">적립/사용 주문건수</div>
+        <div className="kpi-tile__value">{memberOrderCount.toLocaleString("ko-KR")}건</div>
         <div className="kpi-tile__sub">
-          {periodLabel} 방문 · 적립·사용 주문 {memberOrderCount.toLocaleString("ko-KR")}건
+          적립 {memberEarnOrderCount.toLocaleString("ko-KR")}건 · 사용 {memberUseOrderCount.toLocaleString("ko-KR")}건 ·{" "}
+          {periodLabel} 손님 {memberCustomerCount.toLocaleString("ko-KR")}명 방문
         </div>
         <CompareBadge diff={orderCountGap} unit="건" />
       </Card>

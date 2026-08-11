@@ -78,8 +78,8 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
   useEffect(() => {
     onPanelChange(
       [
-        kpiIndicators.memberCustomers,
-        kpiIndicators.memberOrderShare,
+        kpiIndicators.memberOrderCount,
+        kpiIndicators.memberCustomerCount,
         membershipIndicators.hValue,
         customerCompositionIndicators.segmentRatio,
         segmentDetailIndicators.segmentDetail,
@@ -104,10 +104,12 @@ export default function MembershipCustomerAnalysisScreen({ onPanelChange, onOpen
         periodLabel={PERIOD_LABEL}
         memberCustomerCount={membership.activity.customerCount}
         memberOrderCount={membership.activity.orderCount}
+        memberEarnOrderCount={membership.activity.earnOrderCount}
+        memberUseOrderCount={membership.activity.useOrderCount}
         regionAvgMemberOrderCount={membership.activity.regionAvgOrderCount}
         hValuePct={membership.hValue.pct}
         regionAvgHValuePct={membership.hValue.regionAvgPct}
-        memberCustomersIndicator={kpiIndicators.memberCustomers}
+        memberOrderIndicator={kpiIndicators.memberOrderCount}
         hValueIndicator={membershipIndicators.hValue}
       />
 
