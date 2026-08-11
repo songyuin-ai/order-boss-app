@@ -1,12 +1,22 @@
+import IdBadge from "./IdBadge";
 import type { CustomerSegmentInfo, SegmentKey } from "../data/customerSegmentsDummy";
+import type { Indicator } from "../data/types";
 
 interface Props {
   segments: CustomerSegmentInfo[];
   openKey: SegmentKey | null;
   onToggle: (key: SegmentKey) => void;
+  // 6개 그룹 카드 전체에 공통으로 적용되는 필드별 지표(고객수/매출비중/시간대/메뉴/인구통계) — 작업계획서 4-B-2
+  fieldIndicators: {
+    customerCount: Indicator;
+    revenueShare: Indicator;
+    peakHour: Indicator;
+    topMenu: Indicator;
+    demographic: Indicator;
+  };
 }
 
-export default function CustomerSegmentCards({ segments, openKey, onToggle }: Props) {
+export default function CustomerSegmentCards({ segments, openKey, onToggle, fieldIndicators }: Props) {
   return (
     <div className="segment-cards">
       {segments.map((s) => {
@@ -23,7 +33,10 @@ export default function CustomerSegmentCards({ segments, openKey, onToggle }: Pr
               <span className="segment-card__body">
                 <span className="segment-card__top">
                   <span className="segment-card__name">{s.label}</span>
-                  <span className="segment-card__count">{s.count}명</span>
+                  <span className="segment-card__count">
+                    {s.count}명
+                    <IdBadge id={fieldIndicators.customerCount.id} inline />
+                  </span>
                 </span>
                 <span className="segment-card__desc">{s.desc}</span>
               </span>
@@ -36,17 +49,26 @@ export default function CustomerSegmentCards({ segments, openKey, onToggle }: Pr
 
                 <div className="stat-tile-grid">
                   <div className="stat-tile stat-tile--accent">
-                    <div className="stat-tile__label">매출 기여도</div>
+                    <div className="stat-tile__label">
+                      매출 기여도
+                      <IdBadge id={fieldIndicators.revenueShare.id} inline />
+                    </div>
                     <div className="stat-tile__value">{s.revenueSharePct}%</div>
                   </div>
                   <div className="stat-tile">
-                    <div className="stat-tile__label">주 방문 시간대</div>
+                    <div className="stat-tile__label">
+                      주 방문 시간대
+                      <IdBadge id={fieldIndicators.peakHour.id} inline />
+                    </div>
                     <div className="stat-tile__value">{s.peakHour}</div>
                   </div>
                 </div>
 
                 <div className="story-card__block">
-                  <div className="story-card__block-label">인기 메뉴 TOP3</div>
+                  <div className="story-card__block-label">
+                    많이 주문한 메뉴
+                    <IdBadge id={fieldIndicators.topMenu.id} inline />
+                  </div>
                   <div className="chip-row">
                     {s.topProducts.map((p) => (
                       <span key={p.name} className="chip chip--category">
@@ -57,7 +79,10 @@ export default function CustomerSegmentCards({ segments, openKey, onToggle }: Pr
                 </div>
 
                 <div className="story-card__block">
-                  <div className="story-card__block-label">주 고객층</div>
+                  <div className="story-card__block-label">
+                    주 고객층
+                    <IdBadge id={fieldIndicators.demographic.id} inline />
+                  </div>
                   <p className="segment-detail__demographic">{s.demographicTop}</p>
                 </div>
 

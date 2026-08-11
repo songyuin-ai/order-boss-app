@@ -8,7 +8,7 @@ import { customerComposition } from "../data/customerCompositionDummy";
 import { customerDetailIndicators as defaultCustomerDetailIndicators } from "../data/customerDetailIndicators";
 import { agePreferredProductsByGender, repurchaseTop5 } from "../data/customerDetailDummy";
 import { segmentDetailIndicators as defaultSegmentDetailIndicators } from "../data/segmentDetailIndicators";
-import { CUSTOMER_SEGMENTS, segmentTrend } from "../data/customerSegmentsDummy";
+import { CUSTOMER_SEGMENTS } from "../data/customerSegmentsDummy";
 import { membershipIndicators as defaultMembershipIndicators } from "../data/membershipIndicators";
 import { membership } from "../data/membershipDummy";
 import { kpiIndicators as defaultKpiIndicators } from "../data/kpiIndicators";
@@ -25,7 +25,6 @@ interface DataShape {
   delivery: { daily: DeliveryPeriodSetData; weekly: DeliveryPeriodSetData; monthly: DeliveryPeriodSetData };
   customerCompositionIndicators: typeof defaultCustomerCompositionIndicators;
   customerComposition: typeof customerComposition;
-  segmentTrend: typeof segmentTrend;
   customerDetailIndicators: typeof defaultCustomerDetailIndicators;
   agePreferredProductsByGender: typeof agePreferredProductsByGender;
   repurchaseTop5: typeof repurchaseTop5;
@@ -60,7 +59,6 @@ const defaultShape: DataShape = {
   delivery: { daily: deliveryDaily, weekly: deliveryWeekly, monthly: deliveryMonthly },
   customerCompositionIndicators: defaultCustomerCompositionIndicators,
   customerComposition,
-  segmentTrend,
   customerDetailIndicators: defaultCustomerDetailIndicators,
   agePreferredProductsByGender,
   repurchaseTop5,
