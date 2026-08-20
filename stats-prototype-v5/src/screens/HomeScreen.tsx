@@ -14,7 +14,7 @@ interface Props {
 
 export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   const { homeIndicators, posIndicators, homeRealtime, home } = useAppData();
-  const { revenue, orders, aov, weekCumulative, weekTotal, updatedAtLabel } = homeRealtime;
+  const { revenue, orders, aov, weekCumulative, weekTotal } = homeRealtime;
 
   // 1순위(일간 요약) → 2순위(상세분석 리포트 진입) → 3순위(주간 보충) 순서로, 지표표에도 동일한 우선순위로 노출
   // (v5) 상세분석 리포트 후킹 카드(data_012)는 UX라이팅 확정 전까지 회색 플레이스홀더라 지표표 연동 대상에서 제외
@@ -34,21 +34,17 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
   return (
     <div className="screen">
       <div className="screen__cards">
-        <div className="home-updated">
-          <span>홈 · 실시간 · {updatedAtLabel}</span>
-        </div>
-
         <button type="button" className="daterange-entry" onClick={() => onNavigate("dateRangeView")}>
           <span>날짜별 보기 (일간 · 주간 · 월간)</span>
           <span className="daterange-entry__chevron">›</span>
         </button>
 
         {/* [1순위] 일간 요약 — 매출/주문건수/객단가를 카드 3장이 아니라 하나의 압축 블록으로
-            "오늘"은 아직 마감되지 않은 진행 중인 기간이라 전일 대비는 표시하지 않음 (지역 평균 대비만 상시 표시) */}
+            POS/오더 거래원장은 전일자 마감 데이터까지만 제공되어 "오늘 실시간" 표시가 불가능 — 전일 마감 데이터 기준 */}
         <div className="daily-summary">
           <div className="daily-summary__headline">
             <IdBadge id={posIndicators.totalRevenue.id} />
-            <span className="daily-summary__label">오늘 매출</span>
+            <span className="daily-summary__label">전일 매출</span>
             <span className="daily-summary__value">{formatWon(revenue.value)}</span>
             <div className="daily-summary__badges">
               <span className="badge badge--muted">지역 평균 대비 {formatSignedNumber(revenue.vsRegionPct, "%")}</span>
@@ -84,7 +80,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
 
         {/* 온라인/오프라인 매출 점유율 — 포인트 리포트와 기준(주문건수 절대값 vs 매출 비중)이 달라 별도 섹션으로 분리
             (v4) "딜리버리 점유율"(배달앱만)과 "온라인 점유율"(배달+픽업)이 용어만 다르고 헷갈린다는 피드백으로 온라인 점유율로 통일 */}
-        <Card title="온라인 매출 점유율 (오늘)" indicator={posIndicators.onlineOffline}>
+        <Card title="온라인 매출 점유율 (전일)" indicator={posIndicators.onlineOffline}>
           <div className="delivery-share" onClick={() => onNavigate("deliveryCustomer")} role="button" tabIndex={0}>
             <DonutChart
               primaryValue={home.daily.onlineOffline.online}
@@ -102,6 +98,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
         <div className="section-label">주간 상세</div>
 
         <Card title="주간 매출 누적 (이번 주)" indicator={homeIndicators.weekdayCumulative}>
+          <p className="chart-note">※ 마감된 날짜까지만 표시돼요</p>
           <div className="week-total">
             <span className="week-total__value">{formatWon(weekTotal.value)}</span>
             <div className="week-total__badges">
@@ -110,7 +107,7 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
           </div>
           <div className="weekday-strip">
             {weekCumulative.map((d) => (
-              <div key={d.label} className={`weekday-strip__col${d.isToday ? " is-today" : ""}`}>
+              <div key={d.label} className="weekday-strip__col">
                 <span className="weekday-strip__day">{d.label}</span>
                 <span className="weekday-strip__revenue">
                   {d.revenue !== null ? formatCompactWon(d.revenue) : "–"}
@@ -125,7 +122,6 @@ export default function HomeScreen({ onPanelChange, onNavigate }: Props) {
             data={weekCumulative.map((d) => ({
               label: d.label,
               value: d.revenue,
-              highlight: d.isToday,
             }))}
           />
         </Card>

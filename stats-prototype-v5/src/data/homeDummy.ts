@@ -2,7 +2,6 @@ import type { WeekdayBar, HourlyBucket, OnlineOfflineRatio } from "./types";
 
 export interface HomeRealtimeMetric {
   value: number;
-  vsYesterdayPct: number;
   vsRegionPct: number;
 }
 
@@ -10,7 +9,6 @@ export interface HomeWeekdayRevenue {
   label: string;
   revenue: number | null;
   aov: number | null;
-  isToday?: boolean;
 }
 
 export interface HomeWeeklyTotal {
@@ -19,8 +17,9 @@ export interface HomeWeeklyTotal {
   vsRegionPct: number;
 }
 
+// (v5) POS/오더 거래원장은 전일자 마감 데이터까지만 제공되어 "오늘 실시간" 개념 자체가 성립하지 않음 —
+// 홈 화면은 항상 "전일 마감" 기준으로 표시 (updatedAtLabel 등 실시간 타임스탬프 문구 폐기)
 export interface HomeRealtimeData {
-  updatedAtLabel: string;
   revenue: HomeRealtimeMetric;
   orders: HomeRealtimeMetric;
   aov: HomeRealtimeMetric;
@@ -285,24 +284,24 @@ export const homeMonthly: HomeTabData = {
 };
 
 // 홈 = 사장님앱 실시간 대시보드 (당일 기준, 탭 없음). 이번 주 오늘 = 수요일 가정 (deliveryDummy.ts weekdayCumulative와 동일 컨벤션)
-const CURRENT_WEEKDAY_INDEX = 2;
+// "오늘"(수요일, index 2)은 아직 마감되지 않아 데이터 자체가 없음 — 화면에 표시되는 건 항상 전일(화요일)까지
+const LAST_CLOSED_WEEKDAY_INDEX = 1;
 
 // 매출·객단가는 지역 평균보다 높게, 주문건수는 지역 평균보다 낮게 (매출 우위는 "건수"가 아니라 "단가·전체 볼륨"에서 온다는 인사이트)
+// 헤드라인(전일 매출/주문건수/객단가)은 weekCumulative의 마지막 마감일(화요일)과 같은 날을 가리키므로 매출·객단가 값을 그 날짜와 맞춤
 export const homeRealtime: HomeRealtimeData = {
-  updatedAtLabel: "07/19 14:32 기준",
-  revenue: { value: 1862000, vsYesterdayPct: 8.4, vsRegionPct: 12 },
-  orders: { value: 95, vsYesterdayPct: 5.1, vsRegionPct: -6 },
-  aov: { value: 19600, vsYesterdayPct: 2.9, vsRegionPct: 5 },
+  revenue: { value: 3340000, vsRegionPct: 12 },
+  orders: { value: 95, vsRegionPct: -6 },
+  aov: { value: 18120, vsRegionPct: 5 },
   weekCumulative: WEEKDAY_LABELS.map((label, i) => {
-    const passed = i <= CURRENT_WEEKDAY_INDEX;
-    const revenues = [3120000, 3340000, 1862000];
-    const aovs = [17850, 18120, 19600];
+    const passed = i <= LAST_CLOSED_WEEKDAY_INDEX;
+    const revenues = [3120000, 3340000];
+    const aovs = [17850, 18120];
     return {
       label,
       revenue: passed ? revenues[i] : null,
       aov: passed ? aovs[i] : null,
-      isToday: i === CURRENT_WEEKDAY_INDEX,
     };
   }),
-  weekTotal: { value: 3120000 + 3340000 + 1862000, vsLastWeekPct: 6.8, vsRegionPct: 9 },
+  weekTotal: { value: 3120000 + 3340000, vsLastWeekPct: 6.8, vsRegionPct: 9 },
 };
