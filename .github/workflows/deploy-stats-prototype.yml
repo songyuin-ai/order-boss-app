@@ -1,0 +1,109 @@
+name: Deploy stats-prototype to GitHub Pages
+
+on:
+  push:
+    branches:
+      - claude/boss-app-stats-prototype-8syxnr
+    paths:
+      - "stats-prototype/**"
+      - "stats-prototype-v2/**"
+      - "stats-prototype-v3/**"
+      - "stats-prototype-v4/**"
+      - "stats-prototype-v5/**"
+      - ".github/workflows/deploy-stats-prototype.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            stats-prototype/package-lock.json
+            stats-prototype-v2/package-lock.json
+            stats-prototype-v3/package-lock.json
+            stats-prototype-v4/package-lock.json
+            stats-prototype-v5/package-lock.json
+
+      - name: Install dependencies (v1)
+        working-directory: stats-prototype
+        run: npm ci
+
+      - name: Build (v1)
+        working-directory: stats-prototype
+        run: npm run build
+
+      - name: Install dependencies (v2)
+        working-directory: stats-prototype-v2
+        run: npm ci
+
+      - name: Build (v2)
+        working-directory: stats-prototype-v2
+        run: npm run build
+
+      - name: Install dependencies (v3)
+        working-directory: stats-prototype-v3
+        run: npm ci
+
+      - name: Build (v3)
+        working-directory: stats-prototype-v3
+        run: npm run build
+
+      - name: Install dependencies (v4)
+        working-directory: stats-prototype-v4
+        run: npm ci
+
+      - name: Build (v4)
+        working-directory: stats-prototype-v4
+        run: npm run build
+
+      - name: Install dependencies (v5)
+        working-directory: stats-prototype-v5
+        run: npm ci
+
+      - name: Build (v5)
+        working-directory: stats-prototype-v5
+        run: npm run build
+
+      - name: Combine builds
+        run: |
+          mkdir -p combined-dist
+          cp -r stats-prototype/dist/. combined-dist/
+          mkdir -p combined-dist/v2
+          cp -r stats-prototype-v2/dist/. combined-dist/v2/
+          mkdir -p combined-dist/v3
+          cp -r stats-prototype-v3/dist/. combined-dist/v3/
+          mkdir -p combined-dist/v4
+          cp -r stats-prototype-v4/dist/. combined-dist/v4/
+          mkdir -p combined-dist/v5
+          cp -r stats-prototype-v5/dist/. combined-dist/v5/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: combined-dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
